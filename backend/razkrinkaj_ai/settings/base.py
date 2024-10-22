@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
+from django.utils.log import DEFAULT_LOGGING
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
@@ -20,6 +22,8 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+# Log to console even when debug is off
+DEFAULT_LOGGING["handlers"]["console"]["filters"] = []
 
 # Application definition
 
@@ -86,8 +90,12 @@ WSGI_APPLICATION = "razkrinkaj_ai.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.getenv("DJANGO_DATABASE_HOST", "db"),
+        "NAME": os.getenv("DJANGO_DATABASE_NAME", "wagtail"),
+        "USER": os.getenv("DJANGO_DATABASE_USER", "wagtail"),
+        "PASSWORD": os.getenv("DJANGO_DATABASE_PASSWORD", "changeme"),
+        "PORT": os.getenv("DJANGO_DATABASE_PORT", "5432"),
     }
 }
 
@@ -114,9 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "sl"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Ljubljana"
 
 USE_I18N = True
 
@@ -157,6 +165,11 @@ STORAGES = {
 }
 
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
 # Wagtail settings
 
 WAGTAIL_SITE_NAME = "razkrinkaj_ai"
@@ -171,7 +184,7 @@ WAGTAILSEARCH_BACKENDS = {
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = "http://example.com"
+WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 
 # Allowed file extensions for documents in the document library.
 # This can be omitted to allow all files, but note that this may present a security risk
