@@ -23,6 +23,8 @@ class HomePage(Page):
 
     parent_page_types = []
 
+    admin_default_ordering = "ord"
+
     class Meta:
         verbose_name = "Domača stran"
         verbose_name_plural = "Domača stran"
@@ -54,6 +56,8 @@ class ChapterPage(Page):
 
     parent_page_types = ["home.HomePage"]
 
+    admin_default_ordering = "ord"
+
     class Meta:
         verbose_name = "Poglavje"
         verbose_name_plural = "Poglavja"
@@ -76,6 +80,8 @@ class ChapterTextSubPage(Page):
     ]
 
     parent_page_types = ["home.ChapterPage"]
+
+    admin_default_ordering = "ord"
 
     class Meta:
         verbose_name = "Stran z besedilom"
@@ -128,6 +134,8 @@ class ChapterQuizSubPage(Page):
     ]
 
     parent_page_types = ["home.ChapterPage"]
+
+    admin_default_ordering = "ord"
 
     class Meta:
         verbose_name = "Stran s kvizom"
