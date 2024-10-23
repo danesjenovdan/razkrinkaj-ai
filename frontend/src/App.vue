@@ -1,29 +1,29 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { ref } from 'vue'
+
 </script>
 
 <template>
-  <header>
-    <!-- <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
-    <!-- <nav>
-      <RouterLink to="/">Intro</RouterLink>
-      <RouterLink :to="{ name: 'chapters-list'}">Chapters List</RouterLink>
-    </nav> -->
-  </header>
-
-  <RouterView />
+  <div class="wrapper">
+    <div class="content">
+      <RouterView />
+    </div>
+  </div>
 </template>
 
-<style scoped>
-
-
-nav a.router-link-exact-active {
+<style scope lang="scss">
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
-nav a.router-link-exact-active:hover {
+.content {
+  max-width: 27rem;
+  width: 100%;
+  max-height: 58rem;
+  height: 100%;
 }
-
-nav a {
-}
-
 </style>

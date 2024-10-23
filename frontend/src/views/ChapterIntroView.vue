@@ -8,17 +8,10 @@
       <p>Besedilo</p>
     </div>
     <div class="button-wrapper">
-      <RouterLink :to="{ name: 'chapter-question', params: { id: $route.params.id, questionId: 1 } }">ZAČNI</RouterLink>
+      <RouterLink :to="{ name: 'chapter-question', params: { id: $route.params.id, questionId: 1 } }" class="button">ZAČNI</RouterLink>
     </div>
   </main>
 </template>
 
 <style>
-/* @media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-} */
 </style>

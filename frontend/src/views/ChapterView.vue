@@ -1,22 +1,20 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useResultsStore } from '@/stores/results'
+
+import Header from '../components/Header.vue'
+
+const results = useResultsStore()
+
 </script>
 
 <template>
+  <Header :score="results.chapterScore" />
   <main>
-    <nav>
-      <p>Razkrinkaj.AI</p>
-      <p>0 točk</p>
-    </nav>
     <RouterView />
   </main>
 </template>
 
 <style>
-/* @media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-} */
+
 </style>

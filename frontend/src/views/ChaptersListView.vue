@@ -1,19 +1,22 @@
 <script setup lang="ts">
+import Header from '../components/Header.vue'
+import ChapterElement from '../components/ChapterElement.vue'
+import { useChaptersStore } from '@/stores/chapters'
+import { useResultsStore } from '@/stores/results'
+
+const chapters = useChaptersStore()
+const results = useResultsStore()
+
 </script>
 
 <template>
+  <Header :score="results.score" />
   <main>
     <h1>Izberi poglavje</h1>
-    <RouterLink :to="{ name: 'chapter-intro', params: { id: 1 } }">Poglavje 1</RouterLink>
+    <ChapterElement v-for="chapter in chapters.chapters" :chapter="chapter"></ChapterElement>
   </main>
 </template>
 
 <style>
-/* @media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-} */
+
 </style>
