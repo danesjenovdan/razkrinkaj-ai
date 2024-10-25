@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import Header from '../components/Header.vue'
 import ChapterElement from '../components/ChapterElement.vue'
-import { useChaptersStore } from '@/stores/chapters'
-import { useResultsStore } from '@/stores/results'
+import { useStore } from '@/stores/store'
 
-const chapters = useChaptersStore()
-const results = useResultsStore()
+const store = useStore()
+store.initializeStore()
 
 </script>
 
 <template>
-  <Header :score="results.score" />
+  <Header :score="store.score" />
   <main>
     <h1>Izberi poglavje</h1>
-    <ChapterElement v-for="chapter in chapters.chapters" :chapter="chapter"></ChapterElement>
+    <ChapterElement v-for="chapter in store.chapters" :chapter="chapter"></ChapterElement>
   </main>
 </template>
 
