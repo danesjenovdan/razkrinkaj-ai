@@ -6,8 +6,7 @@ import axios from 'axios'
 
 export const useStore = defineStore('store', () => {
   // app info
-  const apiUrl =
-    import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
+  const apiUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
   const storeInitialized = ref(false)
   // texts
   const introduction_title = ref('Naslov')
@@ -18,6 +17,8 @@ export const useStore = defineStore('store', () => {
   // user answers
   const score = ref(10)
   const chapterScore = ref(0)
+  const user_finished_chapters: number[] = reactive([]) // list of finished chapters
+  const user_answers: any = reactive({}) // user_answers[pageId] = chosenAnswerIndex
 
   // če poglavja nisi zaključil - ga na novo fetchamo
   // če poglavje si zaključil, se shranijo tvoji odgovori in score
@@ -41,7 +42,6 @@ export const useStore = defineStore('store', () => {
   }
 
   async function getChapterData(id: string) {
-    
     const response = await axios.get(`${apiUrl}/api/chapter/${id}`)
     console.log(response)
 
@@ -67,9 +67,11 @@ export const useStore = defineStore('store', () => {
     introduction_title,
     introduction_description,
     introduction_button_text,
+    chapters,
     score,
     chapterScore,
-    chapters,
-    apiUrl
+    user_answers,
+    user_finished_chapters,
+    apiUrl,
   }
 })

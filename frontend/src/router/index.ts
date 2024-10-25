@@ -3,7 +3,7 @@ import IntroView from '../views/IntroView.vue'
 import ChaptersListView from '../views/ChaptersListView.vue'
 import ChapterView from '../views/ChapterView.vue'
 import ChapterIntroView from '../views/ChapterIntroView.vue'
-import ChapterQuestionView from '../views/ChapterQuestionView.vue'
+import ChapterPageView from '../views/ChapterPageView.vue'
 import ChapterResultView from '../views/ChapterResultView.vue'
 
 const router = createRouter({
@@ -30,9 +30,9 @@ const router = createRouter({
           component: ChapterIntroView,
         },
         {
-          path: 'vprasanje/:questionId',
-          name: 'chapter-question',
-          component: ChapterQuestionView,
+          path: 'stran/:pageId',
+          name: 'chapter-page',
+          component: ChapterPageView,
         },
         {
           path: 'rezultat',
