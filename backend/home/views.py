@@ -57,7 +57,7 @@ class HomeView(View):
     def get(self, request, id=None):
         if id is None:
             site = Site.find_for_request(request)
-            root_page = site.root_page
+            root_page = site.root_page.specific
         else:
             root_page = get_object_or_404(HomePage, id=id)
 
