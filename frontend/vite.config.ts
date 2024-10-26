@@ -6,6 +6,10 @@ import checker from 'vite-plugin-checker'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    port: 5173,
+    host: true,
+  },
   plugins: [
     vue(),
     checker({
