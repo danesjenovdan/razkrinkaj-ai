@@ -33,7 +33,7 @@ const page = computed(() => {
 })
 
 const answered = computed(() => {
-  if (page.value && page.value.id in store.user_answers) {
+  if (page.value && page.value.id in store.userAnswers) {
     return true
   }
   return false
@@ -41,7 +41,7 @@ const answered = computed(() => {
 
 function saveAnswer(correct: boolean, index: number) {
   if (page.value) {
-    store.user_answers[page.value.id] = index
+    store.userAnswers[page.value.id] = index
 
     if (correct) {
       store.chapterScore = store.chapterScore + page.value.points

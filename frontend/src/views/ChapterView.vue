@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from '@/stores/store'
 import { useRoute } from 'vue-router'
 import Header from '../components/Header.vue'
@@ -12,10 +12,18 @@ const chapter = store.chapters.filter(c => c.id.toString() == chapterId)[0]
 
 store.getChapterData(chapterId)
 
+const chapterScore = computed(() => {
+  if (chapter.id in store.finishedChapters) {
+    return store.finishedChapters[chapter.id]
+  } else {
+    return store.chapterScore
+  }
+})
+
 </script>
 
 <template>
-  <Header :score="store.chapterScore" />
+  <Header :score="chapterScore" />
   <main>
     <div v-if="chapter.pages">
       <RouterView />

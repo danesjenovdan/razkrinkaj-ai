@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import { useRoute } from 'vue-router'
 
@@ -7,6 +8,11 @@ const route = useRoute()
 
 const chapterId = route.params.id
 const chapter = store.chapters.filter((c) => c.id.toString() == chapterId)[0]
+
+onMounted(() => {
+  // reset chapter score
+  store.chapterScore = 0
+})
 </script>
 
 <template>

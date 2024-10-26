@@ -16,7 +16,7 @@ const props = defineProps<{
         <span>
             {{ chapter.title }}
         </span>
-        <span v-if="store.user_finished_chapters.includes(chapter.id)" class="icon">finished</span>
+        <span v-if="chapter.id in store.finishedChapters" class="icon">finished</span>
         <!-- <span class="icon">locked</span> -->
     </RouterLink>
 </template>

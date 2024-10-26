@@ -10,11 +10,11 @@ store.initializeStore()
 <template>
   <main>
     <div>
-      <h1>{{ store.introduction_title }}</h1>
-      <div v-html="store.introduction_description"></div>
+      <h1>{{ store.introductionTitle }}</h1>
+      <div v-html="store.introductionDescription"></div>
     </div>
     <div class="button-wrapper">
-      <RouterLink :to="{ name: 'chapters-list' }" class="button">{{ store.introduction_button_text }}</RouterLink>
+      <RouterLink :to="{ name: 'chapters-list' }" class="button">{{ store.introductionButtonText }}</RouterLink>
     </div>
   </main>
 </template>

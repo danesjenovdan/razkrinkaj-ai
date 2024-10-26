@@ -12,7 +12,10 @@ const chapterId = <string>route.params.id
 const chapter = store.chapters.filter((c) => c.id.toString() == chapterId)[0]
 
 onMounted(() => {
-  store.user_finished_chapters.push(chapter.id)
+  if (!(chapter.id in store.finishedChapters)) {
+    // mark this chapter as finished
+    store.finishedChapters[chapter.id] = store.chapterScore
+  }
 })
 
 </script>
@@ -24,7 +27,7 @@ onMounted(() => {
         <span>{{ chapter.title }}</span>
       </div>
       <h1>Poglavje zaključeno</h1>
-      <p>Zbranih točk: {{ store.chapterScore }}</p>
+      <p>Zbranih točk: {{ store.finishedChapters[chapter.id] }}</p>
       <p>Pravilni odgovori: </p>
       <p>Skupaj točk: {{ store.score }}</p>
     </div>

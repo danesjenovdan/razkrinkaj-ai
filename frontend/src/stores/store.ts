@@ -9,16 +9,18 @@ export const useStore = defineStore('store', () => {
   const apiUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
   const storeInitialized = ref(false)
   // texts
-  const introduction_title = ref('Naslov')
-  const introduction_description = ref('Opis')
-  const introduction_button_text = ref('Gumb')
+  const introductionTitle = ref('')
+  const introductionDescription = ref('')
+  const introductionButtonText = ref('')
   // chapters
   const chapters: Chapter[] = reactive([])
   // user answers
-  const score = ref(10)
+  const finishedChapters: Record<number, number> = reactive({}) // finished chapters with number of points
+  const userAnswers: Record<number, number> = reactive({}) // userAnswers[pageId] = chosenAnswerIndex
   const chapterScore = ref(0)
-  const user_finished_chapters: number[] = reactive([]) // list of finished chapters
-  const user_answers: any = reactive({}) // user_answers[pageId] = chosenAnswerIndex
+  const score = computed(() => {
+    return Object.values(finishedChapters).reduce((a, b) => a + b, 0)
+  })
 
   // če poglavja nisi zaključil - ga na novo fetchamo
   // če poglavje si zaključil, se shranijo tvoji odgovori in score
@@ -29,9 +31,9 @@ export const useStore = defineStore('store', () => {
 
     if (response.status == 200) {
       const data = response.data
-      introduction_title.value = data.title
-      introduction_description.value = data.description
-      introduction_button_text.value = data.button_text
+      introductionTitle.value = data.title
+      introductionDescription.value = data.description
+      introductionButtonText.value = data.button_text
 
       for (let c of data.chapters) {
         chapters.push(c)
@@ -64,14 +66,14 @@ export const useStore = defineStore('store', () => {
   return {
     initializeStore,
     getChapterData,
-    introduction_title,
-    introduction_description,
-    introduction_button_text,
+    introductionTitle,
+    introductionDescription,
+    introductionButtonText,
     chapters,
     score,
     chapterScore,
-    user_answers,
-    user_finished_chapters,
+    userAnswers,
+    finishedChapters,
     apiUrl,
   }
 })
