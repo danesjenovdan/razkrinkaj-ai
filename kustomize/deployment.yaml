@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: razkrinkaj-ai
+  labels:
+    app: razkrinkaj-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: razkrinkaj-ai
+  template:
+    metadata:
+      labels:
+        app: razkrinkaj-ai
+    spec:
+      securityContext:
+        fsGroup: 1000
+      volumes:
+        - name: razkrinkaj-ai-storage
+          emptyDir: {}
+      initContainers:
+        - name: collectstatic
+          image: razkrinkaj-ai-backend
+          volumeMounts:
+            - name: razkrinkaj-ai-storage
+              mountPath: /storage
+          command:
+            - python
+            - manage.py
+            - collectstatic
+            - --no-input
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: razkrinkaj_ai.settings.k8s
+          envFrom:
+            - secretRef:
+                name: razkrinkaj-ai-secrets
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 100m
+            limits:
+              memory: 400Mi
+              cpu: 200m
+        - name: migrate
+          image: razkrinkaj-ai-backend
+          volumeMounts:
+            - name: razkrinkaj-ai-storage
+              mountPath: /storage
+          command:
+            - python
+            - manage.py
+            - migrate
+            - --no-input
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: razkrinkaj_ai.settings.k8s
+          envFrom:
+            - secretRef:
+                name: razkrinkaj-ai-secrets
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 100m
+            limits:
+              memory: 400Mi
+              cpu: 200m
+      containers:
+        - name: razkrinkaj-ai-backend
+          image: razkrinkaj-ai-backend
+          volumeMounts:
+            - name: razkrinkaj-ai-storage
+              mountPath: /storage
+          command:
+            - gunicorn
+            - razkrinkaj_ai.wsgi:application
+            - -b
+            - 0.0.0.0:8000
+            - --log-level
+            - DEBUG
+            - --workers
+            - "1"
+            - --threads
+            - "3"
+            - --timeout
+            - "90"
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DJANGO_SETTINGS_MODULE
+              value: razkrinkaj_ai.settings.k8s
+          envFrom:
+            - secretRef:
+                name: razkrinkaj-ai-secrets
+          resources:
+            requests:
+              memory: 400Mi
+              cpu: 100m
+            limits:
+              memory: 400Mi
+              cpu: 200m
+        - name: razkrinkaj-ai-nginx
+          image: nginx:alpine
+          volumeMounts:
+            - name: razkrinkaj-ai-storage
+              mountPath: /usr/share/nginx/html
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: 50Mi
+              cpu: 50m
+            limits:
+              memory: 50Mi
+              cpu: 50m
