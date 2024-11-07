@@ -1,29 +1,23 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { ref } from 'vue'
-
+import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="wrapper">
-    <div class="content">
+  <div class="page-wrapper">
+    <div class="page-content">
       <RouterView />
     </div>
   </div>
 </template>
 
-<style scope lang="scss">
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+<style scoped lang="scss">
+.page-wrapper {
+  max-width: var(--page-max-width);
+  margin-inline: auto;
+  background: var(--color-bg);
 }
 
-.content {
-  max-width: 27rem;
-  width: 100%;
-  max-height: 58rem;
-  height: 100%;
+.page-content {
+  padding-inline: var(--page-gutter);
 }
 </style>

@@ -1,16 +1,21 @@
-@import './base.css';
+:root {
+  --color-body-bg: #222;
+  --color-bg: #f8f8f4;
+  --color-text: #25271d;
 
-html, body, #app {
-    height: 100%;
+  --page-scale: 1;
+  --page-max-width: 22.5rem;
+  --page-gutter: 1.5625rem;
 }
 
-.button {
-    display: inline-flex;
-    padding: 10px 20px;
-    background-color: white;
-    border: 2px solid black;
-    color: black;
-    text-decoration: none;
-    justify-content: center;
-    align-items: center;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-body-bg);
+  color: var(--color-text);
 }

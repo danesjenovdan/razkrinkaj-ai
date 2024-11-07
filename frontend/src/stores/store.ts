@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import type { Chapter } from '@/types'
 
 import axios from 'axios'
@@ -27,7 +27,7 @@ export const useStore = defineStore('store', () => {
 
   async function getData() {
     const response = await axios.get(`${apiUrl}/api/home`)
-    console.log(response)
+    // console.log(response)
 
     if (response.status == 200) {
       const data = response.data
@@ -62,6 +62,10 @@ export const useStore = defineStore('store', () => {
       getData()
     }
   }
+
+  onMounted(() => {
+    initializeStore()
+  })
 
   return {
     initializeStore,
