@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue'
 import { useStore } from '@/stores/store'
 import { useRoute } from 'vue-router'
-import Header from '../components/Header.vue'
+import ScoreHeader from '../components/ScoreHeader.vue'
 
 const store = useStore()
 const route = useRoute()
@@ -23,7 +23,7 @@ const chapterScore = computed(() => {
 </script>
 
 <template>
-  <Header :score="chapterScore" />
+  <ScoreHeader :score="chapterScore" />
   <main>
     <div v-if="chapter.pages">
       <RouterView />

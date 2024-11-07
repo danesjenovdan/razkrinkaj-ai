@@ -12,10 +12,10 @@ if (props.emoji && props.icon) {
 </script>
 
 <template>
-  <RouterLink :to="props.link" class="button-primary">
-    <span>{{ props.buttonText }}</span>
-    <span v-if="props.emoji">{{ props.emoji }}</span>
-    <span v-if="props.icon" class="icon">{{ props.icon }}</span>
+  <RouterLink :to="link" class="button-primary">
+    <span>{{ buttonText }}</span>
+    <span v-if="emoji">{{ emoji }}</span>
+    <span v-if="icon" class="icon">{{ icon }}</span>
   </RouterLink>
 </template>
 
@@ -27,6 +27,7 @@ if (props.emoji && props.icon) {
   border-radius: 3px;
   border: 0.5px solid #000;
   background: #4063f6;
+  font-family: var(--font-family-heading);
   font-size: 1rem;
   line-height: 1;
   font-weight: 700;

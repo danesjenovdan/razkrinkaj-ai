@@ -16,10 +16,9 @@ export interface Page {
 }
 
 export interface Chapter {
-  title: string
-  shortDescription?: string
-  description: string
   id: number
+  title: string
+  description: string
   image: string
   locked_by_default: boolean
   pages: Page[]

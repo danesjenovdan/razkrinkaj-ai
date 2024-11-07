@@ -35,7 +35,10 @@ export const useStore = defineStore('store', () => {
       introductionDescription.value = data.description
       introductionButtonText.value = data.button_text
 
-      for (let c of data.chapters) {
+      for (const c of data.chapters) {
+        if (c.image && !c.image.startsWith('http')) {
+          c.image = `${apiUrl}${c.image}`
+        }
         chapters.push(c)
       }
 
