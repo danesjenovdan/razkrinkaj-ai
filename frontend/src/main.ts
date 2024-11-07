@@ -1,3 +1,4 @@
+import './assets/fonts/selfhosted.css'
 import './assets/reset.css'
 import './assets/main.css'
 
