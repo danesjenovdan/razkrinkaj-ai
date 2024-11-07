@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useStore } from '@/stores/store'
-import { useRoute } from 'vue-router'
+import type { Chapter } from '@/types'
+import { computed } from 'vue'
 
-const store = useStore()
-const route = useRoute()
+const props = defineProps<{ chapter: Chapter }>()
 
-const chapterId = route.params.id
-const chapter = store.chapters.filter((c) => c.id.toString() == chapterId)[0]
-
-onMounted(() => {
-  // reset chapter score
-  store.chapterScore = 0
+const firstPage = computed(() => {
+  const fp = props.chapter.pages?.[0]
+  if (!fp || fp.type !== 'text') {
+    throw new Error('First page is not a text page')
+  }
+  return fp
 })
 </script>
 
@@ -21,11 +19,23 @@ onMounted(() => {
       <h1>{{ chapter.title }}</h1>
       <div v-html="chapter.description"></div>
     </div>
-    <div v-if="chapter.pages.length > 0" class="button-wrapper">
-      <RouterLink :to="{ name: 'chapter-page', params: { id: $route.params.id, pageId: 1 } }" class="button">ZAČNI</RouterLink>
+    <div>
+      <div>{{ firstPage.id }}</div>
+      <h2>{{ firstPage.title }}</h2>
+      <div>{{ firstPage.type }}</div>
+      <div>{{ firstPage.text }}</div>
     </div>
+    <!-- <div v-if="chapter.pages.length > 0" class="button-wrapper">
+      <RouterLink
+        :to="{
+          name: 'chapter-page',
+          params: { id: $route.params.id, pageId: 1 },
+        }"
+        class="button"
+        >ZAČNI</RouterLink
+      >
+    </div> -->
   </main>
 </template>
 
-<style>
-</style>
+<style></style>

@@ -1,25 +1,35 @@
-export interface PageAnswer {
-  correct: boolean
+export type PageAnswer = {
   text: string
+  correct: boolean
 }
 
-export interface Page {
-  title: string
-  text?: string
-  type: string
+export type BasePage = {
   id: number
+  title: string
+}
+
+export type TextPage = BasePage & {
+  type: 'text'
+  text: string
+  button_text: string
+}
+
+export type QuizPage = BasePage & {
+  type: 'quiz'
   image: string
   image_answer: string
-  points: number
   answers: PageAnswer[]
+  points: number
   answer_description: string
 }
 
-export interface Chapter {
+export type Page = TextPage | QuizPage
+
+export type Chapter = {
   id: number
   title: string
   description: string
   image: string
   locked_by_default: boolean
-  pages: Page[]
+  pages: Page[] | null
 }

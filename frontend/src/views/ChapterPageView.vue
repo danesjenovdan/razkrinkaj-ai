@@ -44,7 +44,7 @@ function saveAnswer(correct: boolean, index: number) {
     store.userAnswers[page.value.id] = index
 
     if (correct) {
-      store.chapterScore = store.chapterScore + page.value.points
+      // store.chapterScore = store.chapterScore + page.value.points
     }
   }
 }
