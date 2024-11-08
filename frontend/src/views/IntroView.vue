@@ -21,20 +21,22 @@ const store = useStore()
 </template>
 
 <style scoped lang="scss">
-.intro {
+main {
   padding-bottom: 3.5rem;
 
-  h1 {
-    margin: 0;
-    padding-block: 2rem;
-  }
+  .intro {
+    h1 {
+      margin: 0;
+      padding-block: 2rem;
+    }
 
-  .description {
-    font-size: 0.875rem;
-  }
+    .description {
+      font-size: 0.875rem;
+    }
 
-  .button {
-    margin-top: 2rem;
+    .button {
+      margin-top: 2rem;
+    }
   }
 }
 </style>
