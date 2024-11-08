@@ -12,8 +12,8 @@ const store = useStore()
     <h1>Izberi poglavje</h1>
     <div class="chapters">
       <ChapterElement
-        v-for="chapter in store.chapters"
-        :key="chapter.id"
+        v-for="[id, chapter] in store.chapters"
+        :key="id"
         :chapter="chapter"
       />
     </div>

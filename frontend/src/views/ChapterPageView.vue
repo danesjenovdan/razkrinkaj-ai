@@ -1,61 +1,66 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useStore } from '@/stores/store'
+import ButtonPrimary from '@/components/ButtonPrimary.vue'
+import RichText from '@/components/RichText.vue'
+import type { Chapter } from '@/types'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-const store = useStore()
+const props = defineProps<{ chapter: Chapter }>()
+
 const route = useRoute()
-
-const chapterId = <string>route.params.id
-const chapter = store.chapters.filter((c) => c.id.toString() == chapterId)[0]
-
-const pageId = ref(<string>route.params.pageId)
-
-watch(
-  () => route.params.pageId,
-  async newPageId => {
-    console.log("new page id!", newPageId)
-    pageId.value = <string>newPageId
-  }
-)
-
-const currentPageIndex = computed((): number => {
-  return parseInt(pageId.value) - 1
+const pageIndex = computed(() => {
+  const pageIndexParam = route.params.pageIndex as string
+  return parseInt(pageIndexParam, 10)
 })
 
 const page = computed(() => {
-  const chapter = store.chapters.filter(c => c.id.toString() == chapterId)[0]
-  try {
-    return chapter.pages[currentPageIndex.value]
-  } catch {
-    return null
+  const p = props.chapter.pages?.[pageIndex.value]
+  if (!p) {
+    throw new Error('Page not found')
   }
+  return p
 })
 
-const answered = computed(() => {
-  if (page.value && page.value.id in store.userAnswers) {
-    return true
-  }
-  return false
+const hasNextPage = computed(() => {
+  return !!props.chapter.pages?.[pageIndex.value + 1]
 })
 
-function saveAnswer(correct: boolean, index: number) {
-  if (page.value) {
-    store.userAnswers[page.value.id] = index
+// const answered = computed(() => {
+//   if (page.value && page.value.id in store.userAnswers) {
+//     return true
+//   }
+//   return false
+// })
 
-    if (correct) {
-      // store.chapterScore = store.chapterScore + page.value.points
-    }
-  }
-}
+// function saveAnswer(correct: boolean, index: number) {
+//   if (page.value) {
+//     store.userAnswers[page.value.id] = index
 
+//     if (correct) {
+//       // store.chapterScore = store.chapterScore + page.value.points
+//     }
+//   }
+// }
 </script>
 
 <template>
   <main>
-    <div v-if="page">
-      <h1>{{ page.title }}</h1>
-      <div v-if="page.type=='quiz'">
+    <div v-if="page.type === 'text'" class="page-content">
+      <RichText :title="page.title" :content="page.text" />
+      <ButtonPrimary
+        class="button"
+        :buttonText="page.button_text"
+        :link="
+          hasNextPage
+            ? { name: 'chapter-page', params: { pageIndex: pageIndex + 1 } }
+            : { name: 'chapter-result' }
+        "
+        icon="arrow"
+      />
+    </div>
+    <!--
+    <div>
+       <div v-if="page.type=='quiz'">
         <img v-if="!answered" :src="`${store.apiUrl}${page.image}`" />
         <img v-if="answered" :src="`${store.apiUrl}${page.image_answer}`" />
         <div>
@@ -65,26 +70,13 @@ function saveAnswer(correct: boolean, index: number) {
         </div>
         <div v-if="answered" v-html="page.answer_description"></div>
       </div>
-      <div v-else>
-        <div v-html="page.text"></div>
-      </div>
-      <div v-if="answered || page.type === 'text'" class="button-wrapper">
-        <!-- go to next page -->
-        <RouterLink v-if="currentPageIndex + 1 < chapter.pages.length"
-          :to="{ name: 'chapter-page', params: { id: chapterId, pageId: currentPageIndex + 2 } }">Nadaljuj</RouterLink>
-        <!-- go to results -->
-        <RouterLink v-else :to="{ name: 'chapter-result', params: { id: chapterId } }">Nadaljuj</RouterLink>
-      </div>
     </div>
-    <div v-else>
-      loading...
-    </div>
+    -->
   </main>
 </template>
 
-<style lang="scss">
-img {
-  width: 100%;
-  height: auto;
+<style scoped lang="scss">
+main {
+  padding-bottom: 3.5rem;
 }
 </style>

@@ -36,7 +36,7 @@ const router = createRouter({
               component: ChapterIntroView,
             },
             {
-              path: 'stran/:pageId',
+              path: 'stran/:pageIndex',
               name: 'chapter-page',
               component: ChapterPageView,
             },
