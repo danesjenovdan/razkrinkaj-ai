@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views import View
 from wagtail.models import Page, Site
+from wagtail.templatetags.wagtailcore_tags import richtext
 
 from .models import ChapterPage, ChapterQuizSubPage, ChapterTextSubPage, HomePage
 
@@ -35,7 +36,7 @@ def serialize_chapter_sub_page(page):
         data.update(
             {
                 "type": "text",
-                "text": page.text,
+                "text": richtext(page.text),
                 "button_text": page.button_text,
             }
         )
@@ -47,7 +48,7 @@ def serialize_chapter_sub_page(page):
                 "image_answer": serialize_image_url(page.image_answer),
                 "answers": [serialize_answer(answer) for answer in page.answers],
                 "points": page.points,
-                "answer_description": page.answer_description,
+                "answer_description": richtext(page.answer_description),
             }
         )
     return data
@@ -67,7 +68,7 @@ class HomeView(View):
             {
                 "id": root_page.id,
                 "title": root_page.title,
-                "description": root_page.description,
+                "description": richtext(root_page.description),
                 "button_text": root_page.button_text,
                 "chapters": [
                     {
