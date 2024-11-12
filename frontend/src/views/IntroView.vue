@@ -13,7 +13,7 @@ const store = useStore()
       <ButtonPrimary
         class="button"
         :buttonText="store.introductionButtonText"
-        :link="{ name: 'chapters-list' }"
+        :link="{ name: 'chapter-list' }"
         emoji="🚀🚀🚀"
       />
     </div>

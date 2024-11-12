@@ -22,7 +22,7 @@ const router = createRouter({
         },
         {
           path: 'seznam-poglavij',
-          name: 'chapters-list',
+          name: 'chapter-list',
           component: ChapterListView,
         },
         {

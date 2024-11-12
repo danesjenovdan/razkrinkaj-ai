@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 const props = withDefaults(
   defineProps<{
     buttonText: string
-    link: object
+    link?: object
     emoji?: string
     icon?: string
     color?: string
@@ -15,10 +17,12 @@ const props = withDefaults(
 if (props.emoji && props.icon) {
   throw new Error('You can only use either emoji or icon, not both')
 }
+
+const componentName = computed(() => props.link ? 'RouterLink' : 'button')
 </script>
 
 <template>
-  <RouterLink :to="link" :class="['button-primary', `button-color-${color}`]">
+  <component :is="componentName" :to="link" :class="['button-primary', `button-color-${color}`]">
     <span>{{ buttonText }}</span>
     <span v-if="emoji">{{ emoji }}</span>
     <span v-if="icon" class="icon">
@@ -37,7 +41,7 @@ if (props.emoji && props.icon) {
       </svg>
       <span v-else>{{ icon }}</span>
     </span>
-  </RouterLink>
+  </component>
 </template>
 
 <style scoped lang="scss">
