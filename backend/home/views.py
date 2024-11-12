@@ -18,6 +18,11 @@ def custom_404_handler(request, exception):
 
 
 def serialize_image_url(image):
+    # TODO: add image alt text
+    # TODO: add image width and height
+    # return {
+    #     "url": image.file.url if image else None,
+    # }
     return image.file.url if image else None
 
 
