@@ -5,6 +5,7 @@ import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
 
 const props = defineProps<{ page: QuizPage }>()
+const emit = defineEmits<{ done: [] }>()
 
 // const answered = computed(() => {
 //   if (page.value && page.value.id in store.userAnswers) {
@@ -33,6 +34,7 @@ const answeredCorrectly = computed(() => {
 
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
+  emit('done')
 }
 </script>
 
@@ -122,6 +124,7 @@ function onAnswerClick(index: number) {
 
   .answer-description {
     margin-top: 2.25rem;
+    margin-bottom: 0.75rem;
     padding: 1rem 1.125rem;
     background: var(--color-bg-accent);
     border-radius: 3px;

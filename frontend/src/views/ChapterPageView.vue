@@ -3,7 +3,7 @@ import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
 import type { Chapter } from '@/types'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const props = defineProps<{ chapter: Chapter }>()
@@ -25,6 +25,18 @@ const page = computed(() => {
 const hasNextPage = computed(() => {
   return !!props.chapter.pages?.[pageIndex.value + 1]
 })
+
+const nextPageLink = computed(() => {
+  return hasNextPage.value
+    ? { name: 'chapter-page', params: { pageIndex: pageIndex.value + 1 } }
+    : { name: 'chapter-result' }
+})
+
+const quizDone = ref(false)
+
+function onQuizDone() {
+  quizDone.value = true
+}
 </script>
 
 <template>
@@ -34,16 +46,20 @@ const hasNextPage = computed(() => {
       <ButtonPrimary
         class="button"
         :buttonText="page.button_text"
-        :link="
-          hasNextPage
-            ? { name: 'chapter-page', params: { pageIndex: pageIndex + 1 } }
-            : { name: 'chapter-result' }
-        "
+        :link="nextPageLink"
         icon="arrow"
       />
     </div>
     <div v-else-if="page.type === 'quiz'" class="page-content">
-      <QuizPage :page="page" />
+      <QuizPage :page="page" @done="onQuizDone" />
+      <ButtonPrimary
+        v-if="quizDone"
+        class="button"
+        buttonText="Nadaljuj"
+        :link="nextPageLink"
+        icon="arrow"
+        color="white"
+      />
     </div>
     <div v-else>unknown page type</div>
   </main>

@@ -1,10 +1,16 @@
 <script setup lang="ts">
-const props = defineProps<{
-  buttonText: string
-  link: object
-  emoji?: string
-  icon?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    buttonText: string
+    link: object
+    emoji?: string
+    icon?: string
+    color?: string
+  }>(),
+  {
+    color: 'primary',
+  },
+)
 
 if (props.emoji && props.icon) {
   throw new Error('You can only use either emoji or icon, not both')
@@ -12,7 +18,7 @@ if (props.emoji && props.icon) {
 </script>
 
 <template>
-  <RouterLink :to="link" class="button-primary">
+  <RouterLink :to="link" :class="['button-primary', `button-color-${color}`]">
     <span>{{ buttonText }}</span>
     <span v-if="emoji">{{ emoji }}</span>
     <span v-if="icon" class="icon">
@@ -42,13 +48,18 @@ if (props.emoji && props.icon) {
   padding: 0.68rem 0.875rem;
   border-radius: 3px;
   border: 0.5px solid #000;
-  background: #4063f6;
+  background: #fff;
   font-family: var(--font-family-heading);
   font-size: 1rem;
   line-height: 1;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-text);
   text-decoration: none;
+
+  &.button-color-primary {
+    background: #4063f6;
+    color: #fff;
+  }
 
   .icon {
     display: flex;
