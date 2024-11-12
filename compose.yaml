@@ -40,6 +40,7 @@ services:
     volumes:
       - ./frontend/public:/app/public:delegated,rw
       - ./frontend/src:/app/src:delegated,rw
+      - ./frontend/env.d.ts:/app/env.d.ts:delegated,rw
       - ./frontend/eslint.config.js:/app/eslint.config.js:delegated,rw
       - ./frontend/.prettierrc.json:/app/.prettierrc.json:delegated,rw
       - ./frontend/index.html:/app/index.html:delegated,rw

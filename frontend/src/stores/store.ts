@@ -1,23 +1,31 @@
-import { defineStore } from 'pinia'
-import { ref, computed, reactive } from 'vue'
 import type { Chapter } from '@/types'
-
 import axios from 'axios'
+import { defineStore } from 'pinia'
+import { computed, reactive, ref } from 'vue'
+
+const apiUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
 
 export const useStore = defineStore('store', () => {
-  // app info
-  const apiUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
-  const storeInitialized = ref(false)
-  // texts
+  const homeDataLoaded = ref(false)
+  const chapterDataLoaded = reactive(new Map<number, boolean>())
+
+  // intro texts
   const introductionTitle = ref('')
   const introductionDescription = ref('')
   const introductionButtonText = ref('')
+
   // chapters
-  const chapters: Chapter[] = reactive([])
+  const chapters = reactive(new Map<number, Chapter>())
+
+  // ids of just unlocked chapters
+  const justUnlockedChapters = ref<number[]>([])
+  // ids of all unlocked chapters
+  const unlockedChapters = ref<number[]>([])
+  // ids of finished chapters to number of points
+  const finishedChapters = reactive(new Map<number, number>())
+
   // user answers
-  const finishedChapters: Record<number, number> = reactive({}) // finished chapters with number of points
   const userAnswers: Record<number, number> = reactive({}) // userAnswers[pageId] = chosenAnswerIndex
-  const chapterScore = ref(0)
   const score = computed(() => {
     return Object.values(finishedChapters).reduce((a, b) => a + b, 0)
   })
@@ -25,9 +33,11 @@ export const useStore = defineStore('store', () => {
   // če poglavja nisi zaključil - ga na novo fetchamo
   // če poglavje si zaključil, se shranijo tvoji odgovori in score
 
-  async function getData() {
+  async function fetchHomeData() {
     const response = await axios.get(`${apiUrl}/api/home`)
-    console.log(response)
+
+    // TODO: remove this simulate slow network
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
     if (response.status == 200) {
       const data = response.data
@@ -35,45 +45,62 @@ export const useStore = defineStore('store', () => {
       introductionDescription.value = data.description
       introductionButtonText.value = data.button_text
 
-      for (let c of data.chapters) {
-        chapters.push(c)
+      chapters.clear()
+      for (const c of data.chapters) {
+        if (c.image && !c.image.startsWith('http')) {
+          c.image = `${apiUrl}${c.image}`
+        }
+        chapters.set(c.id, c)
       }
 
-      storeInitialized.value = true
+      homeDataLoaded.value = true
     }
   }
 
-  async function getChapterData(id: string) {
+  async function initHomeData() {
+    if (!homeDataLoaded.value) {
+      await fetchHomeData()
+    }
+  }
+
+  async function fetchChapterData(id: number) {
     const response = await axios.get(`${apiUrl}/api/chapter/${id}`)
-    console.log(response)
+
+    // TODO: remove this simulate slow network
+    await new Promise(resolve => setTimeout(resolve, 1000))
 
     if (response.status == 200) {
       const data = response.data
+      const chapter = chapters.get(id)
+      if (chapter) {
+        chapter.pages = data.pages
 
-      const chapter = chapters.filter(c => c.id.toString() == id)[0]
-      chapter.pages = data.pages
-
-      // storeInitialized.value = true
+        chapterDataLoaded.set(chapter.id, true)
+      }
     }
   }
 
-  async function initializeStore() {
-    if (!storeInitialized.value) {
-      getData()
+  async function initChapterData(id: number) {
+    if (!chapterDataLoaded.get(id)) {
+      await fetchChapterData(id)
     }
   }
 
   return {
-    initializeStore,
-    getChapterData,
+    initHomeData,
+    homeDataLoaded,
+    initChapterData,
+    chapterDataLoaded,
+    //
     introductionTitle,
     introductionDescription,
     introductionButtonText,
     chapters,
     score,
-    chapterScore,
     userAnswers,
     finishedChapters,
     apiUrl,
+    justUnlockedChapters,
+    unlockedChapters,
   }
 })

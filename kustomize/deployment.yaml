@@ -114,3 +114,14 @@ spec:
             limits:
               memory: 50Mi
               cpu: 50m
+        - name: razkrinkaj-ai-frontend
+          image: razkrinkaj-ai-frontend
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: 50Mi
+              cpu: 50m
+            limits:
+              memory: 50Mi
+              cpu: 50m

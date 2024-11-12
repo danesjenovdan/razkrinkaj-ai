@@ -1,39 +1,35 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { useStore } from '@/stores/store'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import Header from '../components/Header.vue'
+import { useStore } from '@/stores/store'
+import ScoreHeader from '@/components/ScoreHeader.vue'
 
-const store = useStore()
 const route = useRoute()
+const store = useStore()
 
-const chapterId = <string>route.params.id
-const chapter = store.chapters.filter(c => c.id.toString() == chapterId)[0]
+const idString = route.params.id as string
+const chapterId = parseInt(idString, 10)
+const chapter = store.chapters.get(chapterId)
 
-store.getChapterData(chapterId)
+if (Number.isNaN(chapterId)) {
+  throw new Error('Invalid chapter id')
+}
 
-const chapterScore = computed(() => {
-  if (chapter.id in store.finishedChapters) {
-    return store.finishedChapters[chapter.id]
-  } else {
-    return store.chapterScore
-  }
+const showHeader = computed(() => {
+  return route.name !== 'chapter-result'
 })
 
+store.initChapterData(chapterId)
 </script>
 
 <template>
-  <Header :score="chapterScore" />
+  <ScoreHeader
+    v-if="showHeader"
+    :title="store.introductionTitle"
+    :score="store.score"
+  />
   <main>
-    <div v-if="chapter.pages">
-      <RouterView />
-    </div>
-    <div v-else>
-      loading...
-    </div>
+    <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
+    <div v-else>chapter loading...</div>
   </main>
 </template>
-
-<style>
-
-</style>

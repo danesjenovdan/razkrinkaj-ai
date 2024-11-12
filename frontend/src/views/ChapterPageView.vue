@@ -1,90 +1,76 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { useStore } from '@/stores/store'
+import ButtonPrimary from '@/components/ButtonPrimary.vue'
+import QuizPage from '@/components/QuizPage.vue'
+import RichText from '@/components/RichText.vue'
+import type { Chapter } from '@/types'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-const store = useStore()
+const props = defineProps<{ chapter: Chapter }>()
+
 const route = useRoute()
-
-const chapterId = <string>route.params.id
-const chapter = store.chapters.filter((c) => c.id.toString() == chapterId)[0]
-
-const pageId = ref(<string>route.params.pageId)
-
-watch(
-  () => route.params.pageId,
-  async newPageId => {
-    console.log("new page id!", newPageId)
-    pageId.value = <string>newPageId
-  }
-)
-
-const currentPageIndex = computed((): number => {
-  return parseInt(pageId.value) - 1
+const pageIndex = computed(() => {
+  const pageIndexParam = route.params.pageIndex as string
+  return parseInt(pageIndexParam, 10)
 })
 
 const page = computed(() => {
-  const chapter = store.chapters.filter(c => c.id.toString() == chapterId)[0]
-  try {
-    return chapter.pages[currentPageIndex.value]
-  } catch {
-    return null
+  const p = props.chapter.pages?.[pageIndex.value]
+  if (!p) {
+    throw new Error('Page not found')
   }
+  return p
 })
 
-const answered = computed(() => {
-  if (page.value && page.value.id in store.userAnswers) {
-    return true
-  }
-  return false
+const hasNextPage = computed(() => {
+  return !!props.chapter.pages?.[pageIndex.value + 1]
 })
 
-function saveAnswer(correct: boolean, index: number) {
-  if (page.value) {
-    store.userAnswers[page.value.id] = index
+const nextPageLink = computed(() => {
+  return hasNextPage.value
+    ? { name: 'chapter-page', params: { pageIndex: pageIndex.value + 1 } }
+    : { name: 'chapter-result' }
+})
 
-    if (correct) {
-      store.chapterScore = store.chapterScore + page.value.points
-    }
-  }
+const quizDone = ref(false)
+
+function onQuizDone() {
+  quizDone.value = true
 }
-
 </script>
 
 <template>
   <main>
-    <div v-if="page">
-      <h1>{{ page.title }}</h1>
-      <div v-if="page.type=='quiz'">
-        <img v-if="!answered" :src="`${store.apiUrl}${page.image}`" />
-        <img v-if="answered" :src="`${store.apiUrl}${page.image_answer}`" />
-        <div>
-          <button v-for="(answer, index) in page.answers" @click="saveAnswer(answer.correct, index)" :disabled="answered"
-            class="button">{{ answer.text
-            }} {{ index }}</button>
-        </div>
-        <div v-if="answered" v-html="page.answer_description"></div>
-      </div>
-      <div v-else>
-        <div v-html="page.text"></div>
-      </div>
-      <div v-if="answered || page.type === 'text'" class="button-wrapper">
-        <!-- go to next page -->
-        <RouterLink v-if="currentPageIndex + 1 < chapter.pages.length"
-          :to="{ name: 'chapter-page', params: { id: chapterId, pageId: currentPageIndex + 2 } }">Nadaljuj</RouterLink>
-        <!-- go to results -->
-        <RouterLink v-else :to="{ name: 'chapter-result', params: { id: chapterId } }">Nadaljuj</RouterLink>
-      </div>
+    <div v-if="page.type === 'text'" class="page-content">
+      <RichText :title="page.title" :content="page.text" />
+      <ButtonPrimary
+        class="button"
+        :buttonText="page.button_text"
+        :link="nextPageLink"
+        icon="arrow"
+      />
     </div>
-    <div v-else>
-      loading...
+    <div v-else-if="page.type === 'quiz'" class="page-content">
+      <QuizPage :page="page" @done="onQuizDone" />
+      <ButtonPrimary
+        v-if="quizDone"
+        class="button"
+        buttonText="Nadaljuj"
+        :link="nextPageLink"
+        icon="arrow"
+        color="white"
+      />
     </div>
+    <div v-else>unknown page type</div>
   </main>
 </template>
 
-<style lang="scss">
-img {
-  width: 100%;
-  height: auto;
+<style scoped lang="scss">
+main {
+  padding-bottom: 3.5rem;
+
+  .page-content {
+    padding-top: 0.75rem;
+  }
 }
 </style>

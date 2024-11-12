@@ -1,20 +1,42 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { useStore } from '@/stores/store'
+import ButtonPrimary from '@/components/ButtonPrimary.vue'
 
 const store = useStore()
-store.initializeStore()
-
 </script>
 
 <template>
   <main>
-    <div>
+    <div class="intro">
       <h1>{{ store.introductionTitle }}</h1>
-      <div v-html="store.introductionDescription"></div>
-    </div>
-    <div class="button-wrapper">
-      <RouterLink :to="{ name: 'chapters-list' }" class="button">{{ store.introductionButtonText }}</RouterLink>
+      <div class="description" v-html="store.introductionDescription"></div>
+      <ButtonPrimary
+        class="button"
+        :buttonText="store.introductionButtonText"
+        :link="{ name: 'chapter-list' }"
+        emoji="🚀🚀🚀"
+      />
     </div>
   </main>
 </template>
+
+<style scoped lang="scss">
+main {
+  padding-bottom: 3.5rem;
+
+  .intro {
+    h1 {
+      margin: 0;
+      padding-block: 2rem;
+    }
+
+    .description {
+      font-size: 0.875rem;
+    }
+
+    .button {
+      margin-top: 2rem;
+    }
+  }
+}
+</style>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import RootView from '../views/RootView.vue'
 import IntroView from '../views/IntroView.vue'
-import ChaptersListView from '../views/ChaptersListView.vue'
+import ChapterListView from '../views/ChapterListView.vue'
 import ChapterView from '../views/ChapterView.vue'
 import ChapterIntroView from '../views/ChapterIntroView.vue'
 import ChapterPageView from '../views/ChapterPageView.vue'
@@ -11,44 +12,43 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'intro',
-      component: IntroView,
-    },
-    {
-      path: '/seznam-poglavij',
-      name: 'chapters-list',
-      component: ChaptersListView,
-    },
-    {
-      path: '/poglavje/:id',
-      name: 'chapter',
-      component: ChapterView,
+      name: 'root',
+      component: RootView,
       children: [
         {
-          path: 'intro',
-          name: 'chapter-intro',
-          component: ChapterIntroView,
+          path: '',
+          name: 'intro',
+          component: IntroView,
         },
         {
-          path: 'stran/:pageId',
-          name: 'chapter-page',
-          component: ChapterPageView,
+          path: 'seznam-poglavij',
+          name: 'chapter-list',
+          component: ChapterListView,
         },
         {
-          path: 'rezultat',
-          name: 'chapter-result',
-          component: ChapterResultView,
+          path: 'poglavje/:id',
+          name: 'chapter',
+          component: ChapterView,
+          children: [
+            {
+              path: 'intro',
+              name: 'chapter-intro',
+              component: ChapterIntroView,
+            },
+            {
+              path: 'stran/:pageIndex',
+              name: 'chapter-page',
+              component: ChapterPageView,
+            },
+            {
+              path: 'rezultat',
+              name: 'chapter-result',
+              component: ChapterResultView,
+            },
+          ],
         },
       ],
     },
-    // {
-    //   path: '/about',
-    //   name: 'about',
-    //   // route level code-splitting
-    //   // this generates a separate chunk (About.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () => import('../views/AboutView.vue')
-    // }
   ],
 })
 
