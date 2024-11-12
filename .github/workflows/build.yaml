@@ -33,6 +33,20 @@ jobs:
             rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-backend:${{ github.sha }}
             rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-backend:latest
 
+      - name: Build and push frontend
+        uses: docker/build-push-action@v6
+        env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
+        with:
+          context: ./frontend
+          build-args: |
+            VITE_API_URL_BASE=https://api.razkrinkaj-ai.lb.djnd.si
+          push: true
+          tags: |
+            rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend:${{ github.sha }}
+            rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend:latest
+
       - name: Update image versions in kustomize/kustomization.yaml
         run: |
           sed -i "s/newTag: .*\+/newTag\: '${{ github.sha }}'/" kustomize/kustomization.yaml

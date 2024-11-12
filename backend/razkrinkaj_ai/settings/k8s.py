@@ -6,6 +6,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "<TODO>")
 
 ALLOWED_HOSTS = ["api.razkrinkaj-ai.lb.djnd.si"]
 CSRF_TRUSTED_ORIGINS = ["https://api.razkrinkaj-ai.lb.djnd.si"]
+CORS_ALLOWED_ORIGINS = ["https://razkrinkaj-ai.lb.djnd.si"]
 
 WAGTAILADMIN_BASE_URL = "https://api.razkrinkaj-ai.lb.djnd.si"
 

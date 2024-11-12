@@ -9,3 +9,6 @@ images:
   - name: razkrinkaj-ai-backend
     newName: rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-backend
     newTag: "latest"
+  - name: razkrinkaj-ai-frontend
+    newName: rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend
+    newTag: "latest"
