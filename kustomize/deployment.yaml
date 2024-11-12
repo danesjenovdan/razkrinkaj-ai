@@ -117,7 +117,7 @@ spec:
         - name: razkrinkaj-ai-frontend
           image: razkrinkaj-ai-frontend
           ports:
-            - containerPort: 80
+            - containerPort: 8081
           resources:
             requests:
               memory: 50Mi
