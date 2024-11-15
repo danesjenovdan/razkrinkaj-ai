@@ -54,6 +54,7 @@ def serialize_chapter_sub_page(page):
                 "answers": [serialize_answer(answer) for answer in page.answers],
                 "points": page.points,
                 "answer_description": richtext(page.answer_description),
+                "button_text": page.button_text,
             }
         )
     return data

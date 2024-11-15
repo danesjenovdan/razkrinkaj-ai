@@ -3,7 +3,7 @@ import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
 import type { Chapter } from '@/types'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 const props = defineProps<{ chapter: Chapter }>()
@@ -32,10 +32,14 @@ const nextPageLink = computed(() => {
     : { name: 'chapter-result' }
 })
 
-const quizDone = ref(false)
+const showNextButton = ref(false)
+
+watch(pageIndex, () => {
+  showNextButton.value = false
+})
 
 function onQuizDone() {
-  quizDone.value = true
+  showNextButton.value = true
 }
 </script>
 
@@ -53,9 +57,9 @@ function onQuizDone() {
     <div v-else-if="page.type === 'quiz'" class="page-content">
       <QuizPage :page="page" @done="onQuizDone" />
       <ButtonPrimary
-        v-if="quizDone"
+        v-if="showNextButton"
         class="button"
-        buttonText="Nadaljuj"
+        :buttonText="page.button_text"
         :link="nextPageLink"
         icon="arrow"
         color="white"
