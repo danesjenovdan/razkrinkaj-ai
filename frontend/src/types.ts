@@ -1,3 +1,10 @@
+export type ImageDescription = {
+  url: string
+  alt: string
+  width: number
+  height: number
+}
+
 export type PageAnswer = {
   text: string
   correct: boolean
@@ -16,8 +23,8 @@ export type TextPage = BasePage & {
 
 export type QuizPage = BasePage & {
   type: 'quiz'
-  image: string
-  image_answer: string
+  image: ImageDescription | null
+  image_answer: ImageDescription | null
   answers: PageAnswer[]
   points: number
   answer_description: string
@@ -30,7 +37,7 @@ export type Chapter = {
   id: number
   title: string
   description: string
-  image: string
+  image: ImageDescription | null
   locked_by_default: boolean
   pages: Page[] | null
 }

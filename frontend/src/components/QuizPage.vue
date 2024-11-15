@@ -32,6 +32,10 @@ const answeredCorrectly = computed(() => {
   return props.page.answers[selectedAnswer.value].correct
 })
 
+const image = computed(() => {
+  return selectedAnswer.value === null ? props.page.image : props.page.image_answer
+})
+
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
   emit('done')
@@ -41,9 +45,12 @@ function onAnswerClick(index: number) {
 <template>
   <div class="quiz-page">
     <img
-      :src="selectedAnswer === null ? page.image : page.image_answer"
-      alt="quiz image"
-    />
+        v-if="image"
+        :src="image.url"
+        :alt="image.alt"
+        :width="image.width"
+        :height="image.height"
+      />
     <div
       :class="{
         score: true,

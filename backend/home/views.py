@@ -18,12 +18,17 @@ def custom_404_handler(request, exception):
 
 
 def serialize_image_url(image):
-    # TODO: add image alt text
-    # TODO: add image width and height
-    # return {
-    #     "url": image.file.url if image else None,
-    # }
-    return image.file.url if image else None
+    # TODO: resize image
+    return (
+        {
+            "url": image.file.url,
+            "alt": image.title,
+            "width": image.width,
+            "height": image.height,
+        }
+        if image
+        else None
+    )
 
 
 def serialize_answer(answer):
