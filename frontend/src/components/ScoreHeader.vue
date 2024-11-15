@@ -20,6 +20,7 @@ defineProps<{
 .score-header {
   margin-inline: calc(var(--page-gutter) * -1);
   padding-inline: var(--page-gutter);
+  background: var(--color-bg-white);
   border-bottom: 0.5px solid #000;
 
   .header-content {

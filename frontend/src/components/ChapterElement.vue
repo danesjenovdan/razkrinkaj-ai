@@ -151,6 +151,7 @@ const isLocked = computed(() => {
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;
+  background: var(--color-bg-white);
   border-radius: 3px;
   border: 0.5px solid #000;
   text-decoration: none;
