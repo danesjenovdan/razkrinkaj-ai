@@ -21,6 +21,7 @@ export type QuizPage = BasePage & {
   answers: PageAnswer[]
   points: number
   answer_description: string
+  button_text: string
 }
 
 export type Page = TextPage | QuizPage

@@ -40,7 +40,10 @@ function onAnswerClick(index: number) {
 
 <template>
   <div class="quiz-page">
-    <img :src="page.image" alt="quiz image" />
+    <img
+      :src="selectedAnswer === null ? page.image : page.image_answer"
+      alt="quiz image"
+    />
     <div
       :class="{
         score: true,
@@ -81,7 +84,7 @@ function onAnswerClick(index: number) {
     padding: 0.25rem;
     border-radius: 3px;
     border: 0.5px solid #000;
-    background: var(--color-bg);
+    background: var(--color-bg-white);
   }
 
   .score {

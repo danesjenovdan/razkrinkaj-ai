@@ -43,7 +43,7 @@ defineProps<{
 
 <style scoped lang="scss">
 .button-answer {
-  --_color-bg: var(--color-bg);
+  --_color-bg: var(--color-bg-white);
   --_color-border: #000;
   --_color-shadow: transparent;
 

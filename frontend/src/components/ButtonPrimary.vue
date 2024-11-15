@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 const props = withDefaults(
   defineProps<{
-    buttonText: string
+    buttonText?: string
     link?: object
     emoji?: string
     icon?: string
@@ -18,12 +18,14 @@ if (props.emoji && props.icon) {
   throw new Error('You can only use either emoji or icon, not both')
 }
 
+const text = computed(() => props.buttonText || 'Nadaljuj')
+
 const componentName = computed(() => props.link ? 'RouterLink' : 'button')
 </script>
 
 <template>
   <component :is="componentName" :to="link" :class="['button-primary', `button-color-${color}`]">
-    <span>{{ buttonText }}</span>
+    <span>{{ text }}</span>
     <span v-if="emoji">{{ emoji }}</span>
     <span v-if="icon" class="icon">
       <svg

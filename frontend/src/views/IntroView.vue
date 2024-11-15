@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useStore } from '@/stores/store'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
+import PageFooter from '@/components/PageFooter.vue'
 
 const store = useStore()
 </script>
@@ -18,6 +19,7 @@ const store = useStore()
       />
     </div>
   </main>
+  <PageFooter />
 </template>
 
 <style scoped lang="scss">

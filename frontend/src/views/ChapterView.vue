@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
+import TheLoader from '@/components/TheLoader.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -30,6 +31,17 @@ store.initChapterData(chapterId)
   />
   <main>
     <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
-    <div v-else>chapter loading...</div>
+    <div v-else class="loader-container">
+      <TheLoader />
+    </div>
   </main>
 </template>
+
+<style scoped lang="scss">
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+</style>

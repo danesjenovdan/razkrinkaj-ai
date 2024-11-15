@@ -12,12 +12,19 @@ import { RouterView } from 'vue-router'
 
 <style scoped lang="scss">
 .page-wrapper {
-  max-width: var(--page-max-width);
+  display: grid;
+  width: var(--page-width);
   margin-inline: auto;
-  background: var(--color-bg);
+  background: var(--color-bg-light);
 }
 
 .page-content {
+  display: flex;
+  flex-direction: column;
   padding-inline: var(--page-gutter);
+
+  :deep(> main) {
+    flex: 1;
+  }
 }
 </style>

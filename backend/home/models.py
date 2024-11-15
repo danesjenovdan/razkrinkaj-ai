@@ -124,6 +124,11 @@ class ChapterQuizSubPage(Page):
     )
     points = models.IntegerField(default=0, verbose_name="Število točk")
     answer_description = RichTextField(blank=True, verbose_name="Opis odgovora")
+    button_text = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Besedilo gumba",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("image"),
@@ -131,6 +136,7 @@ class ChapterQuizSubPage(Page):
         FieldPanel("answers"),
         FieldPanel("points"),
         FieldPanel("answer_description"),
+        FieldPanel("button_text"),
     ]
 
     parent_page_types = ["home.ChapterPage"]

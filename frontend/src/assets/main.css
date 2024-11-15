@@ -1,11 +1,11 @@
 :root {
-  --color-body-bg: #222;
-  --color-bg: #f8f8f4;
+  --color-bg-white: #fff;
+  --color-bg-light: #f8f8f4;
   --color-bg-accent: #f3f6d1;
   --color-text: #25271d;
 
   --page-scale: 1;
-  --page-max-width: 22.5rem;
+  --page-width: min(576px, 100%);
   --page-gutter: 1.5625rem;
 
   --font-family-base: 'wf-albert-sans', sans-serif;
@@ -20,7 +20,20 @@
 
 body {
   margin: 0;
-  background: var(--color-body-bg);
+  background: var(--color-bg-light);
   color: var(--color-text);
   font-family: var(--font-family-base);
 }
+
+#app {
+  display: grid;
+  min-height: 100vh;
+}
+
+/*
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) { ... }
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) { ... }
+*/
