@@ -40,7 +40,7 @@ function onQuizDone() {
 </script>
 
 <template>
-  <main>
+  <main :key="pageIndex">
     <div v-if="page.type === 'text'" class="page-content">
       <RichText :title="page.title" :content="page.text" />
       <ButtonPrimary
