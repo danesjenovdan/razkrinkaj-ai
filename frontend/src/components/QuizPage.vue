@@ -40,7 +40,10 @@ function onAnswerClick(index: number) {
 
 <template>
   <div class="quiz-page">
-    <img :src="page.image" alt="quiz image" />
+    <img
+      :src="selectedAnswer === null ? page.image : page.image_answer"
+      alt="quiz image"
+    />
     <div
       :class="{
         score: true,
