@@ -19,7 +19,13 @@ function onShareResult() {
       <h1>Poglavje zaključeno!</h1>
     </div>
     <div class="chapter-info">
-      <img :src="chapter.image" alt="chapter image" />
+      <img
+        v-if="chapter.image"
+        :src="chapter.image.url"
+        :alt="chapter.image.alt"
+        :width="chapter.image.width"
+        :height="chapter.image.height"
+      />
       <h1>{{ chapter.title }}</h1>
     </div>
     <div>

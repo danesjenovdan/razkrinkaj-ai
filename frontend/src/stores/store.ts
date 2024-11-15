@@ -44,9 +44,6 @@ export const useStore = defineStore('store', () => {
 
       chapters.clear()
       for (const c of data.chapters) {
-        if (c.image && !c.image.startsWith('http')) {
-          c.image = `${apiUrl}${c.image}`
-        }
         chapters.set(c.id, c)
       }
 

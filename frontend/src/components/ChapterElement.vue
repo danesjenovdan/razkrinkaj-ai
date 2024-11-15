@@ -44,7 +44,13 @@ const isLocked = computed(() => {
       </div>
     </div>
     <div class="image-col">
-      <img :src="chapter.image" alt="chapter image" />
+      <img
+        v-if="chapter.image"
+        :src="chapter.image.url"
+        :alt="chapter.image.alt"
+        :width="chapter.image.width"
+        :height="chapter.image.height"
+      />
     </div>
     <div class="lock-icons">
       <div v-if="isFinished" class="icon">
