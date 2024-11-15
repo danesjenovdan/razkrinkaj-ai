@@ -12,9 +12,9 @@ import { RouterView } from 'vue-router'
 
 <style scoped lang="scss">
 .page-wrapper {
-  max-width: var(--page-max-width);
+  width: var(--page-width);
   margin-inline: auto;
-  background: var(--color-bg);
+  background: var(--color-bg-light);
 }
 
 .page-content {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { useStore } from '@/stores/store'
 import { onMounted } from 'vue'
+import { useStore } from '@/stores/store'
+import TheLoader from '@/components/TheLoader.vue'
 
 const store = useStore()
 store.initHomeData()
@@ -23,5 +24,16 @@ onMounted(() => {
 
 <template>
   <RouterView v-if="store.homeDataLoaded" />
-  <div v-else>root loading...</div>
+  <div v-else class="loader-container">
+    <TheLoader />
+  </div>
 </template>
+
+<style scoped lang="scss">
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+</style>

@@ -81,7 +81,7 @@ defineProps<{
       padding: 0.25rem;
       border-radius: 3px;
       border: 0.5px solid #000;
-      background: var(--color-bg);
+      background: var(--color-bg-white);
     }
 
     hr {
