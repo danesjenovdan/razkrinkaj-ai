@@ -63,9 +63,6 @@ export const useStore = defineStore('store', () => {
   async function fetchChapterData(id: number) {
     const response = await axios.get(`${apiUrl}/api/chapter/${id}`)
 
-    // TODO: remove this simulate slow network
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
     if (response.status == 200) {
       const data = response.data
       const chapter = chapters.get(id)
