@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Chapter } from '@/types'
+import { computed, onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
 
-defineProps<{ chapter: Chapter }>()
+const props = defineProps<{ chapter: Chapter }>()
 
 const store = useStore()
 
@@ -11,6 +12,33 @@ function onShareResult() {
   const message = 'TODO: message, skopiraj v odložišče...'
   window.alert(message)
 }
+
+const totalChapterScore = computed(() => {
+  if (props.chapter.pages) {
+    return props.chapter.pages.reduce((prev, curr) => {
+      if (curr.type === 'quiz') {
+        return prev + curr.points
+      }
+      return prev
+    }, 0)
+  }
+  return 0
+})
+
+onMounted(() => {
+  // save score
+  store.finishedChapters.set(props.chapter.id, store.currentChapterScore)
+  // unlock next chapter
+  const chapterIds = [...store.chapters.keys()]
+  const currentChapterIndex = chapterIds.findIndex(
+    cid => cid === props.chapter.id,
+  )
+  const nextChapterId = chapterIds[currentChapterIndex + 1]
+  if (nextChapterId) {
+    store.justUnlockedChapters.push(nextChapterId)
+    store.unlockedChapters.push(nextChapterId)
+  }
+})
 </script>
 
 <template>
@@ -29,7 +57,9 @@ function onShareResult() {
       <h1>{{ chapter.title }}</h1>
     </div>
     <div>
-      <p>Zbranih točk: 0/0</p>
+      <p>
+        Zbranih točk: {{ store.currentChapterScore }}/{{ totalChapterScore }}
+      </p>
       <p>Pravilni odgovori: 0/0</p>
       <p>Skupaj točk: {{ store.score }}</p>
     </div>

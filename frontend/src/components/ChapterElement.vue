@@ -9,9 +9,7 @@ const props = defineProps<{
 
 const store = useStore()
 
-const isFinished = computed(() =>
-  Object.keys(store.finishedChapters).includes(String(props.chapter.id)),
-)
+const isFinished = computed(() => store.finishedChapters.has(props.chapter.id))
 const isJustUnlocked = computed(() =>
   store.justUnlockedChapters.includes(props.chapter.id),
 )

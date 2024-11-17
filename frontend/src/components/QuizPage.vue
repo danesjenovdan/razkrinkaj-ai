@@ -1,28 +1,22 @@
 <script setup lang="ts">
 import type { QuizPage } from '@/types'
 import { computed, ref } from 'vue'
+import { useStore } from '@/stores/store'
 import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
 
 const props = defineProps<{ page: QuizPage }>()
 const emit = defineEmits<{ done: [] }>()
 
+const store = useStore()
+
+// TODO:
 // const answered = computed(() => {
 //   if (page.value && page.value.id in store.userAnswers) {
 //     return true
 //   }
 //   return false
 // })
-
-// function saveAnswer(correct: boolean, index: number) {
-//   if (page.value) {
-//     store.userAnswers[page.value.id] = index
-
-//     if (correct) {
-//       // store.chapterScore = store.chapterScore + page.value.points
-//     }
-//   }
-// }
 
 const selectedAnswer = ref<number | null>(null)
 const answeredCorrectly = computed(() => {
@@ -33,11 +27,16 @@ const answeredCorrectly = computed(() => {
 })
 
 const image = computed(() => {
-  return selectedAnswer.value === null ? props.page.image : props.page.image_answer
+  return selectedAnswer.value === null
+    ? props.page.image
+    : props.page.image_answer
 })
 
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
+  const correct = props.page.answers[selectedAnswer.value].correct
+  const points = correct ? props.page.points : -props.page.points
+  store.currentChapterScore += points
   emit('done')
 }
 </script>
@@ -45,12 +44,12 @@ function onAnswerClick(index: number) {
 <template>
   <div class="quiz-page">
     <img
-        v-if="image"
-        :src="image.url"
-        :alt="image.alt"
-        :width="image.width"
-        :height="image.height"
-      />
+      v-if="image"
+      :src="image.url"
+      :alt="image.alt"
+      :width="image.width"
+      :height="image.height"
+    />
     <div
       :class="{
         score: true,

@@ -25,13 +25,16 @@ export const useStore = defineStore('store', () => {
   const finishedChapters = reactive(new Map<number, number>())
 
   // user answers
+  const currentChapterId = ref(-1)
+  const currentChapterScore = ref(0)
+
   const userAnswers: Record<number, number> = reactive({}) // userAnswers[pageId] = chosenAnswerIndex
   const score = computed(() => {
-    return Object.values(finishedChapters).reduce((a, b) => a + b, 0)
+    return [...finishedChapters.values()].reduce((a, b) => a + b, 0)
   })
 
-  // če poglavja nisi zaključil - ga na novo fetchamo
-  // če poglavje si zaključil, se shranijo tvoji odgovori in score
+  // TODO: če poglavja nisi zaključil - ga na novo fetchamo
+  // TODO: če poglavje si zaključil, se shranijo tvoji odgovori in score
 
   async function fetchHomeData() {
     const response = await axios.get(`${apiUrl}/api/home`)
@@ -83,15 +86,17 @@ export const useStore = defineStore('store', () => {
     initChapterData,
     chapterDataLoaded,
     //
+    apiUrl,
     introductionTitle,
     introductionDescription,
     introductionButtonText,
     chapters,
-    score,
-    userAnswers,
-    finishedChapters,
-    apiUrl,
     justUnlockedChapters,
     unlockedChapters,
+    finishedChapters,
+    currentChapterId,
+    currentChapterScore,
+    userAnswers,
+    score,
   }
 })

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
@@ -20,6 +20,12 @@ const showHeader = computed(() => {
   return route.name !== 'chapter-result'
 })
 
+onMounted(() => {
+  store.justUnlockedChapters = []
+  store.currentChapterId = chapterId
+  store.currentChapterScore = 0
+})
+
 store.initChapterData(chapterId)
 </script>
 
@@ -27,7 +33,7 @@ store.initChapterData(chapterId)
   <ScoreHeader
     v-if="showHeader"
     :title="store.introductionTitle"
-    :score="store.score"
+    :score="store.score + store.currentChapterScore"
   />
   <main>
     <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
