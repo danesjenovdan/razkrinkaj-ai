@@ -9,9 +9,7 @@ const props = defineProps<{
 
 const store = useStore()
 
-const isFinished = computed(() =>
-  Object.keys(store.finishedChapters).includes(String(props.chapter.id)),
-)
+const isFinished = computed(() => store.finishedChapters.has(props.chapter.id))
 const isJustUnlocked = computed(() =>
   store.justUnlockedChapters.includes(props.chapter.id),
 )
@@ -162,6 +160,10 @@ const isLocked = computed(() => {
   border: 0.5px solid #000;
   text-decoration: none;
 
+  @media (min-width: 768px) {
+    padding: 0.75rem;
+  }
+
   .text-col {
     flex-grow: 1;
     display: flex;
@@ -172,6 +174,10 @@ const isLocked = computed(() => {
       font-family: var(--font-family-heading);
       font-size: 1rem;
       font-weight: 700;
+
+      @media (min-width: 768px) {
+        font-size: 1.3125rem;
+      }
     }
 
     .description {
@@ -180,13 +186,22 @@ const isLocked = computed(() => {
       font-size: 0.625rem;
       line-height: 1.1;
       white-space: pre-line;
+
+      @media (min-width: 768px) {
+        font-size: 0.875rem;
+      }
     }
 
     .icon {
       display: flex;
       margin-top: 0.5rem;
-      width: 14px;
-      height: 11px;
+      width: 0.875rem;
+      height: 0.875rem;
+
+      @media (min-width: 768px) {
+        width: 1rem;
+        height: 1rem;
+      }
 
       svg {
         width: 100%;
@@ -204,6 +219,11 @@ const isLocked = computed(() => {
       object-fit: cover;
       object-position: center;
       border-radius: 3px;
+
+      @media (min-width: 768px) {
+        width: 5.5rem;
+        height: 5.5rem;
+      }
     }
   }
 

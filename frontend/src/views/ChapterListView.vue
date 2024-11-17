@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
 import ChapterElement from '@/components/ChapterElement.vue'
 
 const store = useStore()
+
+onMounted(() => {
+  store.clearCurrentChapter()
+})
 </script>
 
 <template>
@@ -31,6 +36,11 @@ main {
     font-size: 1.3125rem;
     text-align: center;
     text-transform: uppercase;
+
+    @media (min-width: 768px) {
+      padding-top: 3rem;
+      font-size: 2.25rem;
+    }
   }
 
   .chapters {

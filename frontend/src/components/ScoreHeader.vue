@@ -27,6 +27,8 @@ defineProps<{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: var(--page-width);
+    margin-inline: auto;
 
     .score {
       display: block;

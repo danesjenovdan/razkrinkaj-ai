@@ -1,28 +1,15 @@
 <script setup lang="ts">
 import type { QuizPage } from '@/types'
 import { computed, ref } from 'vue'
+import { useStore } from '@/stores/store'
 import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
+import ZoomableImage from './ZoomableImage.vue'
 
 const props = defineProps<{ page: QuizPage }>()
 const emit = defineEmits<{ done: [] }>()
 
-// const answered = computed(() => {
-//   if (page.value && page.value.id in store.userAnswers) {
-//     return true
-//   }
-//   return false
-// })
-
-// function saveAnswer(correct: boolean, index: number) {
-//   if (page.value) {
-//     store.userAnswers[page.value.id] = index
-
-//     if (correct) {
-//       // store.chapterScore = store.chapterScore + page.value.points
-//     }
-//   }
-// }
+const store = useStore()
 
 const selectedAnswer = ref<number | null>(null)
 const answeredCorrectly = computed(() => {
@@ -33,24 +20,29 @@ const answeredCorrectly = computed(() => {
 })
 
 const image = computed(() => {
-  return selectedAnswer.value === null ? props.page.image : props.page.image_answer
+  return selectedAnswer.value === null
+    ? props.page.image
+    : props.page.image_answer
 })
 
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
+  const correct = props.page.answers[selectedAnswer.value].correct
+  const points = correct ? props.page.points : -props.page.points
+  // add points
+  store.currentChapterScore += points
+  // store answer
+  store.currentChapterAnswers.set(props.page.id, {
+    answerIndex: index,
+    correct,
+  })
   emit('done')
 }
 </script>
 
 <template>
   <div class="quiz-page">
-    <img
-        v-if="image"
-        :src="image.url"
-        :alt="image.alt"
-        :width="image.width"
-        :height="image.height"
-      />
+    <ZoomableImage v-if="image" :image="image" />
     <div
       :class="{
         score: true,
@@ -83,16 +75,6 @@ function onAnswerClick(index: number) {
 <style scoped lang="scss">
 .quiz-page {
   padding-block: 1.5rem;
-
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-    padding: 0.25rem;
-    border-radius: 3px;
-    border: 0.5px solid #000;
-    background: var(--color-bg-white);
-  }
 
   .score {
     display: flex;

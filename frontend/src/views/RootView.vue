@@ -4,6 +4,7 @@ import { useStore } from '@/stores/store'
 import TheLoader from '@/components/TheLoader.vue'
 
 const store = useStore()
+store.loadLocalStorage()
 store.initHomeData()
 
 onMounted(() => {

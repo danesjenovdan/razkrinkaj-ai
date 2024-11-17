@@ -5,11 +5,24 @@
   --color-text: #25271d;
 
   --page-scale: 1;
-  --page-width: min(576px, 100%);
   --page-gutter: 1.5625rem;
+  --page-width: min(480px, 100%);
+  --footer-width: var(--page-width);
 
   --font-family-base: 'wf-albert-sans', sans-serif;
   --font-family-heading: 'wf-alkatra', cursive;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-width: 600px;
+  }
+}
+
+@media (min-width: 992px) {
+  :root {
+    --footer-width: 920px;
+  }
 }
 
 *,
@@ -31,9 +44,6 @@ body {
 }
 
 /*
-// Small devices (landscape phones, 576px and up)
-@media (min-width: 576px) { ... }
-
 // Medium devices (tablets, 768px and up)
 @media (min-width: 768px) { ... }
 */

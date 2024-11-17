@@ -26,6 +26,12 @@ const store = useStore()
 main {
   padding-bottom: 3.5rem;
 
+  @media (min-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .intro {
     h1 {
       margin: 0;
@@ -34,10 +40,19 @@ main {
 
     .description {
       font-size: 0.875rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
     }
 
     .button {
       margin-top: 2rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.5rem;
+        padding: 1.2rem 2rem;
+      }
     }
   }
 }
