@@ -2,8 +2,19 @@ import type { Chapter } from '@/types'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
+import { smartParse, smartToString } from '@/utils/stringify'
 
 const apiUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
+
+type AnswerData = {
+  answerIndex: number
+  correct: boolean
+}
+
+type FinishedChapterData = {
+  score: number
+  answers: Map<number, AnswerData>
+}
 
 export const useStore = defineStore('store', () => {
   const homeDataLoaded = ref(false)
@@ -21,20 +32,59 @@ export const useStore = defineStore('store', () => {
   const justUnlockedChapters = ref<number[]>([])
   // ids of all unlocked chapters
   const unlockedChapters = ref<number[]>([])
-  // ids of finished chapters to number of points
-  const finishedChapters = reactive(new Map<number, number>())
+  // ids of finished chapters to score and answers
+  const finishedChapters = reactive(new Map<number, FinishedChapterData>())
 
   // user answers
   const currentChapterId = ref(-1)
   const currentChapterScore = ref(0)
+  // ids of pages to answers
+  const currentChapterAnswers = reactive(new Map<number, AnswerData>())
 
-  const userAnswers: Record<number, number> = reactive({}) // userAnswers[pageId] = chosenAnswerIndex
+  function setCurrentChapter(id: number) {
+    currentChapterId.value = id
+    currentChapterScore.value = 0
+    currentChapterAnswers.clear()
+  }
+
+  function clearCurrentChapter() {
+    setCurrentChapter(-1)
+  }
+
+  function saveLocalStorage() {
+    const s = window.localStorage
+    s.setItem('justUnlockedChapters', smartToString(justUnlockedChapters))
+    s.setItem('unlockedChapters', smartToString(unlockedChapters))
+    s.setItem('finishedChapters', smartToString(finishedChapters))
+  }
+
+  function loadLocalStorage() {
+    const s = window.localStorage
+    let item: string | null = null
+    if ((item = s.getItem('justUnlockedChapters'))) {
+      const value = smartParse(item) as number[]
+      justUnlockedChapters.value = value
+    }
+    if ((item = s.getItem('unlockedChapters'))) {
+      const value = smartParse(item) as number[]
+      unlockedChapters.value = value
+    }
+    if ((item = s.getItem('finishedChapters'))) {
+      const value = smartParse(item) as Map<number, FinishedChapterData>
+      finishedChapters.clear()
+      for (const [k, v] of value.entries()) {
+        finishedChapters.set(k, v)
+      }
+    }
+  }
+
+  // total score
   const score = computed(() => {
-    return [...finishedChapters.values()].reduce((a, b) => a + b, 0)
+    return [...finishedChapters.values()].reduce(
+      (prev, curr) => prev + curr.score,
+      0,
+    )
   })
-
-  // TODO: če poglavja nisi zaključil - ga na novo fetchamo
-  // TODO: če poglavje si zaključil, se shranijo tvoji odgovori in score
 
   async function fetchHomeData() {
     const response = await axios.get(`${apiUrl}/api/home`)
@@ -96,7 +146,11 @@ export const useStore = defineStore('store', () => {
     finishedChapters,
     currentChapterId,
     currentChapterScore,
-    userAnswers,
+    currentChapterAnswers,
+    setCurrentChapter,
+    clearCurrentChapter,
+    saveLocalStorage,
+    loadLocalStorage,
     score,
   }
 })

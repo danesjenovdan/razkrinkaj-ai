@@ -1,9 +1,14 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
 import ChapterElement from '@/components/ChapterElement.vue'
 
 const store = useStore()
+
+onMounted(() => {
+  store.clearCurrentChapter()
+})
 </script>
 
 <template>

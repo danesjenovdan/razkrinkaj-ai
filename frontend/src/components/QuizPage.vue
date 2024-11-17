@@ -10,14 +10,6 @@ const emit = defineEmits<{ done: [] }>()
 
 const store = useStore()
 
-// TODO:
-// const answered = computed(() => {
-//   if (page.value && page.value.id in store.userAnswers) {
-//     return true
-//   }
-//   return false
-// })
-
 const selectedAnswer = ref<number | null>(null)
 const answeredCorrectly = computed(() => {
   if (selectedAnswer.value === null) {
@@ -36,7 +28,13 @@ function onAnswerClick(index: number) {
   selectedAnswer.value = index
   const correct = props.page.answers[selectedAnswer.value].correct
   const points = correct ? props.page.points : -props.page.points
+  // add points
   store.currentChapterScore += points
+  // store answer
+  store.currentChapterAnswers.set(props.page.id, {
+    answerIndex: index,
+    correct,
+  })
   emit('done')
 }
 </script>

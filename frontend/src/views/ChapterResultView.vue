@@ -26,8 +26,11 @@ const totalChapterScore = computed(() => {
 })
 
 onMounted(() => {
-  // save score
-  store.finishedChapters.set(props.chapter.id, store.currentChapterScore)
+  // save score and answers
+  store.finishedChapters.set(props.chapter.id, {
+    score: store.currentChapterScore,
+    answers: new Map(store.currentChapterAnswers),
+  })
   // unlock next chapter
   const chapterIds = [...store.chapters.keys()]
   const currentChapterIndex = chapterIds.findIndex(
@@ -38,6 +41,8 @@ onMounted(() => {
     store.justUnlockedChapters.push(nextChapterId)
     store.unlockedChapters.push(nextChapterId)
   }
+  // persist data to local storage
+  store.saveLocalStorage()
 })
 </script>
 

@@ -21,9 +21,9 @@ const showHeader = computed(() => {
 })
 
 onMounted(() => {
+  store.setCurrentChapter(chapterId)
+  // clear just unlocked chapters for next time list is shown
   store.justUnlockedChapters = []
-  store.currentChapterId = chapterId
-  store.currentChapterScore = 0
 })
 
 store.initChapterData(chapterId)
