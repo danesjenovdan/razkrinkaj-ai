@@ -4,6 +4,7 @@ import { computed, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
+import ZoomableImage from './ZoomableImage.vue'
 
 const props = defineProps<{ page: QuizPage }>()
 const emit = defineEmits<{ done: [] }>()
@@ -41,13 +42,7 @@ function onAnswerClick(index: number) {
 
 <template>
   <div class="quiz-page">
-    <img
-      v-if="image"
-      :src="image.url"
-      :alt="image.alt"
-      :width="image.width"
-      :height="image.height"
-    />
+    <ZoomableImage v-if="image" :image="image" />
     <div
       :class="{
         score: true,
@@ -80,16 +75,6 @@ function onAnswerClick(index: number) {
 <style scoped lang="scss">
 .quiz-page {
   padding-block: 1.5rem;
-
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-    padding: 0.25rem;
-    border-radius: 3px;
-    border: 0.5px solid #000;
-    background: var(--color-bg-white);
-  }
 
   .score {
     display: flex;
