@@ -31,6 +31,11 @@ main {
     font-size: 1.3125rem;
     text-align: center;
     text-transform: uppercase;
+
+    @media (min-width: 768px) {
+      padding-top: 3rem;
+      font-size: 2.25rem;
+    }
   }
 
   .chapters {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -20,11 +20,15 @@ if (props.emoji && props.icon) {
 
 const text = computed(() => props.buttonText || 'Nadaljuj')
 
-const componentName = computed(() => props.link ? 'RouterLink' : 'button')
+const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
 </script>
 
 <template>
-  <component :is="componentName" :to="link" :class="['button-primary', `button-color-${color}`]">
+  <component
+    :is="componentName"
+    :to="link"
+    :class="['button-primary', `button-color-${color}`]"
+  >
     <span>{{ text }}</span>
     <span v-if="emoji">{{ emoji }}</span>
     <span v-if="icon" class="icon">
@@ -51,7 +55,7 @@ const componentName = computed(() => props.link ? 'RouterLink' : 'button')
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.68rem 0.875rem;
+  padding: 0.76rem 0.875rem;
   border-radius: 3px;
   border: 0.5px solid #000;
   background: #fff;
@@ -65,6 +69,10 @@ const componentName = computed(() => props.link ? 'RouterLink' : 'button')
   &.button-color-primary {
     background: #4063f6;
     color: #fff;
+  }
+
+  > span {
+    margin-bottom: -0.2em;
   }
 
   .icon {
