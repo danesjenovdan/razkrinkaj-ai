@@ -43,6 +43,7 @@ function onAnswerClick(index: number) {
 <template>
   <div class="quiz-page">
     <ZoomableImage v-if="image" :image="image" />
+    <div v-if="page.question" class="question">{{ page.question }}</div>
     <div
       :class="{
         score: true,
@@ -75,6 +76,14 @@ function onAnswerClick(index: number) {
 <style scoped lang="scss">
 .quiz-page {
   padding-block: 1.5rem;
+
+  .question {
+    padding-block: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.1;
+    text-align: center;
+  }
 
   .score {
     display: flex;

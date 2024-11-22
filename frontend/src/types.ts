@@ -25,6 +25,7 @@ export type QuizPage = BasePage & {
   type: 'quiz'
   image: ImageDescription | null
   image_answer: ImageDescription | null
+  question: string
   answers: PageAnswer[]
   points: number
   answer_description: string
