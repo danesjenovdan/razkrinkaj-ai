@@ -75,10 +75,10 @@ function onAnswerClick(index: number) {
 
 <style scoped lang="scss">
 .quiz-page {
-  padding-block: 1.5rem;
+  padding-block: 1.5rem 1.56rem;
 
   .question {
-    padding-block: 0.75rem;
+    padding-block: 0.75rem 1.56rem;
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.1;
@@ -124,8 +124,7 @@ function onAnswerClick(index: number) {
   }
 
   .answer-description {
-    margin-top: 2.25rem;
-    margin-bottom: 0.75rem;
+    margin-top: 2.12rem;
     padding: 1rem 1.125rem;
     background: var(--color-bg-accent);
     border-radius: 3px;

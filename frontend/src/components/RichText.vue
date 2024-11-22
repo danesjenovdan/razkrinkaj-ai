@@ -14,11 +14,11 @@ defineProps<{
 
 <style scoped lang="scss">
 .rich-text {
-  padding-block: 1.5rem;
+  padding-block: 1.5rem 1.25rem;
 
   h1 {
     font-family: var(--font-family-heading);
-    font-size: 1.3125rem;
+    font-size: 1.125rem;
   }
 
   :deep(.rich-content) {
@@ -44,7 +44,7 @@ defineProps<{
     p,
     ul,
     ol {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
     }
 
     ul {
@@ -86,7 +86,7 @@ defineProps<{
 
     div:has(> iframe),
     img {
-      font-size: 0.75rem;
+      font-size: 0.875rem;
       margin-block: 1em;
     }
 

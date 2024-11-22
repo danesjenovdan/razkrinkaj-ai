@@ -42,7 +42,7 @@ const firstPage = computed(() => {
 
 <style scoped lang="scss">
 main {
-  padding-bottom: 3.5rem;
+  padding-bottom: 2rem;
 
   .chapter-info {
     margin-inline: calc(var(--page-gutter) * -1);
@@ -62,14 +62,14 @@ main {
 
     h1 {
       margin-top: 1.1rem;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
       font-family: var(--font-family-heading);
-      font-size: 1.3125rem;
+      font-size: 1.5rem;
       font-weight: 700;
     }
 
     .description {
-      font-size: 0.875rem;
+      font-size: 1rem;
     }
   }
 }

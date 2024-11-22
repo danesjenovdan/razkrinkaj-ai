@@ -153,8 +153,8 @@ const isLocked = computed(() => {
 .chapter {
   position: relative;
   display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 0.56rem;
+  padding: 0.56rem;
   background: var(--color-bg-white);
   border-radius: 3px;
   border: 0.5px solid #000;
@@ -172,7 +172,7 @@ const isLocked = computed(() => {
     .title {
       margin: 0;
       font-family: var(--font-family-heading);
-      font-size: 1rem;
+      font-size: 1.125rem;
       font-weight: 700;
 
       @media (min-width: 768px) {
@@ -183,13 +183,13 @@ const isLocked = computed(() => {
     .description {
       margin-top: 0.25rem;
       margin-bottom: auto;
-      font-size: 0.625rem;
+      font-size: 0.875rem;
       line-height: 1.1;
       white-space: pre-line;
 
-      @media (min-width: 768px) {
-        font-size: 0.875rem;
-      }
+      // @media (min-width: 768px) {
+      //   font-size: 0.875rem;
+      // }
     }
 
     .icon {

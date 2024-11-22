@@ -55,12 +55,12 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.76rem 0.875rem;
+  padding: 1.25rem 1.25rem;
   border-radius: 3px;
   border: 0.5px solid #000;
   background: #fff;
   font-family: var(--font-family-heading);
-  font-size: 1rem;
+  font-size: 1.3125rem;
   line-height: 1;
   font-weight: 700;
   color: var(--color-text);
@@ -77,8 +77,8 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
 
   .icon {
     display: flex;
-    width: 15px;
-    height: 12px;
+    width: 1em;
+    height: auto;
 
     svg {
       width: 100%;

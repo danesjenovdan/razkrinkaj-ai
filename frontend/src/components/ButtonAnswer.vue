@@ -52,12 +52,12 @@ defineProps<{
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.68rem 0.875rem;
+  padding: 1.25rem 0.68rem;
   border-radius: 3px;
   border: 0.5px solid var(--_color-border);
   background: var(--_color-bg);
   font-family: var(--font-family-heading);
-  font-size: 1rem;
+  font-size: 1.3125rem;
   line-height: 1;
   font-weight: 700;
   color: var(--_color-border);
@@ -67,11 +67,13 @@ defineProps<{
     display: flex;
     gap: 0.68rem;
     align-items: center;
+    margin-bottom: -0.2em;
 
     .circle {
+      margin-top: -0.2em;
       flex-shrink: 0;
-      width: 0.875rem;
-      height: 0.875rem;
+      width: 1.5rem;
+      height: 1.5rem;
       background: var(--_color-shadow);
       border: 0.5px solid var(--_color-border);
       border-radius: 9999rem;

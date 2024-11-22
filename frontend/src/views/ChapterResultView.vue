@@ -88,13 +88,13 @@ onMounted(() => {
 
 <style scoped lang="scss">
 main {
-  padding-bottom: 3.5rem;
+  padding-bottom: 2rem;
 
   .results-header {
     margin-inline: calc(var(--page-gutter) * -1);
     padding-inline: var(--page-gutter);
-    margin-bottom: -1.5rem;
-    padding-block: 2.4rem;
+    margin-bottom: -1.75rem;
+    padding-block: 1.5rem 2.75rem;
     background: #4063f6;
     border-bottom: 0.5px solid #000;
     text-align: center;
@@ -102,9 +102,9 @@ main {
     h1 {
       max-width: 13rem;
       margin-inline: auto;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0;
       font-family: var(--font-family-heading);
-      font-size: 1.3125rem;
+      font-size: 1.5rem;
       font-weight: 700;
       line-height: 1;
       color: #fff;
@@ -113,7 +113,7 @@ main {
   }
 
   .chapter-info {
-    padding-bottom: 2.4rem;
+    padding-bottom: 1rem;
     text-align: center;
 
     img {
@@ -126,10 +126,10 @@ main {
     }
 
     h1 {
-      margin-top: 1.1rem;
-      margin-bottom: 0.25rem;
+      margin-top: 1rem;
+      margin-bottom: 0;
       font-family: var(--font-family-heading);
-      font-size: 1.3125rem;
+      font-size: 1.5rem;
       font-weight: 700;
     }
   }

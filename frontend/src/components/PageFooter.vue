@@ -123,7 +123,7 @@ footer {
 
     .footer-block {
       padding-block: 1.25rem;
-      font-size: 0.75rem;
+      font-size: 0.875rem;
 
       strong {
         font-weight: 700;
@@ -142,7 +142,7 @@ footer {
         display: inline-flex;
         gap: 0.5em;
         align-items: center;
-        padding: 0.6em 0.9em;
+        padding: 0.4em 0.62em 0.3em;
         background: #4063f6;
         border: 0.5px solid #000;
         border-radius: 3px;
@@ -160,15 +160,13 @@ footer {
       }
 
       .newsletter-form {
-        margin-top: 1rem;
-
         .form-group {
           margin-top: 0.5rem;
 
           label {
             display: flex;
             flex-direction: column;
-            font-size: 0.625rem;
+            font-size: 0.75rem;
             line-height: 1.3;
             font-weight: 300;
 
@@ -263,11 +261,11 @@ footer {
           }
 
           span {
-            font-size: 0.4375rem;
+            font-size: 0.5625rem;
 
-            @media (min-width: 768px) {
-              font-size: 0.5625rem;
-            }
+            // @media (min-width: 768px) {
+            //   font-size: 0.5625rem;
+            // }
           }
         }
       }
