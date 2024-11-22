@@ -35,12 +35,10 @@ store.initChapterData(chapterId)
     :title="store.introductionTitle"
     :score="store.score + store.currentChapterScore"
   />
-  <main>
-    <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
-    <div v-else class="loader-container">
-      <TheLoader />
-    </div>
-  </main>
+  <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
+  <div v-else class="loader-container">
+    <TheLoader />
+  </div>
 </template>
 
 <style scoped lang="scss">
