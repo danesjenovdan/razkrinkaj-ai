@@ -24,7 +24,11 @@ const store = useStore()
 
 <style scoped lang="scss">
 main {
-  padding-bottom: 3.5rem;
+  padding-bottom: 2rem;
+
+  @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
 
   @media (min-width: 768px) {
     display: flex;
@@ -39,20 +43,15 @@ main {
     }
 
     .description {
-      font-size: 0.875rem;
+      font-size: 1rem;
 
       @media (min-width: 768px) {
-        font-size: 1.125rem;
+        font-size: 1.3125rem;
       }
     }
 
     .button {
-      margin-top: 2rem;
-
-      @media (min-width: 768px) {
-        font-size: 1.5rem;
-        padding: 1.2rem 2rem;
-      }
+      margin-top: 1.5rem;
     }
   }
 }

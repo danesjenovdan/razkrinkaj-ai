@@ -55,16 +55,22 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.76rem 0.875rem;
+  padding: 1.25rem 1.25rem;
   border-radius: 3px;
   border: 0.5px solid #000;
   background: #fff;
   font-family: var(--font-family-heading);
-  font-size: 1rem;
+  font-size: 1.3125rem;
   line-height: 1;
   font-weight: 700;
   color: var(--color-text);
   text-decoration: none;
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+    padding-inline: 2.12rem 1.31rem;
+    padding-block: 1.2rem;
+  }
 
   &.button-color-primary {
     background: #4063f6;
@@ -76,9 +82,10 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   }
 
   .icon {
+    margin-top: -0.2em;
     display: flex;
-    width: 15px;
-    height: 12px;
+    width: 1em;
+    height: auto;
 
     svg {
       width: 100%;

@@ -71,7 +71,11 @@ function onQuizDone() {
 
 <style scoped lang="scss">
 main {
-  padding-bottom: 3.5rem;
+  padding-bottom: 2rem;
+
+  @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
 
   .page-content {
     padding-top: 0.75rem;

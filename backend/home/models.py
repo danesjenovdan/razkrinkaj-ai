@@ -105,6 +105,10 @@ class ChapterQuizSubPage(Page):
         related_name="+",
         verbose_name="Slika odgovora",
     )
+    question = models.TextField(
+        blank=True,
+        verbose_name="Vprašanje",
+    )
     answers = StreamField(
         [
             (
@@ -133,6 +137,7 @@ class ChapterQuizSubPage(Page):
     content_panels = Page.content_panels + [
         FieldPanel("image"),
         FieldPanel("image_answer"),
+        FieldPanel("question"),
         FieldPanel("answers"),
         FieldPanel("points"),
         FieldPanel("answer_description"),

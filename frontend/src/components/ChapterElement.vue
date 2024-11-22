@@ -153,15 +153,15 @@ const isLocked = computed(() => {
 .chapter {
   position: relative;
   display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem;
+  gap: 0.56rem;
+  padding: 0.56rem;
   background: var(--color-bg-white);
   border-radius: 3px;
   border: 0.5px solid #000;
   text-decoration: none;
 
   @media (min-width: 768px) {
-    padding: 0.75rem;
+    padding: 0.625rem;
   }
 
   .text-col {
@@ -169,26 +169,31 @@ const isLocked = computed(() => {
     display: flex;
     flex-direction: column;
 
+    @media (min-width: 768px) {
+      padding: 0.25rem;
+      padding-right: 0;
+    }
+
     .title {
       margin: 0;
       font-family: var(--font-family-heading);
-      font-size: 1rem;
+      font-size: 1.125rem;
       font-weight: 700;
 
       @media (min-width: 768px) {
-        font-size: 1.3125rem;
+        font-size: 1.625rem;
       }
     }
 
     .description {
       margin-top: 0.25rem;
       margin-bottom: auto;
-      font-size: 0.625rem;
+      font-size: 0.875rem;
       line-height: 1.1;
       white-space: pre-line;
 
       @media (min-width: 768px) {
-        font-size: 0.875rem;
+        font-size: 1.125rem;
       }
     }
 
@@ -199,8 +204,9 @@ const isLocked = computed(() => {
       height: 0.875rem;
 
       @media (min-width: 768px) {
-        width: 1rem;
-        height: 1rem;
+        margin-top: 0.75rem;
+        width: 1.125rem;
+        height: 1.125rem;
       }
 
       svg {
@@ -221,8 +227,8 @@ const isLocked = computed(() => {
       border-radius: 3px;
 
       @media (min-width: 768px) {
-        width: 5.5rem;
-        height: 5.5rem;
+        width: 6.8125rem;
+        height: 6.8125rem;
       }
     }
   }
