@@ -90,6 +90,10 @@ onMounted(() => {
 main {
   padding-bottom: 2rem;
 
+  @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
+
   .results-header {
     margin-inline: calc(var(--page-gutter) * -1);
     padding-inline: var(--page-gutter);
@@ -98,6 +102,15 @@ main {
     background: #4063f6;
     border-bottom: 0.5px solid #000;
     text-align: center;
+
+    @media (min-width: 768px) {
+      margin-inline: 0;
+      padding-inline: 0;
+      margin-bottom: -1.94rem;
+      padding-block: 3.44rem 4.94rem;
+      border-bottom: 0;
+      border-radius: 0 0 3px 3px;
+    }
 
     h1 {
       max-width: 13rem;
@@ -109,6 +122,10 @@ main {
       line-height: 1;
       color: #fff;
       text-transform: uppercase;
+
+      @media (min-width: 768px) {
+        font-size: 2.25rem;
+      }
     }
   }
 
@@ -123,6 +140,11 @@ main {
       object-fit: cover;
       object-position: center;
       border-radius: 3px;
+
+      @media (min-width: 768px) {
+        width: 6.8125rem;
+        height: 6.8125rem;
+      }
     }
 
     h1 {
@@ -131,12 +153,21 @@ main {
       font-family: var(--font-family-heading);
       font-size: 1.5rem;
       font-weight: 700;
+
+      @media (min-width: 768px) {
+        font-size: 2.25rem;
+        margin-top: 2.5rem;
+      }
     }
   }
 
   .buttons {
     display: grid;
     gap: 0.68rem;
+
+    @media (min-width: 768px) {
+      gap: 0.88rem;
+    }
   }
 }
 </style>

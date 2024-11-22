@@ -161,13 +161,18 @@ const isLocked = computed(() => {
   text-decoration: none;
 
   @media (min-width: 768px) {
-    padding: 0.75rem;
+    padding: 0.625rem;
   }
 
   .text-col {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+
+    @media (min-width: 768px) {
+      padding: 0.25rem;
+      padding-right: 0;
+    }
 
     .title {
       margin: 0;
@@ -176,7 +181,7 @@ const isLocked = computed(() => {
       font-weight: 700;
 
       @media (min-width: 768px) {
-        font-size: 1.3125rem;
+        font-size: 1.625rem;
       }
     }
 
@@ -187,9 +192,9 @@ const isLocked = computed(() => {
       line-height: 1.1;
       white-space: pre-line;
 
-      // @media (min-width: 768px) {
-      //   font-size: 0.875rem;
-      // }
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
     }
 
     .icon {
@@ -199,8 +204,9 @@ const isLocked = computed(() => {
       height: 0.875rem;
 
       @media (min-width: 768px) {
-        width: 1rem;
-        height: 1rem;
+        margin-top: 0.75rem;
+        width: 1.125rem;
+        height: 1.125rem;
       }
 
       svg {
@@ -221,8 +227,8 @@ const isLocked = computed(() => {
       border-radius: 3px;
 
       @media (min-width: 768px) {
-        width: 5.5rem;
-        height: 5.5rem;
+        width: 6.8125rem;
+        height: 6.8125rem;
       }
     }
   }

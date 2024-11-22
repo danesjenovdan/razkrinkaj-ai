@@ -147,6 +147,7 @@ footer {
         border: 0.5px solid #000;
         border-radius: 3px;
         font-weight: 700;
+        line-height: 1.3;
         color: #fff;
         text-decoration: none;
       }
@@ -262,10 +263,6 @@ footer {
 
           span {
             font-size: 0.5625rem;
-
-            // @media (min-width: 768px) {
-            //   font-size: 0.5625rem;
-            // }
           }
         }
       }

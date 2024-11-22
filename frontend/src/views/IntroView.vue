@@ -27,6 +27,10 @@ main {
   padding-bottom: 2rem;
 
   @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
+
+  @media (min-width: 768px) {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -42,17 +46,12 @@ main {
       font-size: 1rem;
 
       @media (min-width: 768px) {
-        font-size: 1.125rem;
+        font-size: 1.3125rem;
       }
     }
 
     .button {
       margin-top: 1.5rem;
-
-      // @media (min-width: 768px) {
-      //   font-size: 1.5rem;
-      //   padding: 1.2rem 2rem;
-      // }
     }
   }
 }

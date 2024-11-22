@@ -66,6 +66,12 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   color: var(--color-text);
   text-decoration: none;
 
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+    padding-inline: 2.12rem 1.31rem;
+    padding-block: 1.2rem;
+  }
+
   &.button-color-primary {
     background: #4063f6;
     color: #fff;
@@ -76,6 +82,7 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   }
 
   .icon {
+    margin-top: -0.2em;
     display: flex;
     width: 1em;
     height: auto;

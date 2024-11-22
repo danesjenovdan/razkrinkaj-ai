@@ -63,6 +63,12 @@ defineProps<{
   color: var(--_color-border);
   text-decoration: none;
 
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+    padding-inline: 1rem 1.44rem;
+    padding-block: 1.2rem;
+  }
+
   .answer-left {
     display: flex;
     gap: 0.68rem;

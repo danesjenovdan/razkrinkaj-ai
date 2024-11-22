@@ -29,6 +29,10 @@ onMounted(() => {
 main {
   padding-bottom: 2rem;
 
+  @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
+
   h1 {
     margin: 0;
     padding-block: 1.9rem 1.5rem;

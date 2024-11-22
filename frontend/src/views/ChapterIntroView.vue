@@ -44,6 +44,10 @@ const firstPage = computed(() => {
 main {
   padding-bottom: 2rem;
 
+  @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
+
   .chapter-info {
     margin-inline: calc(var(--page-gutter) * -1);
     padding-inline: var(--page-gutter);
@@ -58,6 +62,11 @@ main {
       object-fit: cover;
       object-position: center;
       border-radius: 3px;
+
+      @media (min-width: 768px) {
+        width: 6.8125rem;
+        height: 6.8125rem;
+      }
     }
 
     h1 {
@@ -66,10 +75,19 @@ main {
       font-family: var(--font-family-heading);
       font-size: 1.5rem;
       font-weight: 700;
+
+      @media (min-width: 768px) {
+        font-size: 2.25rem;
+        margin-top: 1.8rem;
+      }
     }
 
     .description {
       font-size: 1rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.3125rem;
+      }
     }
   }
 }

@@ -77,12 +77,20 @@ function onAnswerClick(index: number) {
 .quiz-page {
   padding-block: 1.5rem 1.56rem;
 
+  @media (min-width: 768px) {
+    padding-bottom: 3.38rem;
+  }
+
   .question {
     padding-block: 0.75rem 1.56rem;
     font-size: 0.875rem;
     font-weight: 600;
     line-height: 1.1;
     text-align: center;
+
+    @media (min-width: 768px) {
+      font-size: 1.125rem;
+    }
   }
 
   .score {
@@ -121,6 +129,10 @@ function onAnswerClick(index: number) {
   .answers {
     display: grid;
     gap: 0.68rem;
+
+    @media (min-width: 768px) {
+      gap: 0.88rem;
+    }
   }
 
   .answer-description {
@@ -128,6 +140,11 @@ function onAnswerClick(index: number) {
     padding: 1rem 1.125rem;
     background: var(--color-bg-accent);
     border-radius: 3px;
+
+    @media (min-width: 768px) {
+      margin-top: 3.38rem;
+      padding: 1.68rem 1.5rem;
+    }
 
     .rich-text {
       padding-block: 0;

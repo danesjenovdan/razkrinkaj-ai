@@ -16,9 +16,17 @@ defineProps<{
 .rich-text {
   padding-block: 1.5rem 1.25rem;
 
+  @media (min-width: 768px) {
+    padding-block: 2.45rem 2.45rem;
+  }
+
   h1 {
     font-family: var(--font-family-heading);
     font-size: 1.125rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.625rem;
+    }
   }
 
   :deep(.rich-content) {
@@ -31,20 +39,36 @@ defineProps<{
 
     h2 {
       font-size: 1.125rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.625rem;
+      }
     }
 
     h3 {
       font-size: 1rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.375rem;
+      }
     }
 
     h4 {
       font-size: 0.875rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
     }
 
     p,
     ul,
     ol {
       font-size: 0.875rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
     }
 
     ul {
@@ -88,6 +112,10 @@ defineProps<{
     img {
       font-size: 0.875rem;
       margin-block: 1em;
+
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
     }
 
     iframe {
