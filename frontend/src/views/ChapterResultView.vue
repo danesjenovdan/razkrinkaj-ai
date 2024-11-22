@@ -166,7 +166,7 @@ main {
     gap: 0.68rem;
 
     @media (min-width: 768px) {
-      gap: 0.88rem;
+      gap: 0.875rem;
     }
   }
 }

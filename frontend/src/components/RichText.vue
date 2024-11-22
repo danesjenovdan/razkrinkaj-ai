@@ -141,6 +141,11 @@ defineProps<{
       border-top: 0.5px solid #000;
       margin-block: 1em;
     }
+
+    a {
+      font-weight: 600;
+      color: #092bba;
+    }
   }
 }
 </style>
