@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { ImageDescription } from '@/types'
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import PinchScrollZoom, {
   type PinchScrollZoomExposed,
 } from '@coddicat/vue-pinch-scroll-zoom'
-import { preloadImageUrl } from '@/utils/image';
+import { preloadImageUrl } from '@/utils/image'
 
 const props = defineProps<{ image: ImageDescription }>()
 
@@ -42,6 +42,13 @@ function onPopState() {
   isZoomed.value = false
   document.body.style.overflow = ''
 }
+
+watch(
+  () => props.image,
+  () => {
+    preloadImageUrl(props.image.original_url)
+  },
+)
 
 onMounted(() => {
   if (window.location.hash === '#zoomed') {
