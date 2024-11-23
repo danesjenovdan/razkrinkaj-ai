@@ -3,8 +3,8 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 import { smartParse, smartToString } from '@/utils/stringify'
-
-const apiUrl = import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'
+import { preloadImage, preloadImages } from '@/utils/image'
+import { apiUrl } from '@/utils/api'
 
 type AnswerData = {
   answerIndex: number
@@ -93,11 +93,13 @@ export const useStore = defineStore('store', () => {
       const data = response.data
       introductionTitle.value = data.title
       introductionDescription.value = data.description
+      preloadImages(data.description_images)
       introductionButtonText.value = data.button_text
 
       chapters.clear()
       for (const c of data.chapters) {
         chapters.set(c.id, c)
+        preloadImage(c.image)
       }
 
       homeDataLoaded.value = true
@@ -136,7 +138,6 @@ export const useStore = defineStore('store', () => {
     initChapterData,
     chapterDataLoaded,
     //
-    apiUrl,
     introductionTitle,
     introductionDescription,
     introductionButtonText,

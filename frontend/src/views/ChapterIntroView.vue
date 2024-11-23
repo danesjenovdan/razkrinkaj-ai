@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { Chapter } from '@/types'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import RichText from '@/components/RichText.vue'
-import type { Chapter } from '@/types'
-import { computed } from 'vue'
+import ThumbnailImage from '@/components/ThumbnailImage.vue'
+import { preloadPageImages } from '@/utils/image'
+import { computed, onMounted } from 'vue'
 
 const props = defineProps<{ chapter: Chapter }>()
 
@@ -13,18 +15,22 @@ const firstPage = computed(() => {
   }
   return fp
 })
+
+const nextPage = computed(() => {
+  return props.chapter.pages?.[1]
+})
+
+onMounted(() => {
+  if (nextPage.value) {
+    preloadPageImages(nextPage.value)
+  }
+})
 </script>
 
 <template>
   <main>
     <div class="chapter-info">
-      <img
-        v-if="chapter.image"
-        :src="chapter.image.url"
-        :alt="chapter.image.alt"
-        :width="chapter.image.width"
-        :height="chapter.image.height"
-      />
+      <ThumbnailImage v-if="chapter.image" :image="chapter.image" />
       <h1>{{ chapter.title }}</h1>
       <div v-html="chapter.description" class="description"></div>
     </div>
@@ -55,17 +61,22 @@ main {
     background: var(--color-bg-accent);
     text-align: center;
 
-    img {
+    .thumbnail-image {
       width: 5rem;
       height: 5rem;
       margin-inline: auto;
-      object-fit: cover;
-      object-position: center;
       border-radius: 3px;
 
       @media (min-width: 768px) {
         width: 6.8125rem;
         height: 6.8125rem;
+      }
+
+      :deep(img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
       }
     }
 

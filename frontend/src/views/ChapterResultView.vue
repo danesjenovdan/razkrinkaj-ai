@@ -3,6 +3,7 @@ import type { Chapter } from '@/types'
 import { computed, onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
+import ThumbnailImage from '@/components/ThumbnailImage.vue'
 
 const props = defineProps<{ chapter: Chapter }>()
 
@@ -52,13 +53,7 @@ onMounted(() => {
       <h1>Poglavje zaključeno!</h1>
     </div>
     <div class="chapter-info">
-      <img
-        v-if="chapter.image"
-        :src="chapter.image.url"
-        :alt="chapter.image.alt"
-        :width="chapter.image.width"
-        :height="chapter.image.height"
-      />
+      <ThumbnailImage v-if="chapter.image" :image="chapter.image" />
       <h1>{{ chapter.title }}</h1>
     </div>
     <div>
@@ -133,17 +128,22 @@ main {
     padding-bottom: 1rem;
     text-align: center;
 
-    img {
+    .thumbnail-image {
       width: 5rem;
       height: 5rem;
       margin-inline: auto;
-      object-fit: cover;
-      object-position: center;
       border-radius: 3px;
 
       @media (min-width: 768px) {
         width: 6.8125rem;
         height: 6.8125rem;
+      }
+
+      :deep(img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
       }
     }
 
@@ -166,7 +166,7 @@ main {
     gap: 0.68rem;
 
     @media (min-width: 768px) {
-      gap: 0.88rem;
+      gap: 0.875rem;
     }
   }
 }

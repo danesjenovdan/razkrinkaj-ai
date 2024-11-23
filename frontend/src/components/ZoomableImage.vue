@@ -4,6 +4,7 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import PinchScrollZoom, {
   type PinchScrollZoomExposed,
 } from '@coddicat/vue-pinch-scroll-zoom'
+import { preloadImageUrl } from '@/utils/image';
 
 const props = defineProps<{ image: ImageDescription }>()
 
@@ -51,6 +52,7 @@ onMounted(() => {
     )
   }
   window.addEventListener('popstate', onPopState)
+  preloadImageUrl(props.image.original_url)
 })
 
 onBeforeUnmount(() => {
@@ -80,7 +82,7 @@ onBeforeUnmount(() => {
       :max-scale="5"
     >
       <img
-        :src="image.url"
+        :src="image.original_url"
         :alt="image.alt"
         :width="zoomedImgWidth"
         :height="zoomedImgHeight"

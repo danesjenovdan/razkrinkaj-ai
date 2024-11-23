@@ -1,12 +1,33 @@
 <script setup lang="ts">
+import { preloadImageUrl } from '@/utils/image'
+import { onMounted, useTemplateRef } from 'vue'
+
 defineProps<{
   title?: string
   content: string
 }>()
+
+const richTextRef = useTemplateRef('rich-text')
+
+// function replaceThumbnails() {}
+
+onMounted(() => {
+  richTextRef.value
+    ?.querySelectorAll<HTMLImageElement>('img.is-thumbnail')
+    .forEach(img => {
+      const src = img.getAttribute('data-src')
+      if (src) {
+        preloadImageUrl(src).then(preloadedImg => {
+          img.src = preloadedImg.src
+          img.classList.remove('is-thumbnail')
+        })
+      }
+    })
+})
 </script>
 
 <template>
-  <div class="rich-text">
+  <div ref="rich-text" class="rich-text">
     <h1 v-if="title">{{ title }}</h1>
     <div class="rich-content" v-html="content"></div>
   </div>
@@ -109,7 +130,7 @@ defineProps<{
     }
 
     div:has(> iframe),
-    img {
+    .thumbnail-image {
       font-size: 0.875rem;
       margin-block: 1em;
 
@@ -125,14 +146,25 @@ defineProps<{
       aspect-ratio: 16 / 9;
     }
 
-    img {
+    .thumbnail-image {
       display: block;
-      width: 100%;
-      height: auto;
       padding: 0.25rem;
       border-radius: 3px;
       border: 0.5px solid #000;
       background: var(--color-bg-white);
+
+      > div {
+        overflow: hidden;
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+
+        &.is-thumbnail {
+          filter: blur(9px);
+        }
+      }
     }
 
     hr {
@@ -140,6 +172,11 @@ defineProps<{
       border: 0;
       border-top: 0.5px solid #000;
       margin-block: 1em;
+    }
+
+    a {
+      font-weight: 600;
+      color: #092bba;
     }
   }
 }
