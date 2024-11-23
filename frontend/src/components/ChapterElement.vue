@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { Chapter } from '@/types'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from '@/stores/store'
+import ThumbnailImage from './ThumbnailImage.vue'
+import { preloadPageImages } from '@/utils/image'
 
 const props = defineProps<{
   chapter: Chapter
@@ -18,6 +20,17 @@ const isLocked = computed(() => {
     props.chapter.locked_by_default &&
     !store.unlockedChapters.includes(props.chapter.id)
   )
+})
+
+onMounted(() => {
+  if (!isLocked.value) {
+    store.initChapterData(props.chapter.id).then(() => {
+      const firstPage = props.chapter.pages?.[0]
+      if (firstPage) {
+        preloadPageImages(firstPage)
+      }
+    })
+  }
 })
 </script>
 
@@ -42,13 +55,7 @@ const isLocked = computed(() => {
       </div>
     </div>
     <div class="image-col">
-      <img
-        v-if="chapter.image"
-        :src="chapter.image.url"
-        :alt="chapter.image.alt"
-        :width="chapter.image.width"
-        :height="chapter.image.height"
-      />
+      <ThumbnailImage v-if="chapter.image" :image="chapter.image" />
     </div>
     <div class="lock-icons">
       <div v-if="isFinished" class="icon">
@@ -149,7 +156,7 @@ const isLocked = computed(() => {
   </RouterLink>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .chapter {
   position: relative;
   display: flex;
@@ -219,16 +226,21 @@ const isLocked = computed(() => {
   .image-col {
     flex-shrink: 0;
 
-    img {
+    .thumbnail-image {
       width: 5rem;
       height: 5rem;
-      object-fit: cover;
-      object-position: center;
       border-radius: 3px;
 
       @media (min-width: 768px) {
         width: 6.8125rem;
         height: 6.8125rem;
+      }
+
+      :deep(img) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
       }
     }
   }

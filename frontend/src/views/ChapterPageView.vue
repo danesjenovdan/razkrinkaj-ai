@@ -3,6 +3,7 @@ import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
 import type { Chapter } from '@/types'
+import { preloadPageImages } from '@/utils/image'
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
@@ -41,6 +42,16 @@ watch(pageIndex, () => {
 function onQuizDone() {
   showNextButton.value = true
 }
+
+const nextPage = computed(() => {
+  return props.chapter.pages?.[pageIndex.value + 1]
+})
+
+watch(nextPage, () => {
+  if (nextPage.value) {
+    preloadPageImages(nextPage.value)
+  }
+})
 </script>
 
 <template>

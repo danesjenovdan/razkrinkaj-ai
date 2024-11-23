@@ -1,8 +1,14 @@
 export type ImageDescription = {
+  original_url: string
+  thumbnail_url: string
   url: string
   alt: string
   width: number
   height: number
+  // preload info not from api
+  original_preloaded?: boolean
+  thumbnail_preloaded?: boolean
+  preloaded?: boolean
 }
 
 export type PageAnswer = {
@@ -18,6 +24,7 @@ export type BasePage = {
 export type TextPage = BasePage & {
   type: 'text'
   text: string
+  text_images: ImageDescription[]
   button_text: string
 }
 
@@ -29,6 +36,7 @@ export type QuizPage = BasePage & {
   answers: PageAnswer[]
   points: number
   answer_description: string
+  answer_description_images: ImageDescription[]
   button_text: string
 }
 

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { QuizPage } from '@/types'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
 import ZoomableImage from './ZoomableImage.vue'
+import { preloadPageImages } from '@/utils/image'
 
 const props = defineProps<{ page: QuizPage }>()
 const emit = defineEmits<{ done: [] }>()
@@ -38,6 +39,10 @@ function onAnswerClick(index: number) {
   })
   emit('done')
 }
+
+onMounted(() => {
+  preloadPageImages(props.page)
+})
 </script>
 
 <template>

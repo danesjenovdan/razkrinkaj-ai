@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useStore } from '@/stores/store'
+import { fixLocalUrl } from '@/utils/image'
 import TheLoader from '@/components/TheLoader.vue'
 
 const store = useStore()
@@ -13,8 +14,12 @@ onMounted(() => {
     event => {
       if (event.target instanceof HTMLImageElement) {
         const img = event.target
-        if (!img.getAttribute('src')?.startsWith('http')) {
-          img.src = `${store.apiUrl}${img.getAttribute('src')}`
+        const src = img.getAttribute('src')
+        if (src) {
+          const url = fixLocalUrl(src)
+          if (url !== src) {
+            img.src = url
+          }
         }
       }
     },
