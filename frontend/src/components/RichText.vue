@@ -153,6 +153,10 @@ onMounted(() => {
       border: 0.5px solid #000;
       background: var(--color-bg-white);
 
+      @media (min-width: 768px) {
+        padding: 0.5rem;
+      }
+
       > div {
         overflow: hidden;
       }
