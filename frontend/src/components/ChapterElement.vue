@@ -253,6 +253,11 @@ onMounted(() => {
     .icon {
       width: 1.5rem;
       height: 1.5rem;
+
+      @media (min-width: 768px) {
+        width: 2rem;
+        height: 2rem;
+      }
     }
   }
 
