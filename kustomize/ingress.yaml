@@ -26,31 +26,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: razkrinkaj-ai-nginx
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - files.razkrinkaj-ai.lb.djnd.si
-      secretName: razkrinkaj-ai-nginx-tls
-  rules:
-    - host: files.razkrinkaj-ai.lb.djnd.si
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: razkrinkaj-ai-nginx
-                port:
-                  number: 80
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: razkrinkaj-ai-frontend
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
@@ -71,4 +46,4 @@ spec:
               service:
                 name: razkrinkaj-ai-frontend
                 port:
-                  number: 8081
+                  number: 80
