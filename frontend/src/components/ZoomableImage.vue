@@ -15,23 +15,26 @@ const pageHeight = ref(0)
 const zoomedImgWidth = ref(0)
 const zoomedImgHeight = ref(0)
 
+function calculateSizes() {
+  pageWidth.value = window.innerWidth
+  pageHeight.value = window.innerHeight
+  zoomedImgWidth.value = pageWidth.value
+  zoomedImgHeight.value =
+    pageWidth.value * (props.image.height / props.image.width)
+  if (pageHeight.value < zoomedImgHeight.value) {
+    zoomedImgHeight.value = pageHeight.value
+    zoomedImgWidth.value =
+      pageHeight.value * (props.image.width / props.image.height)
+  }
+}
+
 function onZoomClick() {
   if (isZoomed.value) {
     isZoomed.value = false
     document.body.style.overflow = ''
     window.history.go(-1)
   } else {
-    pageWidth.value = window.innerWidth
-    pageHeight.value = window.innerHeight
-    zoomedImgWidth.value = pageWidth.value
-    zoomedImgHeight.value =
-      pageWidth.value * (props.image.height / props.image.width)
-    if (pageHeight.value < zoomedImgHeight.value) {
-      zoomedImgHeight.value = pageHeight.value
-      zoomedImgWidth.value =
-        pageHeight.value * (props.image.width / props.image.height)
-    }
-
+    calculateSizes()
     isZoomed.value = true
     document.body.style.overflow = 'hidden'
     window.history.pushState(null, '', '#zoomed')
@@ -41,6 +44,12 @@ function onZoomClick() {
 function onPopState() {
   isZoomed.value = false
   document.body.style.overflow = ''
+}
+
+function onResize() {
+  if (isZoomed.value) {
+    calculateSizes()
+  }
 }
 
 watch(
@@ -58,12 +67,14 @@ onMounted(() => {
       window.location.pathname + window.location.search,
     )
   }
+  window.addEventListener('resize', onResize)
   window.addEventListener('popstate', onPopState)
   preloadImageUrl(props.image.original_url)
 })
 
 onBeforeUnmount(() => {
   document.body.style.overflow = ''
+  window.removeEventListener('resize', onResize)
   window.removeEventListener('popstate', onPopState)
 })
 </script>
@@ -121,6 +132,16 @@ onBeforeUnmount(() => {
 .zoomable-image {
   position: relative;
 
+  --_button-offset: 0.5rem;
+  --_button-padding: 0.3125rem;
+  --_button-icon-size: 0.75rem;
+
+  @media (min-width: 768px) {
+    --_button-offset: 0.875rem;
+    --_button-padding: 0.4375rem;
+    --_button-icon-size: 1.25rem;
+  }
+
   &.zoomed {
     position: static;
   }
@@ -146,6 +167,10 @@ onBeforeUnmount(() => {
     border-radius: 3px;
     border: 0.5px solid #000;
     background: var(--color-bg-white);
+
+    @media (min-width: 768px) {
+      padding: 0.5rem;
+    }
   }
 
   button {
@@ -153,26 +178,33 @@ onBeforeUnmount(() => {
     justify-content: center;
     align-items: center;
     position: absolute;
-    bottom: 0.5rem;
-    right: 0.5rem;
+    bottom: var(--_button-offset);
+    right: var(--_button-offset);
     z-index: 1001;
-    padding: 0.25rem;
+    padding: var(--_button-padding);
     background: var(--color-bg-white);
     border: 0.5px solid #000;
     border-radius: 3px;
     cursor: pointer;
 
     svg {
-      width: 0.75rem;
-      height: 0.75rem;
+      width: var(--_button-icon-size);
+      height: var(--_button-icon-size);
     }
 
     span {
       display: block;
-      width: 1.5rem;
-      height: 1.5rem;
-      font-size: 1.5rem;
-      line-height: 1;
+      width: var(--_button-icon-size);
+      height: var(--_button-icon-size);
+      font-size: calc(var(--_button-icon-size) * 1.75);
+      line-height: var(--_button-icon-size);
+    }
+  }
+
+  &.zoomed {
+    button {
+      bottom: auto;
+      top: var(--_button-offset);
     }
   }
 }
