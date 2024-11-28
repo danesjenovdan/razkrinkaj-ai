@@ -4,11 +4,11 @@ DEBUG = bool(os.getenv("DJANGO_DEBUG", False))
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "<TODO>")
 
-ALLOWED_HOSTS = ["api.razkrinkaj-ai.lb.djnd.si"]
-CSRF_TRUSTED_ORIGINS = ["https://api.razkrinkaj-ai.lb.djnd.si"]
-CORS_ALLOWED_ORIGINS = ["https://razkrinkaj-ai.lb.djnd.si"]
+ALLOWED_HOSTS = ["api.razkrinkaj.ai"]
+CSRF_TRUSTED_ORIGINS = ["https://api.razkrinkaj.ai"]
+CORS_ALLOWED_ORIGINS = ["https://razkrinkaj.ai"]
 
-WAGTAILADMIN_BASE_URL = "https://api.razkrinkaj-ai.lb.djnd.si"
+WAGTAILADMIN_BASE_URL = "https://api.razkrinkaj.ai"
 
 STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT", os.path.join(BASE_DIR, "static"))
 STATIC_URL = os.getenv("DJANGO_STATIC_URL_BASE", "/static/")

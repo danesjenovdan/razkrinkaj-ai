@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - api.razkrinkaj-ai.lb.djnd.si
+        - api.razkrinkaj.ai
       secretName: razkrinkaj-ai-tls
   rules:
-    - host: api.razkrinkaj-ai.lb.djnd.si
+    - host: api.razkrinkaj.ai
       http:
         paths:
           - path: /
@@ -34,10 +34,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - razkrinkaj-ai.lb.djnd.si
+        - razkrinkaj.ai
       secretName: razkrinkaj-ai-frontend-tls
   rules:
-    - host: razkrinkaj-ai.lb.djnd.si
+    - host: razkrinkaj.ai
       http:
         paths:
           - path: /

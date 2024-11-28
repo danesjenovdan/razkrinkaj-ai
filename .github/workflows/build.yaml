@@ -41,7 +41,7 @@ jobs:
         with:
           context: ./frontend
           build-args: |
-            VITE_API_URL_BASE=https://api.razkrinkaj-ai.lb.djnd.si
+            VITE_API_URL_BASE=https://api.razkrinkaj.ai
           push: true
           tags: |
             rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend:${{ github.sha }}
