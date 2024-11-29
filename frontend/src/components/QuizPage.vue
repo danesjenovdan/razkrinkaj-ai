@@ -15,9 +15,10 @@ const store = useStore()
 const selectedAnswer = ref<number | null>(null)
 
 const image = computed(() => {
-  return selectedAnswer.value === null
-    ? props.page.image
-    : props.page.image_answer
+  if (selectedAnswer.value !== null && props.page.image_answer) {
+    return props.page.image_answer
+  }
+  return props.page.image
 })
 
 function onAnswerClick(index: number) {
@@ -49,7 +50,7 @@ onMounted(() => {
 
 <template>
   <div class="quiz-page">
-    <ZoomableImage v-if="image" :image="image" />
+    <ZoomableImage v-if="image" :image="image" class="main-image" />
     <div v-if="page.question" class="question">{{ page.question }}</div>
     <div class="answers">
       <ButtonAnswer
@@ -77,23 +78,24 @@ onMounted(() => {
     padding-bottom: 3.38rem;
   }
 
+  .main-image {
+    margin-bottom: 0.75rem;
+  }
+
   .question {
-    padding-block: 0.75rem 2rem;
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.1;
     text-align: center;
-
-    @media (min-width: 768px) {
-      padding-bottom: 2.25rem;
-    }
   }
 
   .answers {
     display: grid;
     gap: 0.68rem;
+    margin-top: 2rem;
 
     @media (min-width: 768px) {
+      margin-top: 2.25rem;
       gap: 0.875rem;
     }
   }
