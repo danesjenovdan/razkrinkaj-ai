@@ -43,7 +43,8 @@ onMounted(() => {
 
   h1 {
     font-family: var(--font-family-heading);
-    font-size: 1.125rem;
+    font-size: 1.25rem;
+    font-weight: 600;
 
     @media (min-width: 768px) {
       font-size: 1.625rem;
@@ -59,7 +60,7 @@ onMounted(() => {
     }
 
     h2 {
-      font-size: 1.125rem;
+      font-size: 1.25rem;
 
       @media (min-width: 768px) {
         font-size: 1.625rem;
@@ -67,7 +68,7 @@ onMounted(() => {
     }
 
     h3 {
-      font-size: 1rem;
+      font-size: 1.125rem;
 
       @media (min-width: 768px) {
         font-size: 1.375rem;
@@ -75,20 +76,27 @@ onMounted(() => {
     }
 
     h4 {
-      font-size: 0.875rem;
+      font-size: 1rem;
 
       @media (min-width: 768px) {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
       }
+    }
+
+    p + :is(h2, h3, h4),
+    ul + :is(h2, h3, h4),
+    ol + :is(h2, h3, h4),
+    div + :is(h2, h3, h4) {
+      margin-top: 2.2em;
     }
 
     p,
     ul,
     ol {
-      font-size: 0.875rem;
+      font-size: 1rem;
 
       @media (min-width: 768px) {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
       }
     }
 
@@ -131,11 +139,11 @@ onMounted(() => {
 
     div:has(> iframe),
     .thumbnail-image {
-      font-size: 0.875rem;
+      font-size: 1rem;
       margin-block: 1em;
 
       @media (min-width: 768px) {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
       }
     }
 

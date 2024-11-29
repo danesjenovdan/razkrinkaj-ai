@@ -184,7 +184,7 @@ onMounted(() => {
     .title {
       margin: 0;
       font-family: var(--font-family-heading);
-      font-size: 1.125rem;
+      font-size: 1.25rem;
       font-weight: 700;
 
       @media (min-width: 768px) {
@@ -195,12 +195,12 @@ onMounted(() => {
     .description {
       margin-top: 0.25rem;
       margin-bottom: auto;
-      font-size: 0.875rem;
+      font-size: 1rem;
       line-height: 1.1;
       white-space: pre-line;
 
       @media (min-width: 768px) {
-        font-size: 1.125rem;
+        font-size: 1.25rem;
       }
     }
 

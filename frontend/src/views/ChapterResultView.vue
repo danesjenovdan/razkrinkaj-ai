@@ -14,24 +14,38 @@ function onShareResult() {
   window.alert(message)
 }
 
-const totalChapterScore = computed(() => {
-  if (props.chapter.pages) {
-    return props.chapter.pages.reduce((prev, curr) => {
-      if (curr.type === 'quiz') {
-        return prev + curr.points
-      }
-      return prev
-    }, 0)
-  }
-  return 0
+// const totalChapterScore = computed(() => {
+//   if (props.chapter.pages) {
+//     return props.chapter.pages.reduce((prev, curr) => {
+//       if (curr.type === 'quiz') {
+//         return prev + curr.points
+//       }
+//       return prev
+//     }, 0)
+//   }
+//   return 0
+// })
+
+const totalAnswers = computed(() => {
+  const answers = [...store.currentChapterAnswers.values()]
+  return answers.length
+})
+
+const correctAnswers = computed(() => {
+  const answers = [...store.currentChapterAnswers.values()].filter(
+    answer => answer.correct,
+  )
+  return answers.length
 })
 
 onMounted(() => {
   // save score and answers
-  store.finishedChapters.set(props.chapter.id, {
-    score: store.currentChapterScore,
-    answers: new Map(store.currentChapterAnswers),
-  })
+  if (!store.finishedChapters.has(props.chapter.id)) {
+    store.finishedChapters.set(props.chapter.id, {
+      score: store.currentChapterScore,
+      answers: new Map(store.currentChapterAnswers),
+    })
+  }
   // unlock next chapter
   const chapterIds = [...store.chapters.keys()]
   const currentChapterIndex = chapterIds.findIndex(
@@ -39,8 +53,12 @@ onMounted(() => {
   )
   const nextChapterId = chapterIds[currentChapterIndex + 1]
   if (nextChapterId) {
-    store.justUnlockedChapters.push(nextChapterId)
-    store.unlockedChapters.push(nextChapterId)
+    if (!store.justUnlockedChapters.includes(nextChapterId)) {
+      store.justUnlockedChapters.push(nextChapterId)
+    }
+    if (!store.unlockedChapters.includes(nextChapterId)) {
+      store.unlockedChapters.push(nextChapterId)
+    }
   }
   // persist data to local storage
   store.saveLocalStorage()
@@ -56,12 +74,27 @@ onMounted(() => {
       <ThumbnailImage v-if="chapter.image" :image="chapter.image" />
       <h1>{{ chapter.title }}</h1>
     </div>
-    <div>
-      <p>
-        Zbranih točk: {{ store.currentChapterScore }}/{{ totalChapterScore }}
-      </p>
-      <p>Pravilni odgovori: 0/0</p>
-      <p>Skupaj točk: {{ store.score }}</p>
+    <div class="chapter-scores">
+      <div class="score-box">
+        <span class="emoji">💪</span>
+        <div>
+          Zbranih točk:
+          <span class="score">{{ store.currentChapterScore }}</span>
+        </div>
+      </div>
+      <div class="score-box">
+        <span class="emoji">🎓</span>
+        <div>
+          Pravilni odgovori:
+          <span class="score">{{ correctAnswers }}/{{ totalAnswers }}</span>
+        </div>
+      </div>
+      <div class="score-box">
+        <span class="emoji">🚀</span>
+        <div>
+          Skupaj točk: <span class="score">{{ store.score }}</span>
+        </div>
+      </div>
     </div>
     <div class="buttons">
       <ButtonPrimary
@@ -108,7 +141,7 @@ main {
     }
 
     h1 {
-      max-width: 13rem;
+      max-width: 16rem;
       margin-inline: auto;
       margin-bottom: 0;
       font-family: var(--font-family-heading);
@@ -125,8 +158,12 @@ main {
   }
 
   .chapter-info {
-    padding-bottom: 1rem;
+    padding-bottom: 1.25rem;
     text-align: center;
+
+    @media (min-width: 768px) {
+      padding-bottom: 2.5rem;
+    }
 
     .thumbnail-image {
       width: 5rem;
@@ -161,11 +198,59 @@ main {
     }
   }
 
+  .chapter-scores {
+    display: grid;
+    gap: 0.38rem;
+
+    @media (min-width: 768px) {
+      gap: 1rem;
+    }
+
+    .score-box {
+      display: flex;
+      gap: 0.68rem;
+      align-items: center;
+      width: min(25rem, 100%);
+      margin-inline: auto;
+      padding: 0.5875rem 0.81rem;
+      background: #dbe2ff;
+      border-radius: 3px;
+      font-size: 1.125rem;
+      font-weight: 500;
+
+      @media (min-width: 768px) {
+        gap: 1.31rem;
+        padding: 0.4125rem 1.62rem;
+        font-size: 1.25rem;
+      }
+
+      .emoji {
+        flex-shrink: 0;
+        font-size: 1.5rem;
+
+        @media (min-width: 768px) {
+          font-size: 2.25rem;
+        }
+      }
+
+      .score {
+        font-size: 1.5rem;
+        font-weight: 900;
+
+        @media (min-width: 768px) {
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+
   .buttons {
+    margin-top: 1.44rem;
     display: grid;
     gap: 0.68rem;
 
     @media (min-width: 768px) {
+      margin-top: 4.75rem;
       gap: 0.875rem;
     }
   }

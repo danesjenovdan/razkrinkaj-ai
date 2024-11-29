@@ -13,12 +13,6 @@ const emit = defineEmits<{ done: [] }>()
 const store = useStore()
 
 const selectedAnswer = ref<number | null>(null)
-const answeredCorrectly = computed(() => {
-  if (selectedAnswer.value === null) {
-    return null
-  }
-  return props.page.answers[selectedAnswer.value].correct
-})
 
 const image = computed(() => {
   return selectedAnswer.value === null
@@ -42,6 +36,14 @@ function onAnswerClick(index: number) {
 
 onMounted(() => {
   preloadPageImages(props.page)
+
+  if (store.finishedChapters.has(store.currentChapterId)) {
+    const index = store.currentChapterAnswers.get(props.page.id)?.answerIndex
+    if (index != null) {
+      selectedAnswer.value = index
+      emit('done')
+    }
+  }
 })
 </script>
 
@@ -49,18 +51,6 @@ onMounted(() => {
   <div class="quiz-page">
     <ZoomableImage v-if="image" :image="image" />
     <div v-if="page.question" class="question">{{ page.question }}</div>
-    <div
-      :class="{
-        score: true,
-        correct: answeredCorrectly === true,
-        incorrect: answeredCorrectly === false,
-      }"
-    >
-      <span>
-        <strong>{{ answeredCorrectly ? '+' : '-' }} {{ page.points }}</strong>
-        točk
-      </span>
-    </div>
     <div class="answers">
       <ButtonAnswer
         v-for="(answer, index) in page.answers"
@@ -69,6 +59,7 @@ onMounted(() => {
         :correct="answer.correct"
         :revealed="selectedAnswer !== null"
         :selected="selectedAnswer === index"
+        :points="page.points"
         @click="onAnswerClick(index)"
       />
     </div>
@@ -87,47 +78,14 @@ onMounted(() => {
   }
 
   .question {
-    padding-block: 0.75rem 1.56rem;
-    font-size: 0.875rem;
+    padding-block: 0.75rem 2rem;
+    font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.1;
     text-align: center;
 
     @media (min-width: 768px) {
-      font-size: 1.125rem;
-    }
-  }
-
-  .score {
-    display: flex;
-    justify-content: center;
-    margin-block: 0.75rem;
-
-    span {
-      visibility: hidden;
-      display: inline-block;
-      padding: 0.125rem 0.3rem;
-      background: #ccc;
-      font-size: 0.75rem;
-      line-height: 1;
-
-      strong {
-        font-weight: 900;
-      }
-    }
-
-    &.correct {
-      span {
-        visibility: visible;
-        background: #c5f6b6;
-      }
-    }
-
-    &.incorrect {
-      span {
-        visibility: visible;
-        background: #f9c7b9;
-      }
+      padding-bottom: 2.25rem;
     }
   }
 

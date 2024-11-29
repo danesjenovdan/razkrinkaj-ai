@@ -43,8 +43,22 @@ export const useStore = defineStore('store', () => {
 
   function setCurrentChapter(id: number) {
     currentChapterId.value = id
-    currentChapterScore.value = 0
-    currentChapterAnswers.clear()
+    if (finishedChapters.has(id)) {
+      const data = finishedChapters.get(id)
+      if (data) {
+        currentChapterScore.value = data.score
+        currentChapterAnswers.clear()
+        for (const [k, v] of data.answers.entries()) {
+          currentChapterAnswers.set(k, v)
+        }
+      } else {
+        currentChapterScore.value = 0
+        currentChapterAnswers.clear()
+      }
+    } else {
+      currentChapterScore.value = 0
+      currentChapterAnswers.clear()
+    }
   }
 
   function clearCurrentChapter() {

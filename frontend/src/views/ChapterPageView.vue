@@ -4,7 +4,7 @@ import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
 import type { Chapter } from '@/types'
 import { preloadPageImages } from '@/utils/image'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 
 const props = defineProps<{ chapter: Chapter }>()
@@ -48,6 +48,12 @@ const nextPage = computed(() => {
 })
 
 watch(nextPage, () => {
+  if (nextPage.value) {
+    preloadPageImages(nextPage.value)
+  }
+})
+
+onMounted(() => {
   if (nextPage.value) {
     preloadPageImages(nextPage.value)
   }

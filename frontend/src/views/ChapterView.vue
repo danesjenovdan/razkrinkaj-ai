@@ -20,6 +20,13 @@ const showHeader = computed(() => {
   return route.name !== 'chapter-result'
 })
 
+const score = computed(() => {
+  if (store.finishedChapters.has(chapterId)) {
+    return store.score
+  }
+  return store.score + store.currentChapterScore
+})
+
 onMounted(() => {
   store.setCurrentChapter(chapterId)
   // clear just unlocked chapters for next time list is shown
@@ -33,7 +40,7 @@ store.initChapterData(chapterId)
   <ScoreHeader
     v-if="showHeader"
     :title="store.introductionTitle"
-    :score="store.score + store.currentChapterScore"
+    :score="score"
   />
   <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
   <div v-else class="loader-container">

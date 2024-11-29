@@ -112,17 +112,11 @@ onBeforeUnmount(() => {
       />
     </PinchScrollZoom>
     <button type="button" @click="onZoomClick">
-      <svg
+      <img
         v-if="!isZoomed"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 12 12"
-      >
-        <path
-          fill="#000"
-          d="M5.174 9.73c.98 0 1.884-.315 2.626-.846l2.272 2.293a.754.754 0 0 0 1.071 0 .765.765 0 0 0 0-1.078L8.872 7.807a4.557 4.557 0 0 0 .841-2.642C9.713 2.644 7.68.6 5.173.6 2.668.6.636 2.644.636 5.165c0 2.522 2.032 4.565 4.539 4.565Zm0-7.608A3.038 3.038 0 0 1 8.2 5.165c0 .632-.194 1.24-.561 1.759l-.298.42-.418.3a2.992 2.992 0 0 1-1.749.565c-1.668 0-3.026-1.366-3.026-3.044s1.357-3.043 3.026-3.043Z"
-        />
-      </svg>
+        src="data:image/png;base64,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"
+        alt=""
+      />
       <span v-else>&times;</span>
     </button>
   </div>
@@ -132,14 +126,12 @@ onBeforeUnmount(() => {
 .zoomable-image {
   position: relative;
 
-  --_button-offset: 0.5rem;
-  --_button-padding: 0.3125rem;
-  --_button-icon-size: 0.75rem;
+  --_button-offset: 0.75rem;
+  --_button-padding: 0.125rem;
+  --_button-icon-size: 1.375rem;
 
   @media (min-width: 768px) {
-    --_button-offset: 0.875rem;
-    --_button-padding: 0.4375rem;
-    --_button-icon-size: 1.25rem;
+    --_button-offset: 1rem;
   }
 
   &.zoomed {
@@ -178,8 +170,8 @@ onBeforeUnmount(() => {
     justify-content: center;
     align-items: center;
     position: absolute;
-    bottom: var(--_button-offset);
-    right: var(--_button-offset);
+    top: var(--_button-offset);
+    left: var(--_button-offset);
     z-index: 1001;
     padding: var(--_button-padding);
     background: var(--color-bg-white);
@@ -187,7 +179,8 @@ onBeforeUnmount(() => {
     border-radius: 3px;
     cursor: pointer;
 
-    svg {
+    svg,
+    img {
       width: var(--_button-icon-size);
       height: var(--_button-icon-size);
     }
