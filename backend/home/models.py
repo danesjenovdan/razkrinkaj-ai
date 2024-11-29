@@ -151,3 +151,39 @@ class ChapterQuizSubPage(Page):
     class Meta:
         verbose_name = "Stran s kvizom"
         verbose_name_plural = "Strani s kvizom"
+
+
+class PageAnswerData(models.Model):
+    page = models.ForeignKey(
+        "home.ChapterQuizSubPage",
+        on_delete=models.CASCADE,
+        verbose_name="Stran",
+    )
+    answer_index = models.IntegerField(verbose_name="Indeks odgovora")
+    correct = models.BooleanField(verbose_name="Pravilno")
+
+    def __str__(self):
+        return f"{self.page.title} - {self.answer_index} - {self.correct}"
+
+    class Meta:
+        verbose_name = "Odgovor na stran"
+        verbose_name_plural = "Odgovori na stran"
+
+
+class FinishedChapterData(models.Model):
+    finished_at = models.DateTimeField(auto_now_add=True, verbose_name="Končano ob")
+    user_guid = models.CharField(max_length=255, verbose_name="Uporabnik")
+    chapter = models.ForeignKey(
+        "home.ChapterPage",
+        on_delete=models.CASCADE,
+        verbose_name="Poglavje",
+    )
+    score = models.IntegerField(verbose_name="Število točk")
+    answers = models.ManyToManyField("home.PageAnswerData", verbose_name="Odgovori")
+
+    def __str__(self):
+        return f"{self.user_guid} - {self.chapter.title}"
+
+    class Meta:
+        verbose_name = "Končano poglavje"
+        verbose_name_plural = "Končana poglavja"

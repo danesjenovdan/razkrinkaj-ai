@@ -76,6 +76,7 @@ onMounted(() => {
       score: store.currentChapterScore,
       answers: new Map(store.currentChapterAnswers),
     })
+    store.sendFinishedChapterDataToApi(props.chapter.id)
   }
   // unlock next chapter
   const chapterIds = [...store.chapters.keys()]
