@@ -88,14 +88,10 @@ onMounted(() => {
 
   .question {
     padding-block: 0.75rem 1.56rem;
-    font-size: 0.875rem;
+    font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.1;
     text-align: center;
-
-    @media (min-width: 768px) {
-      font-size: 1.125rem;
-    }
   }
 
   .score {
