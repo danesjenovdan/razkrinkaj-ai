@@ -1,6 +1,40 @@
 <script setup lang="ts">
+import axios from 'axios'
+import { ref } from 'vue'
 import MkLogo from './logos/MkLogo.vue'
 import UseLogo from './logos/UseLogo.vue'
+
+const newsletterEmail = ref('')
+const newsletterConsent = ref(false)
+const newsletterLoading = ref(false)
+
+async function onNewsletterSubmit() {
+  newsletterLoading.value = true
+  try {
+    const response = await axios.post(
+      'https://podpri.lb.djnd.si/api/subscribe/',
+      {
+        email: newsletterEmail.value,
+        segment_id: 21,
+      },
+    )
+    if (response.data.msg === 'mail sent') {
+      newsletterEmail.value = ''
+      newsletterConsent.value = false
+      newsletterLoading.value = false
+      alert(
+        'Hvala! Poslali smo ti sporočilo s povezavo, na kateri lahko potrdiš prijavo!',
+      )
+    } else {
+      newsletterLoading.value = false
+      alert('Prišlo je do napake :(')
+    }
+  } catch (error) {
+    console.error(error)
+    newsletterLoading.value = false
+    alert('Prišlo je do napake :(')
+  }
+}
 </script>
 
 <template>
@@ -37,16 +71,26 @@ import UseLogo from './logos/UseLogo.vue'
           <span class="semi-bold">
             Te zanima, kaj delamo? Naroči se na Občasnik!
           </span>
-          <form class="newsletter-form">
+          <form class="newsletter-form" @submit.prevent="onNewsletterSubmit">
             <div class="form-group">
               <label>
                 Vpiši svoj e-naslov
-                <input type="email" required id="newsletter-email" />
+                <input
+                  type="email"
+                  id="newsletter-email"
+                  required
+                  v-model="newsletterEmail"
+                />
               </label>
             </div>
             <div class="form-group">
               <div class="checkbox">
-                <input type="checkbox" required id="newsletter-checkbox" />
+                <input
+                  type="checkbox"
+                  id="newsletter-checkbox"
+                  required
+                  v-model="newsletterConsent"
+                />
                 <label for="newsletter-checkbox">
                   <span>
                     Strinjam se, da mi Danes je nov dan po e-pošti pošilja
@@ -56,7 +100,11 @@ import UseLogo from './logos/UseLogo.vue'
               </div>
             </div>
             <div class="form-group">
-              <button type="submit" class="button-link submit-button">
+              <button
+                type="submit"
+                class="button-link submit-button"
+                :disabled="newsletterLoading"
+              >
                 NAROČI SE
               </button>
             </div>
@@ -155,6 +203,11 @@ footer {
 
       .submit-button {
         margin-top: 0.5rem;
+
+        &:disabled {
+          cursor: wait;
+          filter: grayscale(1);
+        }
       }
 
       .newsletter-form {
