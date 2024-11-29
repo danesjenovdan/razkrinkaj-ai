@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Chapter } from '@/types'
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import ThumbnailImage from '@/components/ThumbnailImage.vue'
@@ -26,12 +26,26 @@ function onShareResult() {
 //   return 0
 // })
 
+const totalAnswers = computed(() => {
+  const answers = [...store.currentChapterAnswers.values()]
+  return answers.length
+})
+
+const correctAnswers = computed(() => {
+  const answers = [...store.currentChapterAnswers.values()].filter(
+    answer => answer.correct,
+  )
+  return answers.length
+})
+
 onMounted(() => {
   // save score and answers
-  store.finishedChapters.set(props.chapter.id, {
-    score: store.currentChapterScore,
-    answers: new Map(store.currentChapterAnswers),
-  })
+  if (!store.finishedChapters.has(props.chapter.id)) {
+    store.finishedChapters.set(props.chapter.id, {
+      score: store.currentChapterScore,
+      answers: new Map(store.currentChapterAnswers),
+    })
+  }
   // unlock next chapter
   const chapterIds = [...store.chapters.keys()]
   const currentChapterIndex = chapterIds.findIndex(
@@ -39,8 +53,12 @@ onMounted(() => {
   )
   const nextChapterId = chapterIds[currentChapterIndex + 1]
   if (nextChapterId) {
-    store.justUnlockedChapters.push(nextChapterId)
-    store.unlockedChapters.push(nextChapterId)
+    if (!store.justUnlockedChapters.includes(nextChapterId)) {
+      store.justUnlockedChapters.push(nextChapterId)
+    }
+    if (!store.unlockedChapters.includes(nextChapterId)) {
+      store.unlockedChapters.push(nextChapterId)
+    }
   }
   // persist data to local storage
   store.saveLocalStorage()
@@ -66,7 +84,10 @@ onMounted(() => {
       </div>
       <div class="score-box">
         <span class="emoji">🎓</span>
-        <div>Pravilni odgovori: <span class="score">0/0</span></div>
+        <div>
+          Pravilni odgovori:
+          <span class="score">{{ correctAnswers }}/{{ totalAnswers }}</span>
+        </div>
       </div>
       <div class="score-box">
         <span class="emoji">🚀</span>
@@ -120,7 +141,7 @@ main {
     }
 
     h1 {
-      max-width: 13rem;
+      max-width: 16rem;
       margin-inline: auto;
       margin-bottom: 0;
       font-family: var(--font-family-heading);
@@ -179,7 +200,6 @@ main {
 
   .chapter-scores {
     display: grid;
-    justify-content: center;
     gap: 0.38rem;
 
     @media (min-width: 768px) {
@@ -190,7 +210,8 @@ main {
       display: flex;
       gap: 0.68rem;
       align-items: center;
-      width: 25rem;
+      width: min(25rem, 100%);
+      margin-inline: auto;
       padding: 0.5875rem 0.81rem;
       background: #dbe2ff;
       border-radius: 3px;

@@ -42,6 +42,14 @@ function onAnswerClick(index: number) {
 
 onMounted(() => {
   preloadPageImages(props.page)
+
+  if (store.finishedChapters.has(store.currentChapterId)) {
+    const index = store.currentChapterAnswers.get(props.page.id)?.answerIndex
+    if (index != null) {
+      selectedAnswer.value = index
+      emit('done')
+    }
+  }
 })
 </script>
 
