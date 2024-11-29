@@ -55,7 +55,7 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.25rem 1.25rem;
+  padding: 1.125rem 1.25rem;
   border-radius: 3px;
   border: 0.5px solid #000;
   background: #fff;
@@ -77,12 +77,7 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
     color: #fff;
   }
 
-  > span {
-    margin-bottom: -0.2em;
-  }
-
   .icon {
-    margin-top: -0.2em;
     display: flex;
     width: 1em;
     height: auto;

@@ -73,10 +73,8 @@ defineProps<{
     display: flex;
     gap: 0.68rem;
     align-items: center;
-    margin-bottom: -0.2em;
 
     .circle {
-      margin-top: -0.2em;
       flex-shrink: 0;
       width: 1.5rem;
       height: 1.5rem;
