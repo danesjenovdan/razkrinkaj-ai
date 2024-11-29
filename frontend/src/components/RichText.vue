@@ -44,6 +44,7 @@ onMounted(() => {
   h1 {
     font-family: var(--font-family-heading);
     font-size: 1.25rem;
+    font-weight: 600;
 
     @media (min-width: 768px) {
       font-size: 1.625rem;
@@ -80,6 +81,13 @@ onMounted(() => {
       @media (min-width: 768px) {
         font-size: 1.25rem;
       }
+    }
+
+    p + :is(h2, h3, h4),
+    ul + :is(h2, h3, h4),
+    ol + :is(h2, h3, h4),
+    div + :is(h2, h3, h4) {
+      margin-top: 2.2em;
     }
 
     p,
