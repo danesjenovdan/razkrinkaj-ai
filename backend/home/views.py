@@ -1,6 +1,10 @@
+import json
+
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from wagtail.images import get_image_model
 from wagtail.models import Page, Site
 from wagtail.rich_text import extract_references_from_rich_text
@@ -11,7 +15,14 @@ from .image_formats import (
     REGULAR_RENDITION_NAME,
     THUMBNAIL_RENDITION_NAME,
 )
-from .models import ChapterPage, ChapterQuizSubPage, ChapterTextSubPage, HomePage
+from .models import (
+    ChapterPage,
+    ChapterQuizSubPage,
+    ChapterTextSubPage,
+    FinishedChapterData,
+    HomePage,
+    PageAnswerData,
+)
 
 ImageModel = get_image_model()
 
@@ -136,3 +147,27 @@ class ChapterView(View):
                 "pages": [serialize_chapter_sub_page(page) for page in pages],
             }
         )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class FinishedChapterView(View):
+    def post(self, request, id):
+        chapter = get_object_or_404(ChapterPage, id=id)
+        json_body = json.loads(request.body)
+        json_data = json.loads(json_body["data"])
+
+        finished_data = FinishedChapterData.objects.create(
+            user_guid=json_body["userGUID"],
+            chapter=chapter,
+            score=json_data["score"],
+        )
+
+        for answer in json_data["answers"]["entries"]:
+            answer_data = PageAnswerData.objects.create(
+                page=ChapterQuizSubPage.objects.get(id=answer[0]),
+                answer_index=answer[1]["answerIndex"],
+                correct=answer[1]["correct"],
+            )
+            finished_data.answers.add(answer_data)
+
+        return JsonResponse({"status": "ok"})

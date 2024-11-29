@@ -20,6 +20,9 @@ export const useStore = defineStore('store', () => {
   const homeDataLoaded = ref(false)
   const chapterDataLoaded = reactive(new Map<number, boolean>())
 
+  // user guid
+  const userGUID = ref('')
+
   // intro texts
   const introductionTitle = ref('')
   const introductionDescription = ref('')
@@ -67,6 +70,7 @@ export const useStore = defineStore('store', () => {
 
   function saveLocalStorage() {
     const s = window.localStorage
+    s.setItem('userGUID', userGUID.value)
     s.setItem('justUnlockedChapters', smartToString(justUnlockedChapters))
     s.setItem('unlockedChapters', smartToString(unlockedChapters))
     s.setItem('finishedChapters', smartToString(finishedChapters))
@@ -75,6 +79,18 @@ export const useStore = defineStore('store', () => {
   function loadLocalStorage() {
     const s = window.localStorage
     let item: string | null = null
+
+    // load user guid
+    if ((item = s.getItem('userGUID'))) {
+      userGUID.value = item
+    } else {
+      const one = Math.random().toString(36).substring(2)
+      const two = Math.random().toString(36).substring(2)
+      userGUID.value = one + two
+      s.setItem('userGUID', userGUID.value)
+    }
+
+    // load saved data
     if ((item = s.getItem('justUnlockedChapters'))) {
       const value = smartParse(item) as number[]
       justUnlockedChapters.value = value
@@ -101,7 +117,7 @@ export const useStore = defineStore('store', () => {
   })
 
   async function fetchHomeData() {
-    const response = await axios.get(`${apiUrl}/api/home`)
+    const response = await axios.get(`${apiUrl}/api/home/`)
 
     if (response.status == 200) {
       const data = response.data
@@ -127,7 +143,7 @@ export const useStore = defineStore('store', () => {
   }
 
   async function fetchChapterData(id: number) {
-    const response = await axios.get(`${apiUrl}/api/chapter/${id}`)
+    const response = await axios.get(`${apiUrl}/api/chapter/${id}/`)
 
     if (response.status == 200) {
       const data = response.data
@@ -146,12 +162,33 @@ export const useStore = defineStore('store', () => {
     }
   }
 
+  async function sendFinishedChapterDataToApi(chapterId: number) {
+    const data = finishedChapters.get(chapterId)
+    if (data) {
+      try {
+        const response = await axios.post(
+          `${apiUrl}/api/chapter/${chapterId}/finished/`,
+          {
+            userGUID: userGUID.value,
+            data: smartToString(data),
+          },
+        )
+        if (response.status == 200) {
+          console.log('sendFinishedChapterDataToApi', response.data)
+        }
+      } catch (error) {
+        console.error('sendFinishedChapterDataToApi', error)
+      }
+    }
+  }
+
   return {
     initHomeData,
     homeDataLoaded,
     initChapterData,
     chapterDataLoaded,
     //
+    userGUID,
     introductionTitle,
     introductionDescription,
     introductionButtonText,
@@ -167,5 +204,6 @@ export const useStore = defineStore('store', () => {
     saveLocalStorage,
     loadLocalStorage,
     score,
+    sendFinishedChapterDataToApi,
   }
 })
