@@ -9,11 +9,6 @@ const props = defineProps<{ chapter: Chapter }>()
 
 const store = useStore()
 
-function onShareResult() {
-  const message = 'TODO: message, skopiraj v odložišče...'
-  window.alert(message)
-}
-
 // const totalChapterScore = computed(() => {
 //   if (props.chapter.pages) {
 //     return props.chapter.pages.reduce((prev, curr) => {
@@ -37,6 +32,42 @@ const correctAnswers = computed(() => {
   )
   return answers.length
 })
+
+const shareResultMessage = computed(() => {
+  return `
+
+Razkrinkaj.ai
+
+Poglavje: ${props.chapter.title}
+
+💪 Zbranih točk: ${store.currentChapterScore}
+🎓 Pravilni odgovori: ${correctAnswers.value}/${totalAnswers.value}
+🚀 Skupaj točk: ${store.score}
+
+  `.trim()
+})
+
+async function copyTextToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
+
+async function onShareResult() {
+  if (await copyTextToClipboard(shareResultMessage.value)) {
+    window.alert(
+      `Tvoj rezultat smo skopirali v odložišče. Objavi ga na svojem najljubšem kanalu!\n\n${shareResultMessage.value}`,
+    )
+  } else {
+    window.alert(
+      'Ups, nekaj je šlo narobe pri kopiranju v odložišče. Rezultat imaš spodaj, skopiraj in deli ga!',
+    )
+  }
+}
 
 onMounted(() => {
   // save score and answers
