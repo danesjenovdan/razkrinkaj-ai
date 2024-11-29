@@ -10,7 +10,7 @@
   --footer-width: var(--page-width);
 
   --font-family-base: 'wf-albert-sans', sans-serif;
-  --font-family-heading: 'wf-alkatra', cursive;
+  --font-family-heading: 'wf-tektur', sans-serif;
 }
 
 @media (min-width: 768px) {
