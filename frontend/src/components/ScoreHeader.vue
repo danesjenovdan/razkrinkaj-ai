@@ -40,7 +40,7 @@ defineProps<{
 
     .title {
       display: flex;
-      font-size: 1.25rem;
+      font-size: 1.375rem;
 
       @media (min-width: 768px) {
         font-size: 1.75rem;
@@ -54,8 +54,9 @@ defineProps<{
     }
 
     .score {
-      margin-block: 0.75rem;
-      font-size: 1rem;
+      margin-block: 1rem;
+      font-size: 1.125rem;
+      line-height: 1;
 
       strong {
         font-weight: 700;
