@@ -41,17 +41,28 @@ def serialize_image_url(image, is_icon=False):
     if image is None:
         return None
 
-    RENDITION_NAME = REGULAR_RENDITION_NAME if not is_icon else ICON_RENDITION_NAME
-    renditions = image.get_renditions(THUMBNAIL_RENDITION_NAME, RENDITION_NAME)
-
-    return {
-        "original_url": image.file.url,
-        "thumbnail_url": renditions[THUMBNAIL_RENDITION_NAME].file.url,
-        "url": renditions[RENDITION_NAME].file.url,
+    obj = {
         "alt": image.title,
         "width": image.width,
         "height": image.height,
     }
+
+    # don't generate renditions for SVG images
+    if image.is_svg():
+        obj["svg"] = True
+        obj["original_url"] = image.file.url
+        obj["url"] = image.file.url
+
+    # other images have renditions for thumbnail and regular sizes
+    else:
+        RENDITION_NAME = REGULAR_RENDITION_NAME if not is_icon else ICON_RENDITION_NAME
+        renditions = image.get_renditions(THUMBNAIL_RENDITION_NAME, RENDITION_NAME)
+
+        obj["thumbnail_url"] = renditions[THUMBNAIL_RENDITION_NAME].file.url
+        obj["original_url"] = image.file.url
+        obj["url"] = renditions[RENDITION_NAME].file.url
+
+    return obj
 
 
 def serialize_rich_text_images(rich_text):

@@ -21,27 +21,36 @@ class FormatWithThumbnail(Format):
     def __init__(self, name, label, classname, filter_spec):
         super().__init__(name, label, classname, filter_spec)
         self.thumbnail_filter_spec = THUMBNAIL_RENDITION_NAME
+        self.regular_filter_spec = REGULAR_RENDITION_NAME
 
     def image_to_html(self, image, alt_text, extra_attributes=None):
         if extra_attributes is None:
             extra_attributes = {}
 
-        renditions = get_renditions_or_not_found(
-            image, [self.thumbnail_filter_spec, self.filter_spec]
-        )
-
         extra_attributes["alt"] = escape(alt_text)
         if self.classname:
             extra_attributes["class"] = "%s" % escape(self.classname)
-
-        if renditions[self.filter_spec].file.url:
-            extra_attributes["data-src"] = renditions[self.filter_spec].file.url
 
         extra_attributes["width"] = image.width
         extra_attributes["height"] = image.height
         extra_attributes["style"] = f"aspect-ratio: {image.width} / {image.height};"
 
-        img_tag = renditions[self.thumbnail_filter_spec].img_tag(extra_attributes)
+        # don't generate renditions for SVG images
+        if image.is_svg():
+            extra_attributes["data-src"] = image.file.url
+            renditions = get_renditions_or_not_found(image, [self.filter_spec])
+            img_tag = renditions[self.filter_spec].img_tag(extra_attributes)
+        # other images have renditions for thumbnail and regular sizes
+        else:
+            renditions = get_renditions_or_not_found(
+                image, [self.thumbnail_filter_spec, self.regular_filter_spec]
+            )
+            if renditions[self.regular_filter_spec].file.url:
+                extra_attributes["data-src"] = renditions[
+                    self.regular_filter_spec
+                ].file.url
+            img_tag = renditions[self.thumbnail_filter_spec].img_tag(extra_attributes)
+
         return mark_safe(f'<div class="thumbnail-image"><div>{img_tag}</div></div>')
 
 
@@ -51,6 +60,6 @@ register_image_format(
         "fullwidth",
         "Full width",
         "richtext-image full-width is-thumbnail",
-        REGULAR_RENDITION_NAME,
+        "original",
     )
 )

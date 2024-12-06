@@ -1,6 +1,7 @@
 export type ImageDescription = {
+  svg?: boolean
+  thumbnail_url?: string
   original_url: string
-  thumbnail_url: string
   url: string
   alt: string
   width: number

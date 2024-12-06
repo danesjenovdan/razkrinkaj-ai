@@ -236,7 +236,8 @@ onMounted(() => {
         height: 6.8125rem;
       }
 
-      :deep(img) {
+      :deep(img),
+      :deep(svg) {
         width: 100%;
         height: 100%;
         object-fit: cover;
