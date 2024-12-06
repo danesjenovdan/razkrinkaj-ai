@@ -78,20 +78,20 @@ onMounted(() => {
     })
     store.sendFinishedChapterDataToApi(props.chapter.id)
   }
-  // unlock next chapter
-  const chapterIds = [...store.chapters.keys()]
-  const currentChapterIndex = chapterIds.findIndex(
-    cid => cid === props.chapter.id,
-  )
-  const nextChapterId = chapterIds[currentChapterIndex + 1]
-  if (nextChapterId) {
-    if (!store.justUnlockedChapters.includes(nextChapterId)) {
-      store.justUnlockedChapters.push(nextChapterId)
-    }
-    if (!store.unlockedChapters.includes(nextChapterId)) {
-      store.unlockedChapters.push(nextChapterId)
-    }
-  }
+  // // unlock next chapter
+  // const chapterIds = [...store.chapters.keys()]
+  // const currentChapterIndex = chapterIds.findIndex(
+  //   cid => cid === props.chapter.id,
+  // )
+  // const nextChapterId = chapterIds[currentChapterIndex + 1]
+  // if (nextChapterId) {
+  //   if (!store.justUnlockedChapters.includes(nextChapterId)) {
+  //     store.justUnlockedChapters.push(nextChapterId)
+  //   }
+  //   if (!store.unlockedChapters.includes(nextChapterId)) {
+  //     store.unlockedChapters.push(nextChapterId)
+  //   }
+  // }
   // persist data to local storage
   store.saveLocalStorage()
 })
