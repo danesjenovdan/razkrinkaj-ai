@@ -66,6 +66,7 @@ defineProps<{
   line-height: 1;
   font-weight: 700;
   color: var(--_color-border);
+  text-align: left;
   text-decoration: none;
 
   @media (min-width: 768px) {
@@ -81,6 +82,7 @@ defineProps<{
 
     .circle,
     .icon {
+      flex-shrink: 0;
       width: 1.5rem;
       height: 1.5rem;
       margin-block: -0.2em;
@@ -92,7 +94,6 @@ defineProps<{
     }
 
     .circle {
-      flex-shrink: 0;
       border: 0.5px solid var(--_color-border);
       border-radius: 9999rem;
     }
@@ -108,6 +109,7 @@ defineProps<{
   }
 
   .score {
+    flex-shrink: 0;
     display: inline-block;
     padding: 0.125rem 0.3rem;
     background: var(--_color-shadow);

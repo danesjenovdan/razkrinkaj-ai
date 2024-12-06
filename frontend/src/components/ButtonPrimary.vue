@@ -30,7 +30,7 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
     :class="['button-primary', `button-color-${color}`]"
   >
     <span>{{ text }}</span>
-    <span v-if="emoji">{{ emoji }}</span>
+    <span v-if="emoji" class="emoji">{{ emoji }}</span>
     <span v-if="icon" class="icon">
       <svg
         v-if="icon === 'arrow'"
@@ -53,6 +53,7 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
 <style scoped lang="scss">
 .button-primary {
   display: flex;
+  gap: 0.68rem;
   align-items: center;
   justify-content: space-between;
   padding: 1.125rem 1.25rem;
@@ -75,6 +76,11 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   &.button-color-primary {
     background: #4063f6;
     color: #fff;
+  }
+
+  .emoji,
+  .icon {
+    flex-shrink: 0;
   }
 
   .icon {
