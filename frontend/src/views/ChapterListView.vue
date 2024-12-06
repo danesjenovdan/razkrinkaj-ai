@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
 import ChapterElement from '@/components/ChapterElement.vue'
+import PageFooter from '@/components/PageFooter.vue'
 
 const store = useStore()
 
@@ -23,6 +24,7 @@ onMounted(() => {
       />
     </div>
   </main>
+  <PageFooter />
 </template>
 
 <style scoped lang="scss">
