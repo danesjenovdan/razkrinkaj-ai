@@ -68,6 +68,21 @@ export const useStore = defineStore('store', () => {
     setCurrentChapter(-1)
   }
 
+  function clearAllProgress() {
+    justUnlockedChapters.value = []
+    unlockedChapters.value = []
+    finishedChapters.clear()
+    clearCurrentChapter()
+    clearLocalStorage()
+  }
+
+  function clearLocalStorage() {
+    const s = window.localStorage
+    s.removeItem('justUnlockedChapters')
+    s.removeItem('unlockedChapters')
+    s.removeItem('finishedChapters')
+  }
+
   function saveLocalStorage() {
     const s = window.localStorage
     s.setItem('userGUID', userGUID.value)
@@ -201,6 +216,7 @@ export const useStore = defineStore('store', () => {
     currentChapterAnswers,
     setCurrentChapter,
     clearCurrentChapter,
+    clearAllProgress,
     saveLocalStorage,
     loadLocalStorage,
     score,

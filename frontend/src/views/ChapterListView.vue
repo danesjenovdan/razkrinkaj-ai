@@ -1,11 +1,25 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
 import ChapterElement from '@/components/ChapterElement.vue'
 import PageFooter from '@/components/PageFooter.vue'
+import ButtonPrimary from '@/components/ButtonPrimary.vue'
 
+const router = useRouter()
 const store = useStore()
+
+function onResetClick() {
+  if (
+    window.confirm(
+      'Ali ste prepričani, da želite začeti znova? To bo izbrisalo vse odgovore.',
+    )
+  ) {
+    store.clearAllProgress()
+    router.push({ name: 'intro' })
+  }
+}
 
 onMounted(() => {
   store.clearCurrentChapter()
@@ -23,6 +37,13 @@ onMounted(() => {
         :chapter="chapter"
       />
     </div>
+    <ButtonPrimary
+      class="button"
+      buttonText="Začni znova"
+      emoji="❌"
+      color="white"
+      @click="onResetClick"
+    />
   </main>
   <PageFooter />
 </template>
@@ -56,6 +77,15 @@ main {
 
     @media (min-width: 768px) {
       gap: 0.875rem;
+    }
+  }
+
+  .button {
+    width: 100%;
+    margin-top: 1.5rem;
+
+    @media (min-width: 768px) {
+      margin-top: 1.75rem;
     }
   }
 }
