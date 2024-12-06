@@ -93,5 +93,19 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
       height: 100%;
     }
   }
+
+  &:hover {
+    background: #fefffb;
+    box-shadow:
+      0px 0px 6px 0px #cbd844 inset,
+      0px 0px 7px -1px #f3ff6f;
+
+    &.button-color-primary {
+      background: #3458f3;
+      box-shadow:
+        0px 0px 6px 0px #173ac9 inset,
+        0px 0px 7px -1px #4063f6;
+    }
+  }
 }
 </style>

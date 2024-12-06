@@ -292,6 +292,13 @@ onMounted(() => {
     }
   }
 
+  &:hover {
+    background: #fefffb;
+    box-shadow:
+      0px 0px 6px 0px #cbd844 inset,
+      0px 0px 7px -1px #f3ff6f;
+  }
+
   &.disabled {
     background: #fafafa;
     border-color: #8f94a3;

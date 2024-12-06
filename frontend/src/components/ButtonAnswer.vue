@@ -156,5 +156,16 @@ defineProps<{
       }
     }
   }
+
+  &:hover {
+    background: #eef1fc;
+    box-shadow:
+      0px 0px 6px 0px #173ac9 inset,
+      0px 0px 7px -1px #4063f6;
+
+    .circle {
+      background: #4063f6;
+    }
+  }
 }
 </style>
