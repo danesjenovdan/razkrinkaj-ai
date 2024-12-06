@@ -41,7 +41,7 @@ class ChapterPage(Page):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="+",
-        verbose_name="Slika",
+        verbose_name="Slika (če je SVG formata, bo barva #9BF37E zamenjana z drugo barvo glede na stanje)",
     )
     locked_by_default = models.BooleanField(
         default=False,

@@ -10,7 +10,7 @@ const store = useStore()
   <main>
     <div class="intro">
       <img
-        src="/razkrinkaj-ai-logo.png"
+        src="/razkrinkaj-ai-logo.gif"
         alt="Razkrinkaj.ai"
         class="title-logo"
       />

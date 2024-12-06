@@ -36,7 +36,7 @@ const correctAnswers = computed(() => {
 const shareResultMessage = computed(() => {
   return `
 
-Razkrinkaj.ai
+Moj rezultat na razkrinkaj.ai
 
 Poglavje: ${props.chapter.title}
 
@@ -78,20 +78,20 @@ onMounted(() => {
     })
     store.sendFinishedChapterDataToApi(props.chapter.id)
   }
-  // unlock next chapter
-  const chapterIds = [...store.chapters.keys()]
-  const currentChapterIndex = chapterIds.findIndex(
-    cid => cid === props.chapter.id,
-  )
-  const nextChapterId = chapterIds[currentChapterIndex + 1]
-  if (nextChapterId) {
-    if (!store.justUnlockedChapters.includes(nextChapterId)) {
-      store.justUnlockedChapters.push(nextChapterId)
-    }
-    if (!store.unlockedChapters.includes(nextChapterId)) {
-      store.unlockedChapters.push(nextChapterId)
-    }
-  }
+  // // unlock next chapter
+  // const chapterIds = [...store.chapters.keys()]
+  // const currentChapterIndex = chapterIds.findIndex(
+  //   cid => cid === props.chapter.id,
+  // )
+  // const nextChapterId = chapterIds[currentChapterIndex + 1]
+  // if (nextChapterId) {
+  //   if (!store.justUnlockedChapters.includes(nextChapterId)) {
+  //     store.justUnlockedChapters.push(nextChapterId)
+  //   }
+  //   if (!store.unlockedChapters.includes(nextChapterId)) {
+  //     store.unlockedChapters.push(nextChapterId)
+  //   }
+  // }
   // persist data to local storage
   store.saveLocalStorage()
 })
@@ -208,11 +208,24 @@ main {
         height: 6.8125rem;
       }
 
-      :deep(img) {
+      :deep(img),
+      :deep(svg) {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center;
+      }
+
+      :deep(svg) {
+        *[fill='#9BF37E' i],
+        *[fill='#9BF47E' i] {
+          fill: #4063f6;
+        }
+
+        *[stroke='#9BF37E' i],
+        *[stroke='#9BF47E' i] {
+          stroke: #4063f6;
+        }
       }
     }
 

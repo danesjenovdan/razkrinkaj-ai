@@ -36,7 +36,7 @@ onMounted(() => {
 
 <template>
   <RouterLink
-    :class="{ chapter: true, disabled: isLocked }"
+    :class="{ chapter: true, disabled: isLocked, completed: isFinished }"
     :to="{ name: 'chapter-intro', params: { id: chapter.id } }"
   >
     <div class="text-col">
@@ -236,11 +236,24 @@ onMounted(() => {
         height: 6.8125rem;
       }
 
-      :deep(img) {
+      :deep(img),
+      :deep(svg) {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center;
+      }
+
+      :deep(svg) {
+        *[fill='#9BF37E' i],
+        *[fill='#9BF47E' i] {
+          fill: #ebf578;
+        }
+
+        *[stroke='#9BF37E' i],
+        *[stroke='#9BF47E' i] {
+          stroke: #ebf578;
+        }
       }
     }
   }
@@ -261,6 +274,31 @@ onMounted(() => {
     }
   }
 
+  &.completed {
+    .image-col {
+      .thumbnail-image {
+        :deep(svg) {
+          *[fill='#9BF37E' i],
+          *[fill='#9BF47E' i] {
+            fill: #4063f6;
+          }
+
+          *[stroke='#9BF37E' i],
+          *[stroke='#9BF47E' i] {
+            stroke: #4063f6;
+          }
+        }
+      }
+    }
+  }
+
+  &:hover {
+    background: #fefffb;
+    box-shadow:
+      0px 0px 6px 0px #cbd844 inset,
+      0px 0px 7px -1px #f3ff6f;
+  }
+
   &.disabled {
     background: #fafafa;
     border-color: #8f94a3;
@@ -268,9 +306,20 @@ onMounted(() => {
     pointer-events: none;
 
     .image-col {
-      img {
-        opacity: 0.5;
-        filter: grayscale(100%);
+      .thumbnail-image {
+        opacity: 0.75;
+
+        :deep(svg) {
+          *[fill='#9BF37E' i],
+          *[fill='#9BF47E' i] {
+            fill: #fafafa;
+          }
+
+          *[stroke='#9BF37E' i],
+          *[stroke='#9BF47E' i] {
+            stroke: #fafafa;
+          }
+        }
       }
     }
   }

@@ -26,19 +26,19 @@ export async function preloadImage(
   image: ImageDescription,
   preloadOriginal = false,
 ) {
-  if (!image.thumbnail_preloaded) {
+  if (!image.thumbnail_preloaded && image.thumbnail_url) {
     preloadImageUrl(image.thumbnail_url).then(() => {
       image.thumbnail_preloaded = true
     })
   }
 
-  if (!image.preloaded) {
+  if (!image.preloaded && image.url) {
     preloadImageUrl(image.url).then(() => {
       image.preloaded = true
     })
   }
 
-  if (preloadOriginal && !image.original_preloaded) {
+  if (preloadOriginal && !image.original_preloaded && image.original_url) {
     preloadImageUrl(image.original_url).then(() => {
       image.original_preloaded = true
     })

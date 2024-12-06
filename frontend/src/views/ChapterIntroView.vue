@@ -72,11 +72,24 @@ main {
         height: 6.8125rem;
       }
 
-      :deep(img) {
+      :deep(img),
+      :deep(svg) {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center;
+      }
+
+      :deep(svg) {
+        *[fill='#9BF37E' i],
+        *[fill='#9BF47E' i] {
+          fill: #ebf578;
+        }
+
+        *[stroke='#9BF37E' i],
+        *[stroke='#9BF47E' i] {
+          stroke: #ebf578;
+        }
       }
     }
 
