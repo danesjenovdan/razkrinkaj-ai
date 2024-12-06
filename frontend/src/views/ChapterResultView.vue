@@ -36,7 +36,7 @@ const correctAnswers = computed(() => {
 const shareResultMessage = computed(() => {
   return `
 
-Razkrinkaj.ai
+Moj rezultat na razkrinkaj.ai
 
 Poglavje: ${props.chapter.title}
 
