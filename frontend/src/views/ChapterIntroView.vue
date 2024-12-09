@@ -62,14 +62,18 @@ main {
     text-align: center;
 
     .thumbnail-image {
-      width: 5rem;
-      height: 5rem;
+      width: 5.625rem;
+      height: 5.625rem;
       margin-inline: auto;
+      padding: 0.25rem;
+      background: var(--color-bg-white);
+      border: 0.5px solid #000;
       border-radius: 3px;
 
       @media (min-width: 768px) {
         width: 6.8125rem;
         height: 6.8125rem;
+        padding: 0.3125rem;
       }
 
       :deep(img),

@@ -78,6 +78,18 @@ onMounted(() => {
     })
     store.sendFinishedChapterDataToApi(props.chapter.id)
   }
+
+  // unlock all feedback chapters that are not finished yet
+  for (const chapter of store.chapters.values()) {
+    if (
+      chapter.is_feedback &&
+      !store.finishedChapters.has(chapter.id) &&
+      !store.unlockedChapters.includes(chapter.id)
+    ) {
+      store.unlockedChapters.push(chapter.id)
+    }
+  }
+
   // // unlock next chapter
   // const chapterIds = [...store.chapters.keys()]
   // const currentChapterIndex = chapterIds.findIndex(
@@ -92,6 +104,7 @@ onMounted(() => {
   //     store.unlockedChapters.push(nextChapterId)
   //   }
   // }
+
   // persist data to local storage
   store.saveLocalStorage()
 })
@@ -106,7 +119,7 @@ onMounted(() => {
       <ThumbnailImage v-if="chapter.image" :image="chapter.image" />
       <h1>{{ chapter.title }}</h1>
     </div>
-    <div class="chapter-scores">
+    <div v-if="!chapter.is_feedback" class="chapter-scores">
       <div class="score-box">
         <span class="emoji">💪</span>
         <div>
@@ -130,6 +143,7 @@ onMounted(() => {
     </div>
     <div class="buttons">
       <ButtonPrimary
+        v-if="!chapter.is_feedback"
         class="button"
         buttonText="Deli rezultat"
         @click="onShareResult"
@@ -198,14 +212,18 @@ main {
     }
 
     .thumbnail-image {
-      width: 5rem;
-      height: 5rem;
+      width: 5.625rem;
+      height: 5.625rem;
       margin-inline: auto;
+      padding: 0.25rem;
+      background: var(--color-bg-white);
+      border: 0.5px solid #000;
       border-radius: 3px;
 
       @media (min-width: 768px) {
         width: 6.8125rem;
         height: 6.8125rem;
+        padding: 0.3125rem;
       }
 
       :deep(img),

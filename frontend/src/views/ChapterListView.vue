@@ -40,7 +40,7 @@ onMounted(() => {
     <ButtonPrimary
       class="button"
       buttonText="Začni znova"
-      emoji="❌"
+      icon="refresh"
       color="white"
       @click="onResetClick"
     />

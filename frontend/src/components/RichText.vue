@@ -9,8 +9,6 @@ defineProps<{
 
 const richTextRef = useTemplateRef('rich-text')
 
-// function replaceThumbnails() {}
-
 onMounted(() => {
   richTextRef.value
     ?.querySelectorAll<HTMLImageElement>('img.is-thumbnail')
@@ -23,6 +21,11 @@ onMounted(() => {
         })
       }
     })
+
+  richTextRef.value?.querySelectorAll<HTMLAnchorElement>('a').forEach(a => {
+    a.setAttribute('target', '_blank')
+    a.setAttribute('rel', 'noopener noreferrer')
+  })
 })
 </script>
 

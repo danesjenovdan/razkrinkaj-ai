@@ -121,9 +121,10 @@ async function onNewsletterSubmit() {
             <div class="footer-logo">
               <UseLogo />
               <span>
-                Projekt je bil delno financiran z donacijo veleposlaništva ZDA.
-                Izražena mnenja, ugotovitve in sklepi ali priporočila pripadajo
-                avtorjem in ne odražajo nujno mnenj Department of State.
+                Projekt je bil delno financiran z donacijo Veleposlaništva ZDA v
+                Ljubljani. Izražena mnenja, ugotovitve, sklepi ali priporočila
+                pripadajo avtorjem in ne odražajo nujno mnenj Ministrstva za
+                zunanje zadeve ZDA.
               </span>
             </div>
           </div>

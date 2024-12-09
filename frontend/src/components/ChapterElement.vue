@@ -22,6 +22,13 @@ const isLocked = computed(() => {
   )
 })
 
+const isHidden = computed(() => {
+  if (props.chapter.is_feedback && (isLocked.value || isFinished.value)) {
+    return true
+  }
+  return false
+})
+
 onMounted(() => {
   if (!isLocked.value) {
     store.initChapterData(props.chapter.id).then(() => {
@@ -36,6 +43,7 @@ onMounted(() => {
 
 <template>
   <RouterLink
+    v-if="!isHidden"
     :class="{ chapter: true, disabled: isLocked, completed: isFinished }"
     :to="{ name: 'chapter-intro', params: { id: chapter.id } }"
   >

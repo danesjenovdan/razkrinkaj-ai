@@ -179,6 +179,13 @@ onBeforeUnmount(() => {
     border-radius: 3px;
     cursor: pointer;
 
+    &:hover {
+      background: #fefffb;
+      box-shadow:
+        0px 0px 6px 0px #cbd844 inset,
+        0px 0px 7px -1px #f3ff6f;
+    }
+
     svg,
     img {
       width: var(--_button-icon-size);
