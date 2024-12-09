@@ -119,7 +119,7 @@ onMounted(() => {
       <ThumbnailImage v-if="chapter.image" :image="chapter.image" />
       <h1>{{ chapter.title }}</h1>
     </div>
-    <div class="chapter-scores">
+    <div v-if="!chapter.is_feedback" class="chapter-scores">
       <div class="score-box">
         <span class="emoji">💪</span>
         <div>
@@ -143,6 +143,7 @@ onMounted(() => {
     </div>
     <div class="buttons">
       <ButtonPrimary
+        v-if="!chapter.is_feedback"
         class="button"
         buttonText="Deli rezultat"
         @click="onShareResult"
