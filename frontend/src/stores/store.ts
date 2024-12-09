@@ -144,7 +144,9 @@ export const useStore = defineStore('store', () => {
       chapters.clear()
       for (const c of data.chapters) {
         chapters.set(c.id, c)
-        preloadImage(c.image)
+        if (c.image) {
+          preloadImage(c.image)
+        }
       }
 
       homeDataLoaded.value = true

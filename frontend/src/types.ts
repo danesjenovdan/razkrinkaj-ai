@@ -49,5 +49,6 @@ export type Chapter = {
   description: string
   image: ImageDescription | null
   locked_by_default: boolean
+  is_feedback: boolean
   pages: Page[] | null
 }

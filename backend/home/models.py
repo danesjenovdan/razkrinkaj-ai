@@ -47,11 +47,16 @@ class ChapterPage(Page):
         default=False,
         verbose_name="Privzeto zaklenjeno",
     )
+    is_feedback = models.BooleanField(
+        default=False,
+        verbose_name="Je anketa",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("description"),
         FieldPanel("image"),
         FieldPanel("locked_by_default"),
+        FieldPanel("is_feedback"),
     ]
 
     parent_page_types = ["home.HomePage"]

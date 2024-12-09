@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useStore } from '@/stores/store'
+
 defineProps<{
   buttonText: string
   correct: boolean
@@ -6,6 +8,11 @@ defineProps<{
   selected: boolean
   points: number
 }>()
+
+const store = useStore()
+
+const chapter = store.chapters.get(store.currentChapterId)
+if (!chapter) throw new Error('Chapter not found')
 </script>
 
 <template>
@@ -13,14 +20,15 @@ defineProps<{
     type="button"
     :class="{
       'button-answer': true,
+      'is-feedback': chapter.is_feedback,
       revealed: revealed,
-      correct: revealed && correct,
-      incorrect: revealed && !correct,
+      correct: revealed && correct && !chapter.is_feedback,
+      incorrect: revealed && !correct && !chapter.is_feedback,
       selected: revealed && selected,
     }"
   >
     <span class="answer-left">
-      <span v-if="!selected" class="circle"></span>
+      <span v-if="!selected || chapter.is_feedback" class="circle"></span>
       <span v-else class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32.046">
           <path
@@ -39,7 +47,7 @@ defineProps<{
       </span>
       <span>{{ buttonText }}</span>
     </span>
-    <span v-if="selected" class="score">
+    <span v-if="selected && points > 0" class="score">
       <strong>{{ correct ? '+' : '-' }} {{ points }}</strong>
       točk
     </span>
@@ -133,13 +141,20 @@ defineProps<{
     box-shadow: 0 0 6px 0 var(--_color-shadow) inset;
 
     &.selected {
-      &.correct {
+      &.correct,
+      &.is-feedback {
         --_color-bg: #f0ffeb;
         --_color-shadow: #99f37d;
 
         box-shadow:
           0 0 6px 0 var(--_color-shadow) inset,
           0 0 0 3px var(--_color-shadow);
+      }
+
+      &.is-feedback {
+        .circle {
+          background: #99f37d;
+        }
       }
 
       &.incorrect {

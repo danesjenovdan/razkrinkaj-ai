@@ -78,6 +78,18 @@ onMounted(() => {
     })
     store.sendFinishedChapterDataToApi(props.chapter.id)
   }
+
+  // unlock all feedback chapters that are not finished yet
+  for (const chapter of store.chapters.values()) {
+    if (
+      chapter.is_feedback &&
+      !store.finishedChapters.has(chapter.id) &&
+      !store.unlockedChapters.includes(chapter.id)
+    ) {
+      store.unlockedChapters.push(chapter.id)
+    }
+  }
+
   // // unlock next chapter
   // const chapterIds = [...store.chapters.keys()]
   // const currentChapterIndex = chapterIds.findIndex(
@@ -92,6 +104,7 @@ onMounted(() => {
   //     store.unlockedChapters.push(nextChapterId)
   //   }
   // }
+
   // persist data to local storage
   store.saveLocalStorage()
 })
