@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
+import ProgressIndicator from '@/components/ProgressIndicator.vue'
 import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
 import type { Chapter } from '@/types'
@@ -62,6 +63,7 @@ onMounted(() => {
 
 <template>
   <main :key="pageIndex">
+    <ProgressIndicator :chapter="chapter" :pageIndex="pageIndex" />
     <div v-if="page.type === 'text'" class="page-content">
       <RichText :title="page.title" :content="page.text" />
       <ButtonPrimary
