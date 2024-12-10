@@ -1,4 +1,5 @@
 import json
+from collections import defaultdict
 
 from django.db.models import Count, Q
 from django.http import JsonResponse
@@ -187,31 +188,66 @@ class FinishedChapterView(View):
 
 
 def admin_answer_analytics(request):
-
-    page_data = (
+    page_data_count_correct = (
         PageAnswerData.objects.all()
         .prefetch_related("page", "finishedchapterdata__chapter")
-        .values("finishedchapterdata__chapter__title", "page__title")
+        .values("finishedchapterdata__chapter__title", "page__title", "page__question")
         .annotate(
-            # answer_index=Count("answer_index"),
             correct_count=Count("correct", filter=Q(correct=True)),
             incorrect_count=Count("correct", filter=Q(correct=False)),
         )
     )
 
-    grouped_data = {}
-    for d in page_data:
-        if d["finishedchapterdata__chapter__title"] not in grouped_data:
-            grouped_data[d["finishedchapterdata__chapter__title"]] = {}
-        grouped_data[d["finishedchapterdata__chapter__title"]][d["page__title"]] = {
-            "correct_count": d["correct_count"],
-            "incorrect_count": d["incorrect_count"],
-            "percentage": round(
-                d["correct_count"] / (d["correct_count"] + d["incorrect_count"]) * 100,
-                2,
-            ),
+    page_data_count_answers = (
+        PageAnswerData.objects.all()
+        .prefetch_related("page", "finishedchapterdata__chapter")
+        .values(
+            "finishedchapterdata__chapter__title",
+            "page",
+            "page__title",
+            "page__question",
+            "answer_index",
+        )
+        .annotate(count=Count("answer_index"))
+    )
+
+    grouped_data = defaultdict(dict)
+
+    for d in page_data_count_correct:
+        chapter_title = d["finishedchapterdata__chapter__title"]
+        page_title = d["page__title"]
+        page_question = d["page__question"]
+        correct_count = d["correct_count"]
+        incorrect_count = d["incorrect_count"]
+        percentage = correct_count / (correct_count + incorrect_count) * 100
+
+        grouped_data[chapter_title][page_title] = {
+            "question": page_question,
+            "correct_count": correct_count,
+            "incorrect_count": incorrect_count,
+            "percentage": percentage,
+            "answers": [],
         }
 
+    for d in page_data_count_answers:
+        chapter_title = d["finishedchapterdata__chapter__title"]
+        page_title = d["page__title"]
+        answer_index = d["answer_index"]
+        count = d["count"]
+
+        page_id = d["page"]
+        page = ChapterQuizSubPage.objects.get(id=page_id)
+        answer_values = [a["value"] for a in page.answers.raw_data]
+
+        answers = grouped_data[chapter_title][page_title]["answers"]
+        answers.append((answer_values[answer_index], count))
+        answers.sort(key=lambda x: x[1], reverse=True)
+
+    # disable default factory to fix template looping
+    grouped_data.default_factory = None
+
     return render(
-        request, "admin/answer_analytics.html", {"grouped_data": grouped_data}
+        request,
+        "admin/answer_analytics.html",
+        {"grouped_data": grouped_data},
     )

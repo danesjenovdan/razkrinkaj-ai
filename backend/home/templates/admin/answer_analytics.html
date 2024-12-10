@@ -1,12 +1,17 @@
 <style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+
   table {
     table-layout: fixed;
     border-collapse: collapse;
-    width: 700px;
+    width: 100%;
   }
 
   table, th, td {
     border: 1px solid black;
+    font-size: 14px;
   }
 
   th, td {
@@ -24,6 +29,10 @@
   }
 
   th.narrow {
+    width: 80px;
+  }
+
+  td table td.narrow {
     width: 15%;
   }
 </style>
@@ -31,9 +40,11 @@
 {% for chapter, answers in grouped_data.items %}
 <div>
   <h2>{{ chapter }}</h2>
-  <table>
+  <table class="table">
     <tr>
       <th>Kviz</th>
+      <th>Vprašanje</th>
+      <th>Odgovori</th>
       <th class="narrow">Pravilno</th>
       <th class="narrow">Narobe</th>
       <th class="narrow">Odstotek</th>
@@ -41,6 +52,17 @@
     {% for page, answer in answers.items %}
     <tr>
       <td>{{ page }}</td>
+      <td>{{ answer.question }}</td>
+      <td style="padding: 0;">
+        <table>
+          {% for ans_val, count in answer.answers %}
+          <tr>
+            <td style="font-weight: 700; color: {% if ans_val.correct %}#080{% else %}#800{% endif %};">{{ ans_val.text }}</td>
+            <td class="narrow num">{{ count }}</td>
+          </tr>
+          {% endfor %}
+        </table>
+      </td>
       <td class="num">{{ answer.correct_count }}</td>
       <td class="num">{{ answer.incorrect_count }}</td>
       <td class="num">{{ answer.percentage|floatformat:2 }} %</td>
