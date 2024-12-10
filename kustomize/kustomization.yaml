@@ -8,7 +8,7 @@ resources:
 images:
   - name: razkrinkaj-ai-backend
     newName: rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-backend
-    newTag: '734d616411fee83c86add94aff4dee44f35870f4'
+    newTag: '501ed175d4fa33573f1883e3aef1a95445359857'
   - name: razkrinkaj-ai-frontend
     newName: rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend
-    newTag: '734d616411fee83c86add94aff4dee44f35870f4'
+    newTag: '501ed175d4fa33573f1883e3aef1a95445359857'
