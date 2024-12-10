@@ -1,7 +1,8 @@
 import json
 
+from django.db.models import Count, Q
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -183,3 +184,34 @@ class FinishedChapterView(View):
             finished_data.answers.add(answer_data)
 
         return JsonResponse({"status": "ok"})
+
+
+def admin_answer_analytics(request):
+
+    page_data = (
+        PageAnswerData.objects.all()
+        .prefetch_related("page", "finishedchapterdata__chapter")
+        .values("finishedchapterdata__chapter__title", "page__title")
+        .annotate(
+            # answer_index=Count("answer_index"),
+            correct_count=Count("correct", filter=Q(correct=True)),
+            incorrect_count=Count("correct", filter=Q(correct=False)),
+        )
+    )
+
+    grouped_data = {}
+    for d in page_data:
+        if d["finishedchapterdata__chapter__title"] not in grouped_data:
+            grouped_data[d["finishedchapterdata__chapter__title"]] = {}
+        grouped_data[d["finishedchapterdata__chapter__title"]][d["page__title"]] = {
+            "correct_count": d["correct_count"],
+            "incorrect_count": d["incorrect_count"],
+            "percentage": round(
+                d["correct_count"] / (d["correct_count"] + d["incorrect_count"]) * 100,
+                2,
+            ),
+        }
+
+    return render(
+        request, "admin/answer_analytics.html", {"grouped_data": grouped_data}
+    )

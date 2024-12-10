@@ -1,0 +1,51 @@
+<style>
+  table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 700px;
+  }
+
+  table, th, td {
+    border: 1px solid black;
+  }
+
+  th, td {
+    padding: 5px;
+    text-align: left;
+  }
+
+  table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  td.num {
+    text-align: right;
+    font-family: monospace;
+  }
+
+  th.narrow {
+    width: 15%;
+  }
+</style>
+
+{% for chapter, answers in grouped_data.items %}
+<div>
+  <h2>{{ chapter }}</h2>
+  <table>
+    <tr>
+      <th>Kviz</th>
+      <th class="narrow">Pravilno</th>
+      <th class="narrow">Narobe</th>
+      <th class="narrow">Odstotek</th>
+    </tr>
+    {% for page, answer in answers.items %}
+    <tr>
+      <td>{{ page }}</td>
+      <td class="num">{{ answer.correct_count }}</td>
+      <td class="num">{{ answer.incorrect_count }}</td>
+      <td class="num">{{ answer.percentage|floatformat:2 }} %</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endfor %}
