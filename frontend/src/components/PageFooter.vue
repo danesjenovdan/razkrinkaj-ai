@@ -196,6 +196,7 @@ footer {
         line-height: 1.3;
         color: #fff;
         text-decoration: none;
+        cursor: pointer;
 
         &:hover {
           background: #3458f3;

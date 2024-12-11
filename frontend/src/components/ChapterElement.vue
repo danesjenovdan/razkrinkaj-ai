@@ -174,6 +174,7 @@ onMounted(() => {
   border-radius: 3px;
   border: 0.5px solid #000;
   text-decoration: none;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     padding: 0.625rem;

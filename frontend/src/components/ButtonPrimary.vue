@@ -75,6 +75,7 @@ const componentName = computed(() => (props.link ? 'RouterLink' : 'button'))
   font-weight: 700;
   color: var(--color-text);
   text-decoration: none;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     font-size: 1.5rem;
