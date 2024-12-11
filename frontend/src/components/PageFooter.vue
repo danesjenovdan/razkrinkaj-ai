@@ -196,8 +196,9 @@ footer {
         line-height: 1.3;
         color: #fff;
         text-decoration: none;
+        cursor: pointer;
 
-        &:hover {
+        @at-root body:not(.is-ios) &:hover {
           background: #3458f3;
           box-shadow:
             0px 0px 4px 0px #173ac9 inset,

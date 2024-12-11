@@ -174,6 +174,7 @@ onMounted(() => {
   border-radius: 3px;
   border: 0.5px solid #000;
   text-decoration: none;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     padding: 0.625rem;
@@ -300,7 +301,7 @@ onMounted(() => {
     }
   }
 
-  &:hover {
+  @at-root body:not(.is-ios) &:hover {
     background: #fefffb;
     box-shadow:
       0px 0px 6px 0px #cbd844 inset,

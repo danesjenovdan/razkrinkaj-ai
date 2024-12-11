@@ -114,6 +114,7 @@ if (!chapter) throw new Error('Chapter not found')
   color: var(--_color-border);
   text-align: left;
   text-decoration: none;
+  cursor: pointer;
 
   @media (min-width: 768px) {
     font-size: 1.5rem;
@@ -211,7 +212,7 @@ if (!chapter) throw new Error('Chapter not found')
     }
   }
 
-  &:hover {
+  @at-root body:not(.is-ios) &:not(.revealed):hover {
     background: #eef1fc;
     box-shadow:
       0px 0px 6px 0px #173ac9 inset,
