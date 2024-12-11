@@ -3,6 +3,14 @@
     font-family: Arial, sans-serif;
   }
 
+  .alert {
+    padding: 16px 20px;
+    margin-bottom: 15px;
+    background-color: #800;
+    font-size: 14px;
+    color: #fff;
+  }
+
   table {
     table-layout: fixed;
     border-collapse: collapse;
@@ -36,6 +44,12 @@
     width: 15%;
   }
 </style>
+
+{% if dangling_empty_page_answer_data_count %}
+<div class="alert">
+  Obstaja <strong>{{ dangling_empty_page_answer_data_count }}</strong> praznih odgovorov. Verjetno je bila analitika pobrisana in je ostalo nekaj praznih odgovorov. Sporoči administratorju!
+</div>
+{% endif %}
 
 {% for chapter, answers in grouped_data.items %}
 <div>

@@ -188,6 +188,10 @@ class FinishedChapterView(View):
 
 
 def admin_answer_analytics(request):
+    dangling_empty_page_answer_data_count = (
+        PageAnswerData.objects.all().filter(finishedchapterdata=None).count()
+    )
+
     page_data_count_correct = (
         PageAnswerData.objects.all()
         .prefetch_related("page", "finishedchapterdata__chapter")
@@ -197,6 +201,10 @@ def admin_answer_analytics(request):
             incorrect_count=Count("correct", filter=Q(correct=False)),
         )
     )
+
+    for p in page_data_count_correct:
+        if not p["finishedchapterdata__chapter__title"]:
+            print(p)
 
     page_data_count_answers = (
         PageAnswerData.objects.all()
@@ -249,5 +257,8 @@ def admin_answer_analytics(request):
     return render(
         request,
         "admin/answer_analytics.html",
-        {"grouped_data": grouped_data},
+        {
+            "grouped_data": grouped_data,
+            "dangling_empty_page_answer_data_count": dangling_empty_page_answer_data_count,
+        },
     )
