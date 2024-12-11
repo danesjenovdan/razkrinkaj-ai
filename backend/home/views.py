@@ -202,10 +202,6 @@ def admin_answer_analytics(request):
         )
     )
 
-    for p in page_data_count_correct:
-        if not p["finishedchapterdata__chapter__title"]:
-            print(p)
-
     page_data_count_answers = (
         PageAnswerData.objects.all()
         .prefetch_related("page", "finishedchapterdata__chapter")
