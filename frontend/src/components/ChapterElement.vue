@@ -301,7 +301,7 @@ onMounted(() => {
     }
   }
 
-  &:hover {
+  @at-root body:not(.is-ios) &:hover {
     background: #fefffb;
     box-shadow:
       0px 0px 6px 0px #cbd844 inset,

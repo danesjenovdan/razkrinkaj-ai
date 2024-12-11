@@ -212,7 +212,7 @@ if (!chapter) throw new Error('Chapter not found')
     }
   }
 
-  &:not(.revealed):hover {
+  @at-root body:not(.is-ios) &:not(.revealed):hover {
     background: #eef1fc;
     box-shadow:
       0px 0px 6px 0px #173ac9 inset,
