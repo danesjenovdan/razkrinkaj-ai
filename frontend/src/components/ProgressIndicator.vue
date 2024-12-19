@@ -32,7 +32,6 @@ const numQuizPages = computed(() => {
 })
 
 const quizPageAnswers = computed(() => {
-  console.log('quizPageAnswers', store.currentChapterAnswers, quizPageIds)
   return quizPageIds.value.map(
     id => store.currentChapterAnswers.get(id)?.correct,
   )
