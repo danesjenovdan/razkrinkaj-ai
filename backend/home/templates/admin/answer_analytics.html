@@ -11,6 +11,12 @@
     color: #fff;
   }
 
+  span.num {
+    text-align: right;
+    font-family: monospace;
+    font-size: 20px;
+  }
+
   table {
     table-layout: fixed;
     border-collapse: collapse;
@@ -54,6 +60,11 @@
 {% for chapter, answers in grouped_data.items %}
 <div>
   <h2>{{ chapter }}</h2>
+  <p>
+    Končano: <span class="num">{{ answers.XXX__is_finished.finished_count }}</span> &mdash;
+    Nekončano: <span class="num">{{ answers.XXX__is_finished.unfinished_count }}</span> &mdash;
+    <span class="num">{{ answers.XXX__is_finished.percentage|floatformat:2 }} %</span>
+  </p>
   <table class="table">
     <tr>
       <th>Kviz</th>
@@ -64,6 +75,7 @@
       <th class="narrow">Odstotek</th>
     </tr>
     {% for page, answer in answers.items %}
+    {% if page != "XXX__is_finished" %}
     <tr>
       <td>{{ page }}</td>
       <td>{{ answer.question }}</td>
@@ -81,6 +93,7 @@
       <td class="num">{{ answer.incorrect_count }}</td>
       <td class="num">{{ answer.percentage|floatformat:2 }} %</td>
     </tr>
+    {% endif %}
     {% endfor %}
   </table>
 </div>

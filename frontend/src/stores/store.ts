@@ -9,6 +9,7 @@ import { apiUrl } from '@/utils/api'
 type AnswerData = {
   answerIndex: number
   correct: boolean
+  answerText?: string
 }
 
 type FinishedChapterData = {
@@ -20,8 +21,10 @@ export const useStore = defineStore('store', () => {
   const homeDataLoaded = ref(false)
   const chapterDataLoaded = reactive(new Map<number, boolean>())
 
-  // user guid
+  // user guid (does not change after reset)
   const userGUID = ref('')
+  // attempt guid (does change after reset)
+  const attemptGUID = ref('')
 
   // intro texts
   const introductionTitle = ref('')
@@ -37,6 +40,8 @@ export const useStore = defineStore('store', () => {
   const unlockedChapters = ref<number[]>([])
   // ids of finished chapters to score and answers
   const finishedChapters = reactive(new Map<number, FinishedChapterData>())
+  // ids of in progress chapters to score and answers
+  const inProgressChapters = reactive(new Map<number, FinishedChapterData>())
 
   // user answers
   const currentChapterId = ref(-1)
@@ -58,6 +63,18 @@ export const useStore = defineStore('store', () => {
         currentChapterScore.value = 0
         currentChapterAnswers.clear()
       }
+    } else if (inProgressChapters.has(id)) {
+      const data = inProgressChapters.get(id)
+      if (data) {
+        currentChapterScore.value = data.score
+        currentChapterAnswers.clear()
+        for (const [k, v] of data.answers.entries()) {
+          currentChapterAnswers.set(k, v)
+        }
+      } else {
+        currentChapterScore.value = 0
+        currentChapterAnswers.clear()
+      }
     } else {
       currentChapterScore.value = 0
       currentChapterAnswers.clear()
@@ -68,27 +85,39 @@ export const useStore = defineStore('store', () => {
     setCurrentChapter(-1)
   }
 
+  function generateGUID() {
+    const one = Math.random().toString(36).substring(2)
+    const two = Math.random().toString(36).substring(2)
+    return one + two
+  }
+
   function clearAllProgress() {
+    attemptGUID.value = generateGUID()
     justUnlockedChapters.value = []
     unlockedChapters.value = []
     finishedChapters.clear()
+    inProgressChapters.clear()
     clearCurrentChapter()
     clearLocalStorage()
   }
 
   function clearLocalStorage() {
     const s = window.localStorage
+    s.setItem('attemptGUID', attemptGUID.value)
     s.removeItem('justUnlockedChapters')
     s.removeItem('unlockedChapters')
     s.removeItem('finishedChapters')
+    s.removeItem('inProgressChapters')
   }
 
   function saveLocalStorage() {
     const s = window.localStorage
     s.setItem('userGUID', userGUID.value)
+    s.setItem('attemptGUID', attemptGUID.value)
     s.setItem('justUnlockedChapters', smartToString(justUnlockedChapters))
     s.setItem('unlockedChapters', smartToString(unlockedChapters))
     s.setItem('finishedChapters', smartToString(finishedChapters))
+    s.setItem('inProgressChapters', smartToString(inProgressChapters))
   }
 
   function loadLocalStorage() {
@@ -99,10 +128,16 @@ export const useStore = defineStore('store', () => {
     if ((item = s.getItem('userGUID'))) {
       userGUID.value = item
     } else {
-      const one = Math.random().toString(36).substring(2)
-      const two = Math.random().toString(36).substring(2)
-      userGUID.value = one + two
+      userGUID.value = generateGUID()
       s.setItem('userGUID', userGUID.value)
+    }
+
+    // load attempt guid
+    if ((item = s.getItem('attemptGUID'))) {
+      attemptGUID.value = item
+    } else {
+      attemptGUID.value = generateGUID()
+      s.setItem('attemptGUID', attemptGUID.value)
     }
 
     // load saved data
@@ -119,6 +154,13 @@ export const useStore = defineStore('store', () => {
       finishedChapters.clear()
       for (const [k, v] of value.entries()) {
         finishedChapters.set(k, v)
+      }
+    }
+    if ((item = s.getItem('inProgressChapters'))) {
+      const value = smartParse(item) as Map<number, FinishedChapterData>
+      inProgressChapters.clear()
+      for (const [k, v] of value.entries()) {
+        inProgressChapters.set(k, v)
       }
     }
   }
@@ -179,24 +221,42 @@ export const useStore = defineStore('store', () => {
     }
   }
 
-  async function sendFinishedChapterDataToApi(chapterId: number) {
-    const data = finishedChapters.get(chapterId)
+  async function sendChapterDataToApi(
+    data: FinishedChapterData | undefined,
+    url: string,
+  ) {
     if (data) {
       try {
-        const response = await axios.post(
-          `${apiUrl}/api/chapter/${chapterId}/finished/`,
-          {
-            userGUID: userGUID.value,
-            data: smartToString(data),
-          },
-        )
+        const response = await axios.post(url, {
+          userGUID: userGUID.value,
+          attemptGUID: attemptGUID.value,
+          data: smartToString(data),
+        })
         if (response.status == 200) {
-          console.log('sendFinishedChapterDataToApi', response.data)
+          console.log('sendChapterDataToApi', response.data)
         }
       } catch (error) {
-        console.error('sendFinishedChapterDataToApi', error)
+        console.error('sendChapterDataToApi', error)
       }
+    } else {
+      console.error('sendChapterDataToApi', 'no data')
     }
+  }
+
+  async function sendFinishedChapterDataToApi(chapterId: number) {
+    const data = finishedChapters.get(chapterId)
+    return sendChapterDataToApi(
+      data,
+      `${apiUrl}/api/chapter/${chapterId}/finished/`,
+    )
+  }
+
+  async function sendProgressChapterDataToApi(chapterId: number) {
+    const data = inProgressChapters.get(chapterId)
+    return sendChapterDataToApi(
+      data,
+      `${apiUrl}/api/chapter/${chapterId}/progress/`,
+    )
   }
 
   return {
@@ -206,6 +266,7 @@ export const useStore = defineStore('store', () => {
     chapterDataLoaded,
     //
     userGUID,
+    attemptGUID,
     introductionTitle,
     introductionDescription,
     introductionButtonText,
@@ -213,6 +274,7 @@ export const useStore = defineStore('store', () => {
     justUnlockedChapters,
     unlockedChapters,
     finishedChapters,
+    inProgressChapters,
     currentChapterId,
     currentChapterScore,
     currentChapterAnswers,
@@ -223,5 +285,6 @@ export const useStore = defineStore('store', () => {
     loadLocalStorage,
     score,
     sendFinishedChapterDataToApi,
+    sendProgressChapterDataToApi,
   }
 })
