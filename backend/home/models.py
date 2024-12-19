@@ -166,6 +166,7 @@ class PageAnswerData(models.Model):
     )
     answer_index = models.IntegerField(verbose_name="Indeks odgovora")
     correct = models.BooleanField(verbose_name="Pravilno")
+    answer_text = models.TextField(verbose_name="Besedilo odgovora", blank=True)
 
     def __str__(self):
         return f"{self.page.title} - {self.answer_index} - {self.correct}"
@@ -185,6 +186,12 @@ class FinishedChapterData(models.Model):
     )
     score = models.IntegerField(verbose_name="Število točk")
     answers = models.ManyToManyField("home.PageAnswerData", verbose_name="Odgovori")
+    attempt_guid = models.CharField(
+        max_length=255,
+        verbose_name="ID poskusa",
+        blank=True,
+    )
+    is_finished = models.BooleanField(default=False, verbose_name="Poglavje končano")
 
     def __str__(self):
         return f"{self.user_guid} - {self.chapter.title}"

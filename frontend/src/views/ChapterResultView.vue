@@ -76,6 +76,7 @@ onMounted(() => {
       score: store.currentChapterScore,
       answers: new Map(store.currentChapterAnswers),
     })
+    store.inProgressChapters.delete(props.chapter.id)
     store.sendFinishedChapterDataToApi(props.chapter.id)
   }
 

@@ -163,6 +163,52 @@ class ChapterView(View):
         )
 
 
+def get_or_create_finished_data(chapter, json_body):
+    finished_data, created = FinishedChapterData.objects.get_or_create(
+        user_guid=json_body["userGUID"],
+        chapter=chapter,
+        attempt_guid=json_body["attemptGUID"],
+        defaults={"score": 0},
+    )
+    return finished_data
+
+
+def update_or_create_page_answer_data(finished_data, json_data):
+    for answer in json_data["answers"]["entries"]:
+        page = ChapterQuizSubPage.objects.get(id=answer[0])
+
+        if answer_data := finished_data.answers.filter(page=page).first():
+            answer_data.answer_index = answer[1]["answerIndex"]
+            answer_data.answer_text = answer[1].get("answerText", "")
+            answer_data.correct = answer[1]["correct"]
+            answer_data.save()
+
+        else:
+            answer_data = PageAnswerData.objects.create(
+                page=page,
+                answer_index=answer[1]["answerIndex"],
+                answer_text=answer[1].get("answerText", ""),
+                correct=answer[1]["correct"],
+            )
+            finished_data.answers.add(answer_data)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class ProgressChapterView(View):
+    def post(self, request, id):
+        chapter = get_object_or_404(ChapterPage, id=id)
+        json_body = json.loads(request.body)
+        json_data = json.loads(json_body["data"])
+
+        finished_data = get_or_create_finished_data(chapter, json_body)
+
+        update_or_create_page_answer_data(finished_data, json_data)
+
+        finished_data.save()
+
+        return JsonResponse({"status": "ok"})
+
+
 @method_decorator(csrf_exempt, name="dispatch")
 class FinishedChapterView(View):
     def post(self, request, id):
@@ -170,19 +216,13 @@ class FinishedChapterView(View):
         json_body = json.loads(request.body)
         json_data = json.loads(json_body["data"])
 
-        finished_data = FinishedChapterData.objects.create(
-            user_guid=json_body["userGUID"],
-            chapter=chapter,
-            score=json_data["score"],
-        )
+        finished_data = get_or_create_finished_data(chapter, json_body)
 
-        for answer in json_data["answers"]["entries"]:
-            answer_data = PageAnswerData.objects.create(
-                page=ChapterQuizSubPage.objects.get(id=answer[0]),
-                answer_index=answer[1]["answerIndex"],
-                correct=answer[1]["correct"],
-            )
-            finished_data.answers.add(answer_data)
+        update_or_create_page_answer_data(finished_data, json_data)
+
+        finished_data.score = json_data["score"]
+        finished_data.is_finished = True
+        finished_data.save()
 
         return JsonResponse({"status": "ok"})
 
@@ -213,6 +253,17 @@ def admin_answer_analytics(request):
             "answer_index",
         )
         .annotate(count=Count("answer_index"))
+    )
+
+    finished_chapter_data_is_finished = (
+        FinishedChapterData.objects.all()
+        .values(
+            "chapter__title",
+        )
+        .annotate(
+            finished_count=Count("is_finished", filter=Q(is_finished=True)),
+            unfinished_count=Count("is_finished", filter=Q(is_finished=False)),
+        )
     )
 
     grouped_data = defaultdict(dict)
@@ -246,6 +297,18 @@ def admin_answer_analytics(request):
         answers = grouped_data[chapter_title][page_title]["answers"]
         answers.append((answer_values[answer_index], count))
         answers.sort(key=lambda x: x[1], reverse=True)
+
+    for d in finished_chapter_data_is_finished:
+        chapter_title = d["chapter__title"]
+        finished_count = d["finished_count"]
+        unfinished_count = d["unfinished_count"]
+        percentage = finished_count / (finished_count + unfinished_count) * 100
+
+        grouped_data[chapter_title]["XXX__is_finished"] = {
+            "finished_count": finished_count,
+            "unfinished_count": unfinished_count,
+            "percentage": percentage,
+        }
 
     # disable default factory to fix template looping
     grouped_data.default_factory = None

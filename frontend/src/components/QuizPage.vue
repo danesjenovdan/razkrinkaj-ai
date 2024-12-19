@@ -23,7 +23,7 @@ const image = computed(() => {
 
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
-  const correct = props.page.answers[selectedAnswer.value].correct
+  const correct = props.page.answers[index].correct
   const points = correct ? props.page.points : -props.page.points
   // add points
   store.currentChapterScore += points
@@ -31,14 +31,26 @@ function onAnswerClick(index: number) {
   store.currentChapterAnswers.set(props.page.id, {
     answerIndex: index,
     correct,
+    answerText: props.page.answers[index].text,
   })
+  // update in progress chapters
+  store.inProgressChapters.set(store.currentChapterId, {
+    score: store.currentChapterScore,
+    answers: new Map(store.currentChapterAnswers),
+  })
+  store.sendProgressChapterDataToApi(store.currentChapterId)
+  // persist data to local storage
+  store.saveLocalStorage()
   emit('done')
 }
 
 onMounted(() => {
   preloadPageImages(props.page)
 
-  if (store.finishedChapters.has(store.currentChapterId)) {
+  if (
+    store.finishedChapters.has(store.currentChapterId) ||
+    store.inProgressChapters.has(store.currentChapterId)
+  ) {
     const index = store.currentChapterAnswers.get(props.page.id)?.answerIndex
     if (index != null) {
       selectedAnswer.value = index

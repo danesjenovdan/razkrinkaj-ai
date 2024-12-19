@@ -9,12 +9,12 @@ export function fixLocalUrl(url: string) {
 }
 
 export async function preloadImageUrl(url: string): Promise<HTMLImageElement> {
-  console.info('[preload] start:', url)
+  // console.info('[preload] start:', url)
 
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
-      console.info('[preload] image:', url)
+      // console.info('[preload] image:', url)
       resolve(img)
     }
     img.onerror = reject
