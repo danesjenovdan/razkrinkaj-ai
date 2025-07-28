@@ -30,8 +30,8 @@ jobs:
           context: ./backend
           push: true
           tags: |
-            rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-backend:${{ github.sha }}
-            rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-backend:latest
+            rg.fr-par.scw.cloud/djnd/manipulacija-backend:${{ github.sha }}
+            rg.fr-par.scw.cloud/djnd/manipulacija-backend:latest
 
       - name: Build and push frontend
         uses: docker/build-push-action@v6
@@ -41,11 +41,11 @@ jobs:
         with:
           context: ./frontend
           build-args: |
-            VITE_API_URL_BASE=https://api.razkrinkaj.ai
+            VITE_API_URL_BASE=https://api.manipulacija.lb.djnd.si
           push: true
           tags: |
-            rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend:${{ github.sha }}
-            rg.fr-par.scw.cloud/djnd/razkrinkaj-ai-frontend:latest
+            rg.fr-par.scw.cloud/djnd/manipulacija-frontend:${{ github.sha }}
+            rg.fr-par.scw.cloud/djnd/manipulacija-frontend:latest
 
       - name: Update image versions in kustomize/kustomization.yaml
         run: |

@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: razkrinkaj-ai
+  name: manipulacija
   labels:
-    app: razkrinkaj-ai
+    app: manipulacija
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: razkrinkaj-ai
+      app: manipulacija
   template:
     metadata:
       labels:
-        app: razkrinkaj-ai
+        app: manipulacija
     spec:
       securityContext:
         fsGroup: 1000
       volumes:
-        - name: razkrinkaj-ai-storage
+        - name: manipulacija-storage
           emptyDir: {}
       initContainers:
         - name: collectstatic
-          image: razkrinkaj-ai-backend
+          image: manipulacija-backend
           volumeMounts:
-            - name: razkrinkaj-ai-storage
+            - name: manipulacija-storage
               mountPath: /storage
           command:
             - python
@@ -32,10 +32,10 @@ spec:
             - --no-input
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: razkrinkaj_ai.settings.k8s
+              value: manipulacija.settings.k8s
           envFrom:
             - secretRef:
-                name: razkrinkaj-ai-secrets
+                name: manipulacija-secrets
           resources:
             requests:
               memory: 400Mi
@@ -44,9 +44,9 @@ spec:
               memory: 800Mi
               cpu: 400m
         - name: migrate
-          image: razkrinkaj-ai-backend
+          image: manipulacija-backend
           volumeMounts:
-            - name: razkrinkaj-ai-storage
+            - name: manipulacija-storage
               mountPath: /storage
           command:
             - python
@@ -55,10 +55,10 @@ spec:
             - --no-input
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: razkrinkaj_ai.settings.k8s
+              value: manipulacija.settings.k8s
           envFrom:
             - secretRef:
-                name: razkrinkaj-ai-secrets
+                name: manipulacija-secrets
           resources:
             requests:
               memory: 400Mi
@@ -67,14 +67,14 @@ spec:
               memory: 800Mi
               cpu: 400m
       containers:
-        - name: razkrinkaj-ai-backend
-          image: razkrinkaj-ai-backend
+        - name: manipulacija-backend
+          image: manipulacija-backend
           volumeMounts:
-            - name: razkrinkaj-ai-storage
+            - name: manipulacija-storage
               mountPath: /storage
           command:
             - gunicorn
-            - razkrinkaj_ai.wsgi:application
+            - manipulacija.wsgi:application
             - -b
             - 0.0.0.0:8000
             - --log-level
@@ -89,10 +89,10 @@ spec:
             - containerPort: 8000
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: razkrinkaj_ai.settings.k8s
+              value: manipulacija.settings.k8s
           envFrom:
             - secretRef:
-                name: razkrinkaj-ai-secrets
+                name: manipulacija-secrets
           resources:
             requests:
               memory: 400Mi
@@ -100,10 +100,10 @@ spec:
             limits:
               memory: 800Mi
               cpu: 400m
-        - name: razkrinkaj-ai-frontend
-          image: razkrinkaj-ai-frontend
+        - name: manipulacija-frontend
+          image: manipulacija-frontend
           volumeMounts:
-            - name: razkrinkaj-ai-storage
+            - name: manipulacija-storage
               mountPath: /usr/share/nginx/html/backend-storage
           ports:
             - containerPort: 80

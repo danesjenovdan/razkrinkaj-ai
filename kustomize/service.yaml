@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: razkrinkaj-ai
+  name: manipulacija
 spec:
   selector:
-    app: razkrinkaj-ai
+    app: manipulacija
   ports:
     - protocol: TCP
       port: 8000
@@ -13,10 +13,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: razkrinkaj-ai-frontend
+  name: manipulacija-frontend
 spec:
   selector:
-    app: razkrinkaj-ai
+    app: manipulacija
   ports:
     - protocol: TCP
       port: 80

@@ -4,11 +4,11 @@ DEBUG = bool(os.getenv("DJANGO_DEBUG", False))
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "<TODO>")
 
-ALLOWED_HOSTS = ["api.razkrinkaj.ai"]
-CSRF_TRUSTED_ORIGINS = ["https://api.razkrinkaj.ai"]
-CORS_ALLOWED_ORIGINS = ["https://razkrinkaj.ai"]
+ALLOWED_HOSTS = ["api.manipulacija.lb.djnd.si"]
+CSRF_TRUSTED_ORIGINS = ["https://api.manipulacija.lb.djnd.si"]
+CORS_ALLOWED_ORIGINS = ["https://manipulacija.lb.djnd.si"]
 
-WAGTAILADMIN_BASE_URL = "https://api.razkrinkaj.ai"
+WAGTAILADMIN_BASE_URL = "https://api.manipulacija.lb.djnd.si"
 
 STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT", os.path.join(BASE_DIR, "static"))
 STATIC_URL = os.getenv("DJANGO_STATIC_URL_BASE", "/static/")
@@ -22,7 +22,7 @@ if os.getenv("DJANGO_ENABLE_S3", False):
     AWS_STORAGE_BUCKET_NAME = os.getenv("DJANGO_AWS_STORAGE_BUCKET_NAME", "djnd")
     AWS_DEFAULT_ACL = "public-read"
     AWS_QUERYSTRING_AUTH = False
-    AWS_LOCATION = os.getenv("DJANGO_AWS_LOCATION", "razkrinkaj-ai")
+    AWS_LOCATION = os.getenv("DJANGO_AWS_LOCATION", "manipulacija")
     AWS_S3_REGION_NAME = os.getenv("DJANGO_AWS_REGION_NAME", "fr-par")
     AWS_S3_ENDPOINT_URL = os.getenv(
         "DJANGO_AWS_S3_ENDPOINT_URL", "https://s3.fr-par.scw.cloud"
