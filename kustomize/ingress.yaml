@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: razkrinkaj-ai
+  name: manipulacija
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
@@ -9,24 +9,24 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - api.razkrinkaj.ai
-      secretName: razkrinkaj-ai-tls
+        - api.manipulacija.lb.djnd.si
+      secretName: manipulacija-tls
   rules:
-    - host: api.razkrinkaj.ai
+    - host: api.manipulacija.lb.djnd.si
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: razkrinkaj-ai
+                name: manipulacija
                 port:
                   number: 8000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: razkrinkaj-ai-frontend
+  name: manipulacija-frontend
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -34,16 +34,16 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - razkrinkaj.ai
-      secretName: razkrinkaj-ai-frontend-tls
+        - manipulacija.lb.djnd.si
+      secretName: manipulacija-frontend-tls
   rules:
-    - host: razkrinkaj.ai
+    - host: manipulacija.lb.djnd.si
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: razkrinkaj-ai-frontend
+                name: manipulacija-frontend
                 port:
                   number: 80

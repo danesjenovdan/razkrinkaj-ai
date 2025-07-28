@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # EDIT DATABASE NAME TO CHOOSE WHICH ONE YOU WANT
-DATABASE_NAME="razkrinkaj_ai"
-K8S_NAMESPACE="razkrinkaj-ai"
-SECRETS_NAME="razkrinkaj-ai-secrets"
+DATABASE_NAME="manipulacija"
+K8S_NAMESPACE="manipulacija"
+SECRETS_NAME="manipulacija-secrets"
 
 # DATABASE PASSWORD IS DYNAMICALLY RETRIEVED FROM THE CLUSTER
 DATABASE_USER=$(kubectl get secret $SECRETS_NAME -n $K8S_NAMESPACE -o jsonpath="{.data.DJANGO_DATABASE_USER}" | base64 --decode)
