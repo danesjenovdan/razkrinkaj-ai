@@ -58,7 +58,7 @@ main {
     margin-inline: calc(var(--page-gutter) * -1);
     padding-inline: var(--page-gutter);
     padding-block: 2.4rem;
-    background: var(--color-bg-accent);
+    // background: var(--color-bg-accent);
     text-align: center;
 
     .thumbnail-image {
@@ -100,7 +100,7 @@ main {
     h1 {
       margin-top: 1.1rem;
       margin-bottom: 0.5rem;
-      font-family: var(--font-family-heading);
+      // font-family: var(--font-family-heading);
       font-size: 1.5rem;
       font-weight: 700;
 

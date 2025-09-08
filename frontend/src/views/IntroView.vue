@@ -7,71 +7,64 @@ const store = useStore()
 </script>
 
 <template>
-  <main>
-    <div class="intro">
-      <img
-        src="/razkrinkaj-ai-logo.gif"
-        alt="Razkrinkaj.ai"
-        class="title-logo"
-      />
-      <div class="description" v-html="store.introductionDescription"></div>
-      <ButtonPrimary
-        class="button"
-        :buttonText="store.introductionButtonText"
-        :link="{ name: 'chapter-list' }"
-        emoji="🚀🚀🚀"
-      />
-    </div>
-  </main>
-  <PageFooter />
+  <div class="page-wrapper">
+    <main>
+      <div class="intro">
+        <img
+          src="/manipulacija-logo.svg"
+          alt="Manipulacija ni informacija"
+          class="title-logo"
+        />
+        <div class="narrow">
+          <div class="description" v-html="store.introductionDescription"></div>
+          <ButtonPrimary
+            class="button"
+            :buttonText="store.introductionButtonText"
+            :link="{ name: 'chapter-list' }"
+            icon="hands"
+          />
+        </div>
+      </div>
+    </main>
+    <PageFooter />
+  </div>
 </template>
 
 <style scoped lang="scss">
+.page-wrapper {
+  background-color: var(--manipulacija-color-3);
+}
+
 main {
-  padding-bottom: 2rem;
-
-  @media (min-width: 768px) {
-    padding-bottom: 3.38rem;
-  }
-
-  @media (min-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
+  padding-bottom: 8.69rem;
 
   .intro {
     .title-logo {
       width: 100%;
-      max-width: 480px;
-      padding-top: 2.31rem;
-      padding-bottom: 1.88rem;
+      max-width: 960px;
+      padding-top: 5.75rem;
+      padding-bottom: 2.875rem;
       margin-inline: auto;
-
-      @media (min-width: 768px) {
-        padding-top: 3.38rem;
-        padding-bottom: 2.31rem;
-      }
     }
 
-    .description {
-      font-size: 1.125rem;
+    .narrow {
+      margin-inline: auto;
+      max-width: 550px;
 
-      @media (min-width: 768px) {
-        font-size: 1.3125rem;
+      .description {
+        font-size: 1.5rem;
+        font-weight: 500;
+
+        :deep(a) {
+          font-weight: 600;
+          color: #092bba;
+        }
       }
 
-      :deep(a) {
-        font-weight: 600;
-        color: #092bba;
-      }
-    }
-
-    .button {
-      margin-top: 1.5rem;
-
-      @media (min-width: 768px) {
-        margin-top: 2.45rem;
+      .button {
+        margin-top: 2.875rem;
+        margin-inline: auto;
+        max-width: 404px;
       }
     }
   }

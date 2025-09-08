@@ -11,8 +11,8 @@ defineProps<{
       <RouterLink :to="{ name: 'intro' }">
         <div class="title">
           <img
-            src="/razkrinkaj-ai-logo.png"
-            alt="Razkrinkaj.ai"
+            src="/manipulacija-logo.svg"
+            alt="Manipulacija ni informacija"
             class="title-logo"
           />
         </div>

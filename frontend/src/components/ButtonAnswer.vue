@@ -107,7 +107,7 @@ if (!chapter) throw new Error('Chapter not found')
   border-radius: 3px;
   border: 0.5px solid var(--_color-border);
   background: var(--_color-bg);
-  font-family: var(--font-family-heading);
+  // font-family: var(--font-family-heading);
   font-size: 1.3125rem;
   line-height: 1;
   font-weight: 700;

@@ -1,0 +1,50 @@
+@use 'variables' as vars;
+
+:root {
+  --manipulacija-color-1: #{vars.$manipulacija-color-1};
+  --manipulacija-color-2: #{vars.$manipulacija-color-2};
+  --manipulacija-color-3: #{vars.$manipulacija-color-3};
+  --manipulacija-color-4: #{vars.$manipulacija-color-4};
+  --manipulacija-color-5: #{vars.$manipulacija-color-5};
+
+  --color-bg-white: #fff;
+  --color-text: #000;
+
+  --page-scale: 1;
+  --page-gutter: 1.5625rem;
+  --page-width: min(1200px, 100%);
+  --footer-width: var(--page-width);
+
+  --font-family-base: 'wf-clash-grotesk-variable', sans-serif;
+  --font-family-alt: 'wf-dynapuff-variable', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg-white);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+}
+
+#app {
+  display: grid;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding-inline: var(--page-gutter);
+
+  & > main {
+    flex: 1;
+    width: var(--page-width);
+    margin-inline: auto;
+  }
+}

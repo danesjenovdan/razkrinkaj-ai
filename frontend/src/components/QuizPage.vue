@@ -115,7 +115,7 @@ onMounted(() => {
   .answer-description {
     margin-top: 2.12rem;
     padding: 1rem 1.125rem;
-    background: var(--color-bg-accent);
+    // background: var(--color-bg-accent);
     border-radius: 3px;
 
     @media (min-width: 768px) {

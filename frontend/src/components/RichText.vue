@@ -45,7 +45,7 @@ onMounted(() => {
   }
 
   h1 {
-    font-family: var(--font-family-heading);
+    // font-family: var(--font-family-heading);
     font-size: 1.25rem;
     font-weight: 600;
 
@@ -58,7 +58,7 @@ onMounted(() => {
     h2,
     h3,
     h4 {
-      font-family: var(--font-family-heading);
+      // font-family: var(--font-family-heading);
       font-weight: 600;
     }
 

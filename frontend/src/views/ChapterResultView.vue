@@ -191,7 +191,7 @@ main {
       max-width: 16rem;
       margin-inline: auto;
       margin-bottom: 0;
-      font-family: var(--font-family-heading);
+      // font-family: var(--font-family-heading);
       font-size: 1.5rem;
       font-weight: 700;
       line-height: 1;
@@ -251,7 +251,7 @@ main {
     h1 {
       margin-top: 1rem;
       margin-bottom: 0;
-      font-family: var(--font-family-heading);
+      // font-family: var(--font-family-heading);
       font-size: 1.5rem;
       font-weight: 700;
 

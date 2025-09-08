@@ -192,7 +192,7 @@ onMounted(() => {
 
     .title {
       margin: 0;
-      font-family: var(--font-family-heading);
+      // font-family: var(--font-family-heading);
       font-size: 1.25rem;
       font-weight: 700;
 

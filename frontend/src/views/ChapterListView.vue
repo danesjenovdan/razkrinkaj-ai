@@ -59,7 +59,7 @@ main {
   h1 {
     margin: 0;
     padding-block: 1.9rem 1.5rem;
-    font-family: var(--font-family-heading);
+    // font-family: var(--font-family-heading);
     font-size: 1.5rem;
     text-align: center;
     text-transform: uppercase;

@@ -1,7 +1,7 @@
 import '@coddicat/vue-pinch-scroll-zoom/style.css';
 import './assets/fonts/selfhosted.css'
 import './assets/reset.css'
-import './assets/main.css'
+import './assets/main.scss'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
