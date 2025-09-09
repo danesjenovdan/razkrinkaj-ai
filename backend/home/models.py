@@ -205,3 +205,24 @@ class FinishedChapterData(models.Model):
     class Meta:
         verbose_name = "Končano poglavje"
         verbose_name_plural = "Končana poglavja"
+
+
+class ManipulationExplanation(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Ime")
+    description = models.CharField(max_length=255, verbose_name="Opis")
+    content = RichTextField(verbose_name="Vsebina")
+    order = models.IntegerField(default=0, verbose_name="Vrstni red")
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+        FieldPanel("content"),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Razlaga manipulacije"
+        verbose_name_plural = "Razlage manipulacij"
+        ordering = ["order"]

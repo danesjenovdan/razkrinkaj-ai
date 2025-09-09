@@ -23,6 +23,7 @@ from .models import (
     ChapterTextSubPage,
     FinishedChapterData,
     HomePage,
+    ManipulationExplanation,
     PageAnswerData,
 )
 
@@ -125,6 +126,7 @@ class HomeView(View):
             root_page = get_object_or_404(HomePage, id=id)
 
         chapters = ChapterPage.objects.filter(live=True).child_of(root_page)
+        explanations = ManipulationExplanation.objects.all().order_by("order")
 
         return JsonResponse(
             {
@@ -144,6 +146,19 @@ class HomeView(View):
                         "is_feedback": chapter.is_feedback,
                     }
                     for chapter in chapters
+                ],
+                "explanations": [
+                    {
+                        "id": explanation.id,
+                        "name": explanation.name,
+                        "description": explanation.description,
+                        "content": richtext(explanation.content),
+                        "content_images": serialize_rich_text_images(
+                            explanation.content
+                        ),
+                        "order": explanation.order,
+                    }
+                    for explanation in explanations
                 ],
             }
         )

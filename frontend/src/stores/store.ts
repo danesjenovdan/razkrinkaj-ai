@@ -1,4 +1,4 @@
-import type { Chapter } from '@/types'
+import type { Chapter, Explanation } from '@/types'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
@@ -34,6 +34,7 @@ export const useStore = defineStore('store', () => {
 
   // chapters
   const chapters = reactive(new Map<number, Chapter>())
+  const explanations = reactive(new Map<number, Explanation>())
 
   // ids of just unlocked chapters
   const justUnlockedChapters = ref<number[]>([])
@@ -193,6 +194,11 @@ export const useStore = defineStore('store', () => {
         }
       }
 
+      explanations.clear()
+      for (const e of data.explanations) {
+        explanations.set(e.id, e)
+      }
+
       homeDataLoaded.value = true
     }
   }
@@ -274,6 +280,7 @@ export const useStore = defineStore('store', () => {
     introductionButtonText,
     introductionButtonTextSecondary,
     chapters,
+    explanations,
     justUnlockedChapters,
     unlockedChapters,
     finishedChapters,
