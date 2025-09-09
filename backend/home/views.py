@@ -133,6 +133,7 @@ class HomeView(View):
                 "description": richtext(root_page.description),
                 "description_images": serialize_rich_text_images(root_page.description),
                 "button_text": root_page.button_text,
+                "button_text_secondary": root_page.button_text_secondary,
                 "chapters": [
                     {
                         "id": chapter.id,

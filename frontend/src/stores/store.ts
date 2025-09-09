@@ -30,6 +30,7 @@ export const useStore = defineStore('store', () => {
   const introductionTitle = ref('')
   const introductionDescription = ref('')
   const introductionButtonText = ref('')
+  const introductionButtonTextSecondary = ref('')
 
   // chapters
   const chapters = reactive(new Map<number, Chapter>())
@@ -182,6 +183,7 @@ export const useStore = defineStore('store', () => {
       introductionDescription.value = data.description
       preloadImages(data.description_images)
       introductionButtonText.value = data.button_text
+      introductionButtonTextSecondary.value = data.button_text_secondary
 
       chapters.clear()
       for (const c of data.chapters) {
@@ -270,6 +272,7 @@ export const useStore = defineStore('store', () => {
     introductionTitle,
     introductionDescription,
     introductionButtonText,
+    introductionButtonTextSecondary,
     chapters,
     justUnlockedChapters,
     unlockedChapters,

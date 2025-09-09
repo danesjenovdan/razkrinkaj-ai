@@ -1,11 +1,10 @@
+@use 'sass:list';
 @use 'variables' as vars;
 
 :root {
-  --manipulacija-color-1: #{vars.$manipulacija-color-1};
-  --manipulacija-color-2: #{vars.$manipulacija-color-2};
-  --manipulacija-color-3: #{vars.$manipulacija-color-3};
-  --manipulacija-color-4: #{vars.$manipulacija-color-4};
-  --manipulacija-color-5: #{vars.$manipulacija-color-5};
+  @for $i from 1 through list.length(vars.$manipulacija-colors) {
+    --manipulacija-color-#{$i}: #{list.nth(vars.$manipulacija-colors, $i)};
+  }
 
   --color-bg-white: #fff;
   --color-text: #000;
@@ -13,7 +12,6 @@
   --page-scale: 1;
   --page-gutter: 1.5625rem;
   --page-width: min(1200px, 100%);
-  --footer-width: var(--page-width);
 
   --font-family-base: 'wf-clash-grotesk-variable', sans-serif;
   --font-family-alt: 'wf-dynapuff-variable', sans-serif;
@@ -37,14 +35,13 @@ body {
   min-height: 100vh;
 }
 
-.page-wrapper {
-  display: flex;
-  flex-direction: column;
-  padding-inline: var(--page-gutter);
+.page-gutter {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
 
-  & > main {
-    flex: 1;
-    width: var(--page-width);
-    margin-inline: auto;
+@for $i from 1 through list.length(vars.$manipulacija-colors) {
+  .bg-manipulacija-color-#{$i} {
+    background-color: var(--manipulacija-color-#{$i});
   }
 }

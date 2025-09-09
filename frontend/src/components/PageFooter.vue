@@ -2,7 +2,6 @@
 import axios from 'axios'
 import { ref } from 'vue'
 import MkLogo from './logos/MkLogo.vue'
-import UseLogo from './logos/UseLogo.vue'
 
 const newsletterEmail = ref('')
 const newsletterConsent = ref(false)
@@ -39,95 +38,86 @@ async function onNewsletterSubmit() {
 
 <template>
   <footer>
-    <div class="page-footer">
-      <div>
-        <div class="footer-block">
-          Za <strong>Razkrinkaj.AI</strong> skrbi<br />
-          <a
-            href="https://danesjenovdan.si"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="about-link"
-            >Danes je nov dan, Inštitut za druga vprašanja</a
-          >
+    <div class="page-gutter bg-manipulacija-color-9">
+      <div class="page-footer">
+        <div class="footer-col">
+          <div class="footer-block">
+            Za <strong>Manipulacija ni informacija</strong> skrbi<br />
+            <a
+              href="https://danesjenovdan.si"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+              >Danes je nov dan, Inštitut za druga vprašanja</a
+            >
+          </div>
+          <div class="footer-block">
+            <span class="semi-bold">Podpri naše delo.</span>
+            <a
+              href="https://danesjenovdan.si/podpri-nas/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="button-link donate-link"
+            >
+              <span>DONIRAJ</span>
+            </a>
+          </div>
         </div>
-        <hr />
-        <div class="footer-block">
-          Podpri naše delo.
-          <a
-            href="https://danesjenovdan.si/podpri-nas/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="button-link donate-link"
-          >
-            <span>DONIRAJ</span>
-            <span>❤</span>
-          </a>
-        </div>
-        <hr />
-      </div>
-      <div>
-        <div class="footer-block">
-          <span class="semi-bold">
-            Te zanima, kaj delamo? Naroči se na Občasnik!
-          </span>
-          <form class="newsletter-form" @submit.prevent="onNewsletterSubmit">
-            <div class="form-group">
-              <label>
-                Vpiši svoj e-naslov
-                <input
-                  type="email"
-                  id="newsletter-email"
-                  required
-                  v-model="newsletterEmail"
-                />
-              </label>
-            </div>
-            <div class="form-group">
-              <div class="checkbox">
-                <input
-                  type="checkbox"
-                  id="newsletter-checkbox"
-                  required
-                  v-model="newsletterConsent"
-                />
-                <label for="newsletter-checkbox">
-                  <span>
-                    Strinjam se, da mi Danes je nov dan po e-pošti pošilja
-                    Občasnik in druga obvestila.
-                  </span>
+        <div class="footer-col">
+          <div class="footer-block">
+            <span class="semi-bold">
+              Te zanima, kaj delamo? Naroči se na Občasnik!
+            </span>
+            <form class="newsletter-form" @submit.prevent="onNewsletterSubmit">
+              <div class="form-group">
+                <label>
+                  Vpiši svoj e-naslov
+                  <input
+                    type="email"
+                    id="newsletter-email"
+                    required
+                    v-model="newsletterEmail"
+                  />
                 </label>
               </div>
-            </div>
-            <div class="form-group">
-              <button
-                type="submit"
-                class="button-link submit-button"
-                :disabled="newsletterLoading"
-              >
-                NAROČI SE
-              </button>
-            </div>
-          </form>
+              <div class="form-group">
+                <div class="checkbox">
+                  <input
+                    type="checkbox"
+                    id="newsletter-checkbox"
+                    required
+                    v-model="newsletterConsent"
+                  />
+                  <label for="newsletter-checkbox">
+                    <span>
+                      Strinjam se, da mi Danes je nov dan po e-pošti pošilja
+                      Občasnik in druga obvestila.
+                    </span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <button
+                  type="submit"
+                  class="button-link submit-button"
+                  :disabled="newsletterLoading"
+                >
+                  NAROČI SE
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-      <hr />
-      <div>
-        <div class="footer-block">
-          <div class="footer-logos">
-            <div class="footer-logo">
-              <MkLogo />
-            </div>
-            <div class="footer-logo">
-              <UseLogo />
-              <span>
-                Projekt je bil delno financiran z donacijo Veleposlaništva ZDA v
-                Ljubljani. Izražena mnenja, ugotovitve, sklepi ali priporočila
-                pripadajo avtorjem in ne odražajo nujno mnenj Ministrstva za
-                zunanje zadeve ZDA.
-              </span>
-            </div>
-          </div>
+    </div>
+    <div class="page-gutter">
+      <div class="page-footer-bottom">
+        <div class="footer-col">
+          <a href="#">Politika zasebnosti in varstva osebnih podatkov</a>
+        </div>
+        <div class="footer-col">
+          <span>Projekt podpira</span>
+          <MkLogo />
         </div>
       </div>
     </div>
@@ -135,44 +125,30 @@ async function onNewsletterSubmit() {
 </template>
 
 <style scoped lang="scss">
+@use '@sass-fairy/string';
+@use '@sass-fairy/url';
+@use '@/assets/variables' as vars;
+
 footer {
-  margin-inline: calc(var(--page-gutter) * -1);
-  padding-inline: var(--page-gutter);
-  background: var(--color-bg-white);
-
   .page-footer {
-    margin-inline: auto;
-    width: var(--footer-width);
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+    padding-top: 3.25rem;
+    padding-bottom: 2.375rem;
 
-    @media (min-width: 768px) {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: 2.75rem;
-      padding-block: 0.75rem;
-
-      & > hr {
-        display: none;
-      }
-
-      & > :last-child {
-        grid-column: 1 / -1;
-      }
-    }
-
-    @media (min-width: 992px) {
-      grid-template-columns: repeat(3, 1fr);
-
-      & > :last-child {
-        grid-column: initial;
-      }
+    .footer-col {
+      flex: 1;
+      max-width: 24rem;
     }
 
     .footer-block {
+      $button-link-bg-string: '<svg viewBox="0 0 119 36" preserveAspectRatio="none" fill="#FFF"><path vector-effect="non-scaling-stroke" stroke="#000" stroke-width="3" d="M59.5 1.5c28.4851 0 43.069 2.806 50.494 6.3027 3.67 1.7285 5.486 3.578 6.419 5.2442.937 1.6733 1.087 3.3424 1.087 4.9531 0 1.6885-.06 3.3538-.882 5.0225-.806 1.6363-2.448 3.4643-5.993 5.1816C103.428 31.6906 88.8592 34.5 59.5 34.5s-43.9276-2.8094-51.125-6.2959c-3.545-1.7173-5.1868-3.5453-5.9932-5.1816C1.5596 21.3538 1.5 19.6885 1.5 18c0-1.6107.1502-3.2798 1.087-4.9531.9326-1.6662 2.7487-3.5157 6.4189-5.2442C16.4306 4.306 31.0148 1.5 59.5 1.5Z"/></svg>';
       padding-block: 1.25rem;
-      font-size: 0.875rem;
+      font-size: 1rem;
 
       strong {
-        font-weight: 700;
+        font-weight: 500;
       }
 
       .semi-bold {
@@ -180,38 +156,47 @@ footer {
       }
 
       .about-link {
-        font-weight: 600;
-        color: #092bba;
+        font-weight: 500;
+        color: inherit;
       }
 
       .button-link {
         display: inline-flex;
         gap: 0.5em;
         align-items: center;
-        padding: 0.4em 0.62em 0.3em;
-        background: #4063f6;
-        border: 0.5px solid #000;
-        border-radius: 3px;
-        font-weight: 700;
+        padding: 0.4em 1.125em 0.3em;
+        background-color: transparent;
+        background-image: url.svg($button-link-bg-string);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        font-family: var(--font-family-alt);
+        font-size: 1.125rem;
+        font-weight: 600;
         line-height: 1.3;
-        color: #fff;
+        color: inherit;
         text-decoration: none;
         cursor: pointer;
-
-        @at-root body:not(.is-ios) &:hover {
-          background: #3458f3;
-          box-shadow:
-            0px 0px 4px 0px #173ac9 inset,
-            0px 0px 5px -1px #4063f6;
-        }
       }
 
       .donate-link {
+        $button-link-bg-string-donate: string.replace(
+          $button-link-bg-string,
+          '#FFF',
+          '#{vars.$manipulacija-color-2}'
+        );
+        background-image: url.svg($button-link-bg-string-donate);
         margin-left: 0.75rem;
       }
 
       .submit-button {
+        $button-link-bg-string-submit: string.replace(
+          $button-link-bg-string,
+          '#FFF',
+          '#{vars.$manipulacija-color-6}'
+        );
+        background-image: url.svg($button-link-bg-string-submit);
         margin-top: 0.5rem;
+        border: 0;
 
         &:disabled {
           cursor: wait;
@@ -228,15 +213,14 @@ footer {
             flex-direction: column;
             font-size: 0.75rem;
             line-height: 1.3;
-            font-weight: 300;
 
             input {
               margin-top: 0.25rem;
-              padding: 0.3em 0.6em;
-              background: #f3f3ec;
-              border: 0.5px solid #545454;
+              padding: 0.2em 0.5em;
+              background: var(--manipulacija-color-8);
+              border: 3px solid #000;
               border-radius: 5px;
-              font-weight: 400;
+              font-weight: 500;
               font-size: 1rem;
               line-height: 1rem;
             }
@@ -250,12 +234,12 @@ footer {
               appearance: none;
               display: grid;
               place-items: center;
-              background: #f3f3ec;
+              background: var(--manipulacija-color-8);
               margin: 0;
               flex-shrink: 0;
               width: 1.5rem;
               height: 1.5rem;
-              border: 0.5px solid #545454;
+              border: 3px solid #000;
               border-radius: 5px;
 
               &:checked {
@@ -266,7 +250,7 @@ footer {
                   height: 0.8em;
                   margin-top: -0.2em;
                   border: 0 solid currentColor;
-                  border-width: 0 1px 1px 0;
+                  border-width: 0 2px 2px 0;
                   transform-origin: center;
                   transform: rotate(45deg);
                 }
@@ -275,60 +259,25 @@ footer {
           }
         }
       }
-
-      .footer-logos {
-        display: grid;
-        gap: 1rem;
-
-        @media (min-width: 768px) {
-          gap: 1.75rem;
-          display: flex;
-          justify-content: center;
-        }
-
-        @media (min-width: 992px) {
-          display: grid;
-          justify-content: initial;
-        }
-
-        .footer-logo {
-          display: flex;
-          gap: 0.75rem;
-          align-items: center;
-          max-width: 260px;
-          margin-inline: auto;
-
-          @media (min-width: 768px) {
-            margin-inline: 0;
-          }
-
-          svg {
-            flex-shrink: 0;
-          }
-
-          .mk-logo {
-            height: 1.25rem;
-          }
-
-          .embassy-logo {
-            height: 2.5rem;
-          }
-
-          span {
-            font-size: 0.5625rem;
-          }
-        }
-      }
     }
+  }
 
-    hr {
-      margin: 0;
-      height: 3px;
-      border: none;
-      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20.15 9"><path fill="none" stroke="%23A0B1FB" stroke-width="2" d="M0 1c5.04 0 5.04 7 10.08 7s5.03-7 10.07-7"/></svg>');
-      background-repeat: repeat-x;
-      background-position: left center;
-      background-size: auto 100%;
+  .page-footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    padding-block: 0.875rem;
+    margin-inline: auto;
+    width: var(--page-width);
+    font-size: 0.75rem;
+
+    .footer-col {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+
+      .mk-logo {
+        height: 1.125rem;
+      }
     }
   }
 }

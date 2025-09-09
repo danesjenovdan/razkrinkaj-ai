@@ -15,10 +15,16 @@ class HomePage(Page):
         blank=True,
         verbose_name="Besedilo gumba",
     )
+    button_text_secondary = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Besedilo drugega gumba",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("description"),
         FieldPanel("button_text"),
+        FieldPanel("button_text_secondary"),
     ]
 
     parent_page_types = []
