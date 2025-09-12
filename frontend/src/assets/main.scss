@@ -25,7 +25,7 @@
 
 body {
   margin: 0;
-  background: var(--color-bg-white);
+  background: var(--manipulacija-color-9);
   color: var(--color-text);
   font-family: var(--font-family-base);
 }
@@ -44,4 +44,8 @@ body {
   .bg-manipulacija-color-#{$i} {
     background-color: var(--manipulacija-color-#{$i});
   }
+}
+
+.bg-white {
+  background-color: var(--color-bg-white);
 }

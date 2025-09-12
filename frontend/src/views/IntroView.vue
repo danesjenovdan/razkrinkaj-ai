@@ -29,7 +29,7 @@ const scrollToMore = () => {
           <ButtonPrimary
             class="button"
             :buttonText="store.introductionButtonText"
-            :link="{ name: 'chapter-list' }"
+            :link="{ name: 'calendar' }"
             icon="hands"
           />
           <ButtonPrimary
@@ -77,11 +77,6 @@ main {
       .description {
         font-size: 1.5rem;
         font-weight: 500;
-
-        :deep(a) {
-          font-weight: 600;
-          color: #092bba;
-        }
       }
 
       .button {

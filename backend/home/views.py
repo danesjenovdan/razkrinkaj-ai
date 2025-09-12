@@ -140,8 +140,8 @@ class HomeView(View):
                     {
                         "id": chapter.id,
                         "title": chapter.title,
-                        "description": chapter.description,
-                        "image": serialize_image_url(chapter.image, is_icon=True),
+                        "description": "",  # DISABLED chapter.description,
+                        "image": None,  # DISABLED serialize_image_url(chapter.image, is_icon=True),
                         "locked_by_default": chapter.locked_by_default,
                         "is_feedback": chapter.is_feedback,
                     }

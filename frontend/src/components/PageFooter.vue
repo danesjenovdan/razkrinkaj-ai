@@ -110,7 +110,7 @@ async function onNewsletterSubmit() {
         </div>
       </div>
     </div>
-    <div class="page-gutter">
+    <div class="page-gutter bg-white">
       <div class="page-footer-bottom">
         <div class="footer-col">
           <a href="#">Politika zasebnosti in varstva osebnih podatkov</a>

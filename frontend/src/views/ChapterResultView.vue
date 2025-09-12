@@ -153,7 +153,7 @@ onMounted(() => {
       <ButtonPrimary
         class="button"
         buttonText="Na izbirnik poglavij"
-        :link="{ name: 'chapter-list' }"
+        :link="{ name: 'calendar' }"
         icon="arrow"
         color="white"
       />

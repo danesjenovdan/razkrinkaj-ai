@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RootView from '../views/RootView.vue'
 import IntroView from '../views/IntroView.vue'
-import ChapterListView from '../views/ChapterListView.vue'
+import CalendarView from '../views/CalendarView.vue'
 import ChapterView from '../views/ChapterView.vue'
 import ChapterIntroView from '../views/ChapterIntroView.vue'
 import ChapterPageView from '../views/ChapterPageView.vue'
@@ -28,9 +28,9 @@ const router = createRouter({
           component: IntroView,
         },
         {
-          path: 'seznam-poglavij',
-          name: 'chapter-list',
-          component: ChapterListView,
+          path: 'koledar',
+          name: 'calendar',
+          component: CalendarView,
         },
         {
           path: 'poglavje/:id',
