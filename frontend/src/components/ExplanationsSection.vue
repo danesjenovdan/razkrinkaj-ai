@@ -121,7 +121,12 @@ section.explanations-section {
           border: 3px solid #000;
           border-radius: 20px;
           text-align: left;
-          transform-origin: left center;
+          // transform-origin: left center;
+          transition:
+            scale 0.15s ease-in-out,
+            box-shadow 0.15s ease-in-out,
+            width 0.15s ease-in-out;
+          will-change: scale, box-shadow, width;
 
           .icon {
             display: grid;
@@ -194,6 +199,7 @@ section.explanations-section {
             width: 120%;
             background: var(--manipulacija-color-11);
             z-index: 1;
+            cursor: default;
 
             .text {
               font-weight: 600;
@@ -204,6 +210,13 @@ section.explanations-section {
             .arrow {
               display: block;
             }
+          }
+        }
+
+        &:not(.selected) {
+          button:hover {
+            scale: 1.02;
+            box-shadow: 0 0 8px var(--manipulacija-color-4);
           }
         }
       }

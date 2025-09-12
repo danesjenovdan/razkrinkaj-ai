@@ -59,10 +59,10 @@ class ChapterPage(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("locked_by_default"),
-        FieldPanel("is_feedback"),
+        # FieldPanel("description"),
+        # FieldPanel("image"),
+        # FieldPanel("locked_by_default"),
+        # FieldPanel("is_feedback"),
     ]
 
     parent_page_types = ["home.HomePage"]

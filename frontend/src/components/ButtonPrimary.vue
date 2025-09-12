@@ -72,6 +72,10 @@ const componentName = computed(() =>
   color: var(--color-text);
   text-decoration: none;
   cursor: pointer;
+  transition:
+    scale 0.15s ease-in-out,
+    filter 0.15s ease-in-out;
+  will-change: scale, filter;
 
   &.button-color-primary {
     $bg-svg-string-primary: string.replace(
@@ -121,6 +125,11 @@ const componentName = computed(() =>
       width: auto;
       height: 2.875rem;
     }
+  }
+
+  &:hover {
+    scale: 1.05;
+    filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
   }
 }
 </style>

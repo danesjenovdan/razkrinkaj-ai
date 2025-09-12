@@ -158,6 +158,10 @@ footer {
       .about-link {
         font-weight: 500;
         color: inherit;
+
+        &:hover {
+          text-decoration: none;
+        }
       }
 
       .button-link {
@@ -176,6 +180,15 @@ footer {
         color: inherit;
         text-decoration: none;
         cursor: pointer;
+        transition:
+          scale 0.15s ease-in-out,
+          filter 0.15s ease-in-out;
+        will-change: scale, filter;
+
+        &:not(:disabled):hover {
+          scale: 1.05;
+          filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
+        }
       }
 
       .donate-link {

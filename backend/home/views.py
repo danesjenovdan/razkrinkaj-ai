@@ -142,8 +142,8 @@ class HomeView(View):
                         "title": chapter.title,
                         "description": "",  # DISABLED chapter.description,
                         "image": None,  # DISABLED serialize_image_url(chapter.image, is_icon=True),
-                        "locked_by_default": chapter.locked_by_default,
-                        "is_feedback": chapter.is_feedback,
+                        "locked_by_default": False,  # DISABLED chapter.locked_by_default,
+                        "is_feedback": False,  # DISABLED chapter.is_feedback,
                     }
                     for chapter in chapters
                 ],
