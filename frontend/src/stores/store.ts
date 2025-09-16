@@ -2,7 +2,7 @@ import type { Chapter, Explanation } from '@/types'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
-import { smartParse, smartToString } from '@/utils/stringify'
+import { smartParse, smartToString, slugifyDot } from '@/utils/stringify'
 import { preloadImage, preloadImages } from '@/utils/image'
 import { apiUrl } from '@/utils/api'
 
@@ -209,6 +209,15 @@ export const useStore = defineStore('store', () => {
     }
   }
 
+  function getChapterIdBySlug(slug: string) {
+    for (const chapter of chapters.values()) {
+      if (slugifyDot(chapter.title) === slug) {
+        return chapter.id
+      }
+    }
+    return -1
+  }
+
   async function fetchChapterData(id: number) {
     const response = await axios.get(`${apiUrl}/api/chapter/${id}/`)
 
@@ -270,6 +279,7 @@ export const useStore = defineStore('store', () => {
   return {
     initHomeData,
     homeDataLoaded,
+    getChapterIdBySlug,
     initChapterData,
     chapterDataLoaded,
     //

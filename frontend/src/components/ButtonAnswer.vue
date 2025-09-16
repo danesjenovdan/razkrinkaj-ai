@@ -10,7 +10,7 @@ defineProps<{
 }>()
 
 const store = useStore()
-console.log(store.currentChapterId)
+
 const chapter = store.chapters.get(store.currentChapterId)
 if (!chapter) throw new Error('Chapter not found')
 </script>

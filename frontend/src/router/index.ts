@@ -32,7 +32,7 @@ const router = createRouter({
           component: CalendarView,
         },
         {
-          path: 'poglavje/:id',
+          path: 'dan/:slug',
           name: 'chapter',
           component: ChapterView,
           children: [

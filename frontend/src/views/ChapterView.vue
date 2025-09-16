@@ -8,11 +8,18 @@ import TheLoader from '@/components/TheLoader.vue'
 const route = useRoute()
 const store = useStore()
 
-const idString = route.params.id as string
-const chapterId = parseInt(idString, 10)
+let chapterId = -1
+if (route.params.id === undefined && route.params.slug !== undefined) {
+  const slug = route.params.slug as string
+  chapterId = store.getChapterIdBySlug(slug)
+} else if (route.params.id !== undefined) {
+  const idString = route.params.id as string
+  chapterId = parseInt(idString, 10)
+}
+
 const chapter = store.chapters.get(chapterId)
 
-if (Number.isNaN(chapterId)) {
+if (Number.isNaN(chapterId) || chapterId < 0 || chapter === undefined) {
   throw new Error('Invalid chapter id')
 }
 

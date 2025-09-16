@@ -5,6 +5,7 @@ import { useStore } from '@/stores/store'
 import { preloadPageImages } from '@/utils/image'
 import StarIcon from './StarIcon.vue'
 import LockIcon from './LockIcon.vue'
+import { slugifyDot } from '@/utils/stringify'
 
 const props = defineProps<{
   chapter: Chapter
@@ -15,6 +16,10 @@ const store = useStore()
 const chapterDate = computed(() => {
   const dateParts = props.chapter.title.split('.').map(Number)
   return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
+})
+
+const chapterSlug = computed(() => {
+  return slugifyDot(props.chapter.title)
 })
 
 const isFinished = computed(() => store.finishedChapters.has(props.chapter.id))
@@ -66,7 +71,7 @@ onMounted(() => {
     }"
     :to="
       !isLocked
-        ? { name: 'chapter-intro', params: { id: chapter.id } }
+        ? { name: 'chapter-intro', params: { slug: chapterSlug } }
         : undefined
     "
   >
