@@ -39,7 +39,7 @@ const componentName = computed(() =>
       <template v-if="icon === 'hands'">
         <img class="hands" src="/hands.svg" alt="" />
       </template>
-      <template v-if="icon === 'hand'">
+      <template v-else-if="icon === 'hand'">
         <img class="hand" src="/hand.svg" alt="" />
       </template>
       <span v-else>{{ icon }}</span>
