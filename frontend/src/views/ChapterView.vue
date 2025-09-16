@@ -8,11 +8,18 @@ import TheLoader from '@/components/TheLoader.vue'
 const route = useRoute()
 const store = useStore()
 
-const idString = route.params.id as string
-const chapterId = parseInt(idString, 10)
+let chapterId = -1
+if (route.params.id === undefined && route.params.slug !== undefined) {
+  const slug = route.params.slug as string
+  chapterId = store.getChapterIdBySlug(slug)
+} else if (route.params.id !== undefined) {
+  const idString = route.params.id as string
+  chapterId = parseInt(idString, 10)
+}
+
 const chapter = store.chapters.get(chapterId)
 
-if (Number.isNaN(chapterId)) {
+if (Number.isNaN(chapterId) || chapterId < 0 || chapter === undefined) {
   throw new Error('Invalid chapter id')
 }
 
@@ -29,11 +36,10 @@ const score = computed(() => {
 
 onMounted(() => {
   store.setCurrentChapter(chapterId)
+  store.initChapterData(chapterId)
   // clear just unlocked chapters for next time list is shown
   store.justUnlockedChapters = []
 })
-
-store.initChapterData(chapterId)
 </script>
 
 <template>
@@ -42,7 +48,10 @@ store.initChapterData(chapterId)
     :title="store.introductionTitle"
     :score="score"
   />
-  <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
+  <RouterView
+    v-if="store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)"
+    :chapter="chapter"
+  />
   <div v-else class="loader-container">
     <TheLoader />
   </div>

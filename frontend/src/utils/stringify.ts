@@ -36,3 +36,29 @@ export function smartToString(data: unknown): string {
 export function smartParse(data: string): unknown {
   return JSON.parse(data, reviver)
 }
+
+export function slugify(text: string): string {
+  return text
+    .toString() // Convert to string
+    .toLowerCase() // Convert to lowercase
+    .normalize('NFD') // Normalize unicode characters
+    .trim() // Remove whitespace from both ends
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/[^\w-]+/g, '') // Remove all non-word chars
+    .replace(/--+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-+/, '') // Remove leading hyphens
+    .replace(/-+$/, '') // Remove trailing hyphens
+}
+
+export function slugifyDot(text: string): string {
+  return text
+    .toString() // Convert to string
+    .toLowerCase() // Convert to lowercase
+    .normalize('NFD') // Normalize unicode characters
+    .trim() // Remove whitespace from both ends
+    .replace(/\s+/g, '.') // Replace spaces with dots
+    .replace(/[^\w\.]+/g, '') // Remove all non-word chars
+    .replace(/\.\.+/g, '.') // Replace multiple dots with single dot
+    .replace(/^\.+/, '') // Remove leading dots
+    .replace(/\.+$/, '') // Remove trailing dots
+}

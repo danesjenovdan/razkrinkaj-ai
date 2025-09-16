@@ -2,25 +2,52 @@
 import { useStore } from '@/stores/store'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import PageFooter from '@/components/PageFooter.vue'
+import ExplanationsSection from '@/components/ExplanationsSection.vue'
 
 const store = useStore()
+
+const scrollToMore = () => {
+  document
+    .querySelector('a[name="more"]')
+    ?.scrollIntoView({ behavior: 'smooth' })
+}
 </script>
 
 <template>
   <main>
-    <div class="intro">
-      <img
-        src="/razkrinkaj-ai-logo.gif"
-        alt="Razkrinkaj.ai"
-        class="title-logo"
-      />
-      <div class="description" v-html="store.introductionDescription"></div>
-      <ButtonPrimary
-        class="button"
-        :buttonText="store.introductionButtonText"
-        :link="{ name: 'chapter-list' }"
-        emoji="🚀🚀🚀"
-      />
+    <div class="page-gutter bg-manipulacija-color-3">
+      <div class="intro">
+        <h1>
+          <img
+            src="/manipulacija-logo.svg"
+            alt="Manipulacija ni informacija"
+            class="title-logo"
+          />
+        </h1>
+        <div class="narrow">
+          <div class="description" v-html="store.introductionDescription"></div>
+          <ButtonPrimary
+            class="button"
+            :buttonText="store.introductionButtonText"
+            :link="{ name: 'calendar' }"
+            icon="hands"
+          />
+          <ButtonPrimary
+            class="button"
+            :buttonText="store.introductionButtonTextSecondary"
+            href="#more"
+            color="secondary"
+            side-icon="hand-down"
+            @click.prevent="scrollToMore"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="page-gutter bg-manipulacija-color-7">
+      <div class="explanations">
+        <a name="more"></a>
+        <ExplanationsSection />
+      </div>
     </div>
   </main>
   <PageFooter />
@@ -28,52 +55,41 @@ const store = useStore()
 
 <style scoped lang="scss">
 main {
-  padding-bottom: 2rem;
-
-  @media (min-width: 768px) {
-    padding-bottom: 3.38rem;
-  }
-
-  @media (min-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-
   .intro {
-    .title-logo {
-      width: 100%;
-      max-width: 480px;
-      padding-top: 2.31rem;
-      padding-bottom: 1.88rem;
+    padding-top: 5.75rem;
+    padding-bottom: 8.69rem;
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 2.875rem;
+
+      .title-logo {
+        width: 100%;
+        max-width: 960px;
+        margin-inline: auto;
+      }
+    }
+
+    .narrow {
       margin-inline: auto;
+      max-width: 550px;
 
-      @media (min-width: 768px) {
-        padding-top: 3.38rem;
-        padding-bottom: 2.31rem;
+      .description {
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+
+      .button {
+        margin-top: 2.875rem;
+        margin-inline: auto;
+        max-width: 404px;
       }
     }
+  }
 
-    .description {
-      font-size: 1.125rem;
-
-      @media (min-width: 768px) {
-        font-size: 1.3125rem;
-      }
-
-      :deep(a) {
-        font-weight: 600;
-        color: #092bba;
-      }
-    }
-
-    .button {
-      margin-top: 1.5rem;
-
-      @media (min-width: 768px) {
-        margin-top: 2.45rem;
-      }
-    }
+  .explanations {
+    padding-top: 7.4375rem;
+    padding-bottom: 8.8125rem;
   }
 }
 </style>

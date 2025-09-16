@@ -1,8 +1,8 @@
-import type { Chapter } from '@/types'
+import type { Chapter, Explanation } from '@/types'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
-import { smartParse, smartToString } from '@/utils/stringify'
+import { smartParse, smartToString, slugifyDot } from '@/utils/stringify'
 import { preloadImage, preloadImages } from '@/utils/image'
 import { apiUrl } from '@/utils/api'
 
@@ -30,9 +30,11 @@ export const useStore = defineStore('store', () => {
   const introductionTitle = ref('')
   const introductionDescription = ref('')
   const introductionButtonText = ref('')
+  const introductionButtonTextSecondary = ref('')
 
   // chapters
   const chapters = reactive(new Map<number, Chapter>())
+  const explanations = reactive(new Map<number, Explanation>())
 
   // ids of just unlocked chapters
   const justUnlockedChapters = ref<number[]>([])
@@ -182,6 +184,7 @@ export const useStore = defineStore('store', () => {
       introductionDescription.value = data.description
       preloadImages(data.description_images)
       introductionButtonText.value = data.button_text
+      introductionButtonTextSecondary.value = data.button_text_secondary
 
       chapters.clear()
       for (const c of data.chapters) {
@@ -189,6 +192,11 @@ export const useStore = defineStore('store', () => {
         if (c.image) {
           preloadImage(c.image)
         }
+      }
+
+      explanations.clear()
+      for (const e of data.explanations) {
+        explanations.set(e.id, e)
       }
 
       homeDataLoaded.value = true
@@ -199,6 +207,15 @@ export const useStore = defineStore('store', () => {
     if (!homeDataLoaded.value) {
       await fetchHomeData()
     }
+  }
+
+  function getChapterIdBySlug(slug: string) {
+    for (const chapter of chapters.values()) {
+      if (slugifyDot(chapter.title) === slug) {
+        return chapter.id
+      }
+    }
+    return -1
   }
 
   async function fetchChapterData(id: number) {
@@ -262,6 +279,7 @@ export const useStore = defineStore('store', () => {
   return {
     initHomeData,
     homeDataLoaded,
+    getChapterIdBySlug,
     initChapterData,
     chapterDataLoaded,
     //
@@ -270,7 +288,9 @@ export const useStore = defineStore('store', () => {
     introductionTitle,
     introductionDescription,
     introductionButtonText,
+    introductionButtonTextSecondary,
     chapters,
+    explanations,
     justUnlockedChapters,
     unlockedChapters,
     finishedChapters,

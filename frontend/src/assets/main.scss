@@ -1,0 +1,51 @@
+@use 'sass:list';
+@use 'variables' as vars;
+
+:root {
+  @for $i from 1 through list.length(vars.$manipulacija-colors) {
+    --manipulacija-color-#{$i}: #{list.nth(vars.$manipulacija-colors, $i)};
+  }
+
+  --color-bg-white: #fff;
+  --color-text: #000;
+
+  --page-scale: 1;
+  --page-gutter: 1.5625rem;
+  --page-width: min(1200px, 100%);
+
+  --font-family-base: 'wf-clash-grotesk-variable', sans-serif;
+  --font-family-alt: 'wf-dynapuff-variable', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--manipulacija-color-9);
+  color: var(--color-text);
+  font-family: var(--font-family-base);
+}
+
+#app {
+  display: grid;
+  min-height: 100vh;
+}
+
+.page-gutter {
+  padding-left: var(--page-gutter);
+  padding-right: var(--page-gutter);
+}
+
+@for $i from 1 through list.length(vars.$manipulacija-colors) {
+  .bg-manipulacija-color-#{$i} {
+    background-color: var(--manipulacija-color-#{$i});
+  }
+}
+
+.bg-white {
+  background-color: var(--color-bg-white);
+}

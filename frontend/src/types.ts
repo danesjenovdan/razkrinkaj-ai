@@ -52,3 +52,12 @@ export type Chapter = {
   is_feedback: boolean
   pages: Page[] | null
 }
+
+export type Explanation = {
+  id: number
+  name: string
+  description: string
+  content: string
+  content_images: ImageDescription[]
+  order: number
+}

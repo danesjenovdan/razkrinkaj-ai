@@ -15,10 +15,16 @@ class HomePage(Page):
         blank=True,
         verbose_name="Besedilo gumba",
     )
+    button_text_secondary = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Besedilo drugega gumba",
+    )
 
     content_panels = Page.content_panels + [
         FieldPanel("description"),
         FieldPanel("button_text"),
+        FieldPanel("button_text_secondary"),
     ]
 
     parent_page_types = []
@@ -53,10 +59,10 @@ class ChapterPage(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("description"),
-        FieldPanel("image"),
-        FieldPanel("locked_by_default"),
-        FieldPanel("is_feedback"),
+        # FieldPanel("description"),
+        # FieldPanel("image"),
+        # FieldPanel("locked_by_default"),
+        # FieldPanel("is_feedback"),
     ]
 
     parent_page_types = ["home.HomePage"]
@@ -81,7 +87,7 @@ class ChapterTextSubPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("text"),
-        FieldPanel("button_text"),
+        # FieldPanel("button_text"),
     ]
 
     parent_page_types = ["home.ChapterPage"]
@@ -140,13 +146,13 @@ class ChapterQuizSubPage(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("image"),
-        FieldPanel("image_answer"),
+        # FieldPanel("image"),
+        # FieldPanel("image_answer"),
         FieldPanel("question"),
         FieldPanel("answers"),
         FieldPanel("points"),
         FieldPanel("answer_description"),
-        FieldPanel("button_text"),
+        # FieldPanel("button_text"),
     ]
 
     parent_page_types = ["home.ChapterPage"]
@@ -199,3 +205,24 @@ class FinishedChapterData(models.Model):
     class Meta:
         verbose_name = "Končano poglavje"
         verbose_name_plural = "Končana poglavja"
+
+
+class ManipulationExplanation(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Ime")
+    description = models.CharField(max_length=255, verbose_name="Opis")
+    content = RichTextField(verbose_name="Vsebina")
+    order = models.IntegerField(default=0, verbose_name="Vrstni red")
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("description"),
+        FieldPanel("content"),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Razlaga manipulacije"
+        verbose_name_plural = "Razlage manipulacij"
+        ordering = ["order"]

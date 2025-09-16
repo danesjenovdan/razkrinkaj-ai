@@ -23,6 +23,7 @@ from .models import (
     ChapterTextSubPage,
     FinishedChapterData,
     HomePage,
+    ManipulationExplanation,
     PageAnswerData,
 )
 
@@ -94,15 +95,15 @@ def serialize_chapter_sub_page(page):
                 "type": "text",
                 "text": richtext(page.text),
                 "text_images": serialize_rich_text_images(page.text),
-                "button_text": page.button_text,
+                "button_text": "",  # DISABLED page.button_text,
             }
         )
     elif isinstance(page, ChapterQuizSubPage):
         data.update(
             {
                 "type": "quiz",
-                "image": serialize_image_url(page.image),
-                "image_answer": serialize_image_url(page.image_answer),
+                "image": None,  # DISABLED serialize_image_url(page.image),
+                "image_answer": None,  # DISABLED serialize_image_url(page.image_answer),
                 "question": page.question,
                 "answers": [serialize_answer(answer) for answer in page.answers],
                 "points": page.points,
@@ -110,7 +111,7 @@ def serialize_chapter_sub_page(page):
                 "answer_description_images": serialize_rich_text_images(
                     page.answer_description
                 ),
-                "button_text": page.button_text,
+                "button_text": "",  # DISABLED page.button_text,
             }
         )
     return data
@@ -125,6 +126,7 @@ class HomeView(View):
             root_page = get_object_or_404(HomePage, id=id)
 
         chapters = ChapterPage.objects.filter(live=True).child_of(root_page)
+        explanations = ManipulationExplanation.objects.all().order_by("order")
 
         return JsonResponse(
             {
@@ -133,16 +135,30 @@ class HomeView(View):
                 "description": richtext(root_page.description),
                 "description_images": serialize_rich_text_images(root_page.description),
                 "button_text": root_page.button_text,
+                "button_text_secondary": root_page.button_text_secondary,
                 "chapters": [
                     {
                         "id": chapter.id,
                         "title": chapter.title,
-                        "description": chapter.description,
-                        "image": serialize_image_url(chapter.image, is_icon=True),
-                        "locked_by_default": chapter.locked_by_default,
-                        "is_feedback": chapter.is_feedback,
+                        "description": "",  # DISABLED chapter.description,
+                        "image": None,  # DISABLED serialize_image_url(chapter.image, is_icon=True),
+                        "locked_by_default": False,  # DISABLED chapter.locked_by_default,
+                        "is_feedback": False,  # DISABLED chapter.is_feedback,
                     }
                     for chapter in chapters
+                ],
+                "explanations": [
+                    {
+                        "id": explanation.id,
+                        "name": explanation.name,
+                        "description": explanation.description,
+                        "content": richtext(explanation.content),
+                        "content_images": serialize_rich_text_images(
+                            explanation.content
+                        ),
+                        "order": explanation.order,
+                    }
+                    for explanation in explanations
                 ],
             }
         )

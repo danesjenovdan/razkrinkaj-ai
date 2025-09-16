@@ -462,6 +462,51 @@
   resolved "https://registry.yarnpkg.com/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.24.0.tgz#0574d7e87b44ee8511d08cc7f914bcb802b70818"
   integrity sha512-fbMkAF7fufku0N2dE5TBXcNlg0pt0cJue4xBRE2Qc5Vqikxr4VCgKj/ht6SMdFcOacVA9rqF70APJ8RN/4vMJw==
 
+"@sass-fairy/exception@^1.0.0":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/exception/-/exception-1.1.1.tgz#41454a4dbdd40a90e491a1f9cee788e7bc06a29d"
+  integrity sha512-DP3dwerkS/gE79CaCzaE46zkTSWxmUc8Q/8Io6FC9qYRaNJ5aR8l1IvRbEe6ZnsnVE1+Ow1XOzC9uL2eeh62Hg==
+
+"@sass-fairy/list@^1.0.0":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/list/-/list-1.2.4.tgz#72f380f3f06b25e55bb6195e13d8b7e230038e60"
+  integrity sha512-gs+96qO1kqPbnDU0tqG9/V77ceUXtA8grYQ554jIEQKYerFRs8usUs7KUu7JZJfkmEDpyoDbvNm18vr1WVgz6w==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+    "@sass-fairy/math" "^1.0.0"
+    "@sass-fairy/meta" "^1.0.0"
+
+"@sass-fairy/math@^1.0.0":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/math/-/math-1.0.3.tgz#2f3bb635e6f00983d109ad1f7f22380f144b3e69"
+  integrity sha512-Lg/0vwx9Y7BSl/hTy3zO13bObx3dz8wkV/G6suX8B2j3IloXMGZmvdlmGwH+8J4e9/nUA/Yv3N9B6+W/IdLHmw==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+
+"@sass-fairy/meta@^1.0.0":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/meta/-/meta-1.0.2.tgz#16d4a8b8859a07bd87b8866d4fbe10258121da98"
+  integrity sha512-LLQnuY5kLdsGjGM+r94y3xew1wi7iok4Ciw43fYC9fCtyvwbeohMA0OK4vjl2iP9RaGIMEWfpjX7WZ0gSc5sSQ==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+
+"@sass-fairy/string@^1.1.0", "@sass-fairy/string@^1.3.1":
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/string/-/string-1.3.1.tgz#8786089841fb8e4d9b4fc75cca1e6bf50c6b3df0"
+  integrity sha512-uOBQn5/jBc2agMy4PXofRJnlpQ1Z4msV6INjs3xK4MmjAOIQXbh0pgVPMKfVN/j/7uJbhf9mLksvUsxO7s685A==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+    "@sass-fairy/list" "^1.0.0"
+
+"@sass-fairy/url@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@sass-fairy/url/-/url-1.0.1.tgz#63d0e7aeb1cc7f3279143dc012c36bdb958e1ea3"
+  integrity sha512-NFWtfXHsFym+SqPGNEvu+80aDbjYzGJKONRTVKnux3xtmaPzPcOQvy8amWOxZTjCZaKeXyNVKp4prVvwGOSZkg==
+  dependencies:
+    "@sass-fairy/exception" "^1.0.0"
+    "@sass-fairy/list" "^1.0.0"
+    "@sass-fairy/string" "^1.1.0"
+
 "@tsconfig/node20@^20.1.4":
   version "20.1.4"
   resolved "https://registry.yarnpkg.com/@tsconfig/node20/-/node20-20.1.4.tgz#3457d42eddf12d3bde3976186ab0cd22b85df928"
