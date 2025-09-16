@@ -29,11 +29,10 @@ const score = computed(() => {
 
 onMounted(() => {
   store.setCurrentChapter(chapterId)
+  store.initChapterData(chapterId)
   // clear just unlocked chapters for next time list is shown
   store.justUnlockedChapters = []
 })
-
-store.initChapterData(chapterId)
 </script>
 
 <template>
@@ -42,7 +41,10 @@ store.initChapterData(chapterId)
     :title="store.introductionTitle"
     :score="score"
   />
-  <RouterView v-if="store.chapterDataLoaded.get(chapterId)" :chapter />
+  <RouterView
+    v-if="store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)"
+    :chapter="chapter"
+  />
   <div v-else class="loader-container">
     <TheLoader />
   </div>

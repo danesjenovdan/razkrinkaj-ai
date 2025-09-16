@@ -95,15 +95,15 @@ def serialize_chapter_sub_page(page):
                 "type": "text",
                 "text": richtext(page.text),
                 "text_images": serialize_rich_text_images(page.text),
-                "button_text": page.button_text,
+                "button_text": "",  # DISABLED page.button_text,
             }
         )
     elif isinstance(page, ChapterQuizSubPage):
         data.update(
             {
                 "type": "quiz",
-                "image": serialize_image_url(page.image),
-                "image_answer": serialize_image_url(page.image_answer),
+                "image": None,  # DISABLED serialize_image_url(page.image),
+                "image_answer": None,  # DISABLED serialize_image_url(page.image_answer),
                 "question": page.question,
                 "answers": [serialize_answer(answer) for answer in page.answers],
                 "points": page.points,
@@ -111,7 +111,7 @@ def serialize_chapter_sub_page(page):
                 "answer_description_images": serialize_rich_text_images(
                     page.answer_description
                 ),
-                "button_text": page.button_text,
+                "button_text": "",  # DISABLED page.button_text,
             }
         )
     return data

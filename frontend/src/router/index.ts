@@ -3,7 +3,6 @@ import RootView from '../views/RootView.vue'
 import IntroView from '../views/IntroView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import ChapterView from '../views/ChapterView.vue'
-import ChapterIntroView from '../views/ChapterIntroView.vue'
 import ChapterPageView from '../views/ChapterPageView.vue'
 import ChapterResultView from '../views/ChapterResultView.vue'
 
@@ -38,9 +37,9 @@ const router = createRouter({
           component: ChapterView,
           children: [
             {
-              path: 'intro',
+              path: '',
               name: 'chapter-intro',
-              component: ChapterIntroView,
+              component: ChapterPageView,
             },
             {
               path: 'stran/:pageIndex',

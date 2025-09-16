@@ -160,6 +160,15 @@ onMounted(() => {
     }
   }
 
+  &.disabled {
+    $day-bg-svg-string-disabled: string.replace(
+      $day-bg-svg-string,
+      '#FFF',
+      '#FFF'
+    );
+    background-image: url.svg($day-bg-svg-string-disabled);
+  }
+
   &:not(.disabled):hover {
     rotate: 3deg;
     scale: 1.05;

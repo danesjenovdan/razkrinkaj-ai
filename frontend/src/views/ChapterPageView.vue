@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
-import ProgressIndicator from '@/components/ProgressIndicator.vue'
 import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
 import type { Chapter } from '@/types'
@@ -13,7 +12,29 @@ const props = defineProps<{ chapter: Chapter }>()
 const route = useRoute()
 const pageIndex = computed(() => {
   const pageIndexParam = route.params.pageIndex as string
+  if (!pageIndexParam) {
+    return 0
+  }
   return parseInt(pageIndexParam, 10)
+})
+
+const chapterDate = computed(() => {
+  const dateParts = props.chapter.title.split('.').map(Number)
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
+})
+
+const formattedTitle = computed(() => {
+  if (!chapterDate.value || Number.isNaN(chapterDate.value.getTime())) {
+    return props.chapter.title
+  }
+  const formatter = new Intl.DateTimeFormat('sl-SI', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+  const formattedDate = formatter.format(chapterDate.value)
+  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
 })
 
 const page = computed(() => {
@@ -63,41 +84,65 @@ onMounted(() => {
 
 <template>
   <main :key="pageIndex">
-    <ProgressIndicator :chapter="chapter" :pageIndex="pageIndex" />
-    <div v-if="page.type === 'text'" class="page-content">
-      <RichText :title="page.title" :content="page.text" />
-      <ButtonPrimary
-        class="button"
-        :buttonText="page.button_text"
-        :link="nextPageLink"
-        icon="arrow"
-      />
+    <div class="page-gutter">
+      <div class="narrow">
+        <div class="intro">
+          <h1>{{ formattedTitle }}</h1>
+        </div>
+      </div>
+      <div v-if="page.type === 'text'" class="page-content">
+        <RichText :title="page.title" :content="page.text" />
+        <ButtonPrimary
+          class="button"
+          button-text="NADALJUJ"
+          :link="nextPageLink"
+          icon="hand"
+        />
+      </div>
+      <div v-else-if="page.type === 'quiz'" class="page-content">
+        <QuizPage :page="page" @done="onQuizDone" />
+        <ButtonPrimary
+          v-if="showNextButton"
+          class="button"
+          button-text="NADALJUJ"
+          :link="nextPageLink"
+          icon="hand"
+          color="white"
+        />
+      </div>
+      <div v-else>unknown page type</div>
     </div>
-    <div v-else-if="page.type === 'quiz'" class="page-content">
-      <QuizPage :page="page" @done="onQuizDone" />
-      <ButtonPrimary
-        v-if="showNextButton"
-        class="button"
-        :buttonText="page.button_text"
-        :link="nextPageLink"
-        icon="arrow"
-        color="white"
-      />
-    </div>
-    <div v-else>unknown page type</div>
   </main>
 </template>
 
 <style scoped lang="scss">
 main {
-  padding-bottom: 2rem;
+  .narrow {
+    max-width: 603px;
+    margin: 0 auto;
+  }
 
-  @media (min-width: 768px) {
-    padding-bottom: 3.38rem;
+  .intro {
+    padding-block: 4.4375rem 0;
+
+    h1 {
+      margin-bottom: 0;
+      font-size: 1.3125rem;
+      font-weight: 600;
+      text-align: center;
+    }
   }
 
   .page-content {
-    padding-top: 0.75rem;
+    padding-bottom: 7rem;
+  }
+
+  .button {
+    gap: 1.5rem;
+    justify-content: center;
+    max-width: 455px;
+    margin-inline: auto;
+    text-align: center;
   }
 }
 </style>

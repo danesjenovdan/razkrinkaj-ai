@@ -87,7 +87,7 @@ class ChapterTextSubPage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel("text"),
-        FieldPanel("button_text"),
+        # FieldPanel("button_text"),
     ]
 
     parent_page_types = ["home.ChapterPage"]
@@ -146,13 +146,13 @@ class ChapterQuizSubPage(Page):
     )
 
     content_panels = Page.content_panels + [
-        FieldPanel("image"),
-        FieldPanel("image_answer"),
+        # FieldPanel("image"),
+        # FieldPanel("image_answer"),
         FieldPanel("question"),
         FieldPanel("answers"),
         FieldPanel("points"),
         FieldPanel("answer_description"),
-        FieldPanel("button_text"),
+        # FieldPanel("button_text"),
     ]
 
     parent_page_types = ["home.ChapterPage"]
