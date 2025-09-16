@@ -143,7 +143,6 @@ section.explanations-section {
             .image {
               grid-area: stack;
               margin: 0.125rem;
-              background: red;
               border-radius: 50%;
               object-fit: cover;
             }
@@ -157,6 +156,7 @@ section.explanations-section {
               margin-bottom: 0.25rem;
               font-family: var(--font-family-alt);
               font-size: 1.3125rem;
+              text-transform: uppercase;
             }
 
             .desc {
