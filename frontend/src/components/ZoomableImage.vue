@@ -37,7 +37,7 @@ function onZoomClick() {
     calculateSizes()
     isZoomed.value = true
     document.body.style.overflow = 'hidden'
-    window.history.pushState(null, '', '#zoomed')
+    window.history.pushState(window.history.state, '', '#zoomed')
   }
 }
 
@@ -62,7 +62,7 @@ watch(
 onMounted(() => {
   if (window.location.hash === '#zoomed') {
     window.history.replaceState(
-      null,
+      window.history.state,
       '',
       window.location.pathname + window.location.search,
     )

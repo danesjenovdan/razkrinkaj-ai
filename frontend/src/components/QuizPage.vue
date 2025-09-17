@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { QuizPage } from '@/types'
-import { onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
 import { preloadPageImages } from '@/utils/image'
+import { slugify } from '@/utils/stringify'
 
 const props = defineProps<{ page: QuizPage }>()
 const emit = defineEmits<{ done: [] }>()
@@ -12,6 +13,47 @@ const emit = defineEmits<{ done: [] }>()
 const store = useStore()
 
 const selectedAnswer = ref<number | null>(null)
+
+const modalOpen = ref(false)
+const modalExplanationId = ref<number | null>(null)
+
+function getAnswerBySlug(slug: string) {
+  for (const [id, explanation] of store.explanations) {
+    if (slugify(explanation.name) === slug) {
+      return id
+    }
+  }
+  return -1
+}
+
+function openModal(buttonText: string) {
+  const id = getAnswerBySlug(slugify(buttonText))
+  if (id === -1) return
+
+  modalOpen.value = true
+  modalExplanationId.value = id
+  document.body.style.overflow = 'hidden'
+
+  window.history.pushState(window.history.state, '', `#modal`)
+}
+
+function closeModal() {
+  modalOpen.value = false
+  modalExplanationId.value = null
+  document.body.style.overflow = ''
+  window.history.go(-1)
+}
+
+function onPopState() {
+  modalOpen.value = false
+  modalExplanationId.value = null
+  document.body.style.overflow = ''
+}
+
+const modalExplanation = computed(() => {
+  if (modalExplanationId.value == null) return null
+  return store.explanations.get(modalExplanationId.value) || null
+})
 
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
@@ -37,6 +79,15 @@ function onAnswerClick(index: number) {
 }
 
 onMounted(() => {
+  if (window.location.hash === '#modal') {
+    window.history.replaceState(
+      window.history.state,
+      '',
+      window.location.pathname + window.location.search,
+    )
+  }
+  window.addEventListener('popstate', onPopState)
+
   preloadPageImages(props.page)
 
   if (
@@ -49,6 +100,11 @@ onMounted(() => {
       emit('done')
     }
   }
+})
+
+onBeforeUnmount(() => {
+  document.body.style.overflow = ''
+  window.removeEventListener('popstate', onPopState)
 })
 </script>
 
@@ -95,7 +151,7 @@ onMounted(() => {
           :points="page.points"
           @click="onAnswerClick(index)"
         />
-        <div class="help">
+        <button type="button" class="help" @click="openModal(answer.text)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -107,7 +163,7 @@ onMounted(() => {
               d="M14.9376 6.734c2.2706 0 3.9866.546 5.148 1.638 1.1786 1.0747 1.768 2.4787 1.768 4.212 0 1.04-.182 1.976-.546 2.808-.3467.8147-.858 1.5427-1.534 2.184-.6587.6413-1.4474 1.2393-2.366 1.794-.6414.3813-1.2394.65-1.794.806-.5547.156-1.0747.234-1.56.234-.5374 0-.9794-.13-1.326-.39-.3467-.2773-.52-.6413-.52-1.092 0-.416.1386-.806.416-1.17.2946-.364.7626-.7367 1.404-1.118.8493-.4853 1.534-.9187 2.054-1.3.52-.3813.78-.8147.78-1.3 0-.3293-.0954-.5893-.286-.78-.1734-.1907-.4767-.286-.91-.286-.3467 0-.7627.0173-1.248.052a18.637 18.637 0 0 1-1.378.052c-.9187 0-1.6294-.2513-2.132-.754-.5027-.5027-.754-1.2047-.754-2.106 0-.7973.1993-1.4473.598-1.95.3986-.52.9533-.9013 1.664-1.144.728-.26 1.5686-.39 2.522-.39Zm-3.224 17.42c0-.572.1386-1.0313.416-1.378.2946-.364.6673-.6327 1.118-.806.468-.1733.9533-.26 1.456-.26.8666 0 1.5253.1993 1.976.598.468.3987.702.936.702 1.612 0 .832-.286 1.4387-.858 1.82-.572.364-1.2654.546-2.08.546-.884 0-1.56-.1907-2.028-.572-.468-.3987-.702-.9187-.702-1.56Z"
             />
           </svg>
-        </div>
+        </button>
       </div>
       <div v-if="selectedAnswer === null" class="answer-info">
         <strong>Previdno:</strong> Napačen odgovor prinaša minus točke. Če nisi
@@ -121,6 +177,44 @@ onMounted(() => {
       <h2>OBRAZLOŽITEV</h2>
       <div class="answer-description">
         <RichText :content="page.answer_description" />
+      </div>
+    </div>
+    <div v-if="modalOpen && modalExplanation !== null" class="help-modal">
+      <div class="modal-content">
+        <button
+          type="button"
+          class="close-button"
+          @click="closeModal"
+          aria-label="Zapri"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 54 54"
+          >
+            <circle
+              cx="27"
+              cy="27"
+              r="25.5"
+              fill="#fff"
+              stroke="#000"
+              stroke-width="3"
+            />
+            <path
+              fill="#4063F6"
+              stroke="#000"
+              stroke-width="3"
+              d="M19.0725 15.0012c-.5601.0131-1.0905.2166-1.4941.6193l-1.9573 1.9596c-.92.9183-.804 2.5129.2566 3.5739l5.8453 5.8475-5.8453 5.8447c-1.0605 1.0605-1.177 2.6556-.2566 3.5756l1.9573 1.9581c.9201.918 2.5135.8038 3.5753-.257l5.8452-5.8466 5.8453 5.8466c1.0628 1.0609 2.6572 1.175 3.5753.257l1.9601-1.9581c.9183-.9198.8041-2.5148-.2587-3.5756l-5.845-5.8447 5.8453-5.8472c1.0628-1.0609 1.177-2.6555.2587-3.5739l-1.9602-1.9596c-.9182-.9201-2.5127-.8038-3.5753.2585l-5.8452 5.845-5.8452-5.8448c-.5966-.5986-1.3627-.8956-2.0813-.8782l-.0002-.0001Z"
+            />
+          </svg>
+        </button>
+        <div class="modal-body">
+          <div class="title-section">
+            <div class="name">{{ modalExplanation.name }}</div>
+            <div class="desc">{{ modalExplanation.description }}</div>
+          </div>
+          <RichText :content="modalExplanation.content" />
+        </div>
       </div>
     </div>
   </div>
@@ -174,6 +268,9 @@ onMounted(() => {
       .help {
         width: 2rem;
         height: 2rem;
+        padding: 0;
+        border: none;
+        background: transparent;
         flex-shrink: 0;
         cursor: help;
 
@@ -239,10 +336,72 @@ onMounted(() => {
       background-image: url('/jagged-border.svg');
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      border-radius: 3px;
 
       .rich-text {
         padding-block: 0;
+      }
+    }
+  }
+
+  .help-modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #4063f6b2;
+    backdrop-filter: blur(4px);
+    z-index: 10;
+
+    .modal-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 700px;
+      max-height: calc(100vh - 5rem);
+      margin-inline: auto;
+      padding: 0.5rem;
+      background-image: url('/jagged-border.svg');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+
+      .close-button {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .modal-body {
+        padding: 2rem 2.25rem;
+        overflow-y: auto;
+
+        .title-section {
+          flex: 1;
+          font-weight: 600;
+
+          .name {
+            margin-bottom: 0.25rem;
+            font-family: var(--font-family-alt);
+            font-size: 2rem;
+            text-transform: uppercase;
+          }
+
+          .desc {
+            font-size: 1.25rem;
+          }
+        }
       }
     }
   }
