@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RootView from '../views/RootView.vue'
 import IntroView from '../views/IntroView.vue'
+import TacticsView from '../views/TacticsView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import ChapterView from '../views/ChapterView.vue'
 import ChapterPageView from '../views/ChapterPageView.vue'
@@ -11,6 +12,8 @@ const router = createRouter({
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
       return savedPosition
+    } else if (to.path === from.path) {
+      return
     } else {
       return { top: 0 }
     }
@@ -30,6 +33,11 @@ const router = createRouter({
           path: 'koledar',
           name: 'calendar',
           component: CalendarView,
+        },
+        {
+          path: 'taktike',
+          name: 'tactics',
+          component: TacticsView,
         },
         {
           path: 'dan/:slug',

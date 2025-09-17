@@ -1,6 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
+import { slugify } from '@/utils/stringify'
+
+const props = defineProps<{
+  updateHash: boolean
+}>()
 
 const store = useStore()
 
@@ -14,7 +19,41 @@ function selectAnswer(i: number) {
   }
   selectedId.value = i
   selectedIdMobile.value = i
+
+  if (props.updateHash) {
+    window.history.pushState(
+      window.history.state,
+      '',
+      `#${slugify(store.explanations.get(i)?.name ?? '')}`,
+    )
+  }
 }
+
+function getAnswerBySlug(slug: string) {
+  for (const [id, explanation] of store.explanations) {
+    if (slugify(explanation.name) === slug) {
+      return id
+    }
+  }
+  return -1
+}
+
+function onHashChange() {
+  const hash = window.location.hash.slice(1)
+  if (!hash) return
+
+  const id = getAnswerBySlug(hash)
+  if (id === -1) return
+
+  selectedId.value = id
+  selectedIdMobile.value = id
+}
+
+window.addEventListener('hashchange', onHashChange)
+
+onMounted(() => {
+  onHashChange()
+})
 </script>
 
 <template>
