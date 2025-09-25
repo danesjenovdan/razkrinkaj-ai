@@ -25,6 +25,7 @@ export const useStore = defineStore('store', () => {
   const userGUID = ref('')
   // attempt guid (does change after reset)
   const attemptGUID = ref('')
+  const attemptStreak = ref(0)
 
   // intro texts
   const introductionTitle = ref('')
@@ -95,6 +96,7 @@ export const useStore = defineStore('store', () => {
 
   function clearAllProgress() {
     attemptGUID.value = generateGUID()
+    attemptStreak.value = 0
     justUnlockedChapters.value = []
     unlockedChapters.value = []
     finishedChapters.clear()
@@ -312,6 +314,7 @@ export const useStore = defineStore('store', () => {
     currentChapterId,
     currentChapterScore,
     currentChapterAnswers,
+    attemptStreak,
     setCurrentChapter,
     clearCurrentChapter,
     clearAllProgress,

@@ -86,7 +86,7 @@ onMounted(() => {
     :is="componentName"
     :class="{
       'calendar-day': true,
-      today: isToday,
+      today: isToday && didAnswerCorrectly === null,
       disabled: isLocked,
       completed: isFinished,
       success: didAnswerCorrectly === true,
@@ -99,10 +99,12 @@ onMounted(() => {
     "
   >
     <h2 class="title">{{ chapter.title }}</h2>
-    <div v-if="!isLocked && !isToday" class="icon icon--star">
+    <div v-if="isToday && didAnswerCorrectly === null" class="text">
+      REŠI!
+    </div>
+    <div v-else-if="!isLocked" class="icon icon--star">
       <StarIcon :variant="starVariant" />
     </div>
-    <div v-else-if="isToday" class="text">REŠI!</div>
     <div v-else-if="isLocked" class="icon icon--lock">
       <LockIcon />
     </div>

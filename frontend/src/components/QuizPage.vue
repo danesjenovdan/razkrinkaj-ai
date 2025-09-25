@@ -57,6 +57,12 @@ const modalExplanation = computed(() => {
   return store.explanations.get(modalExplanationId.value) || null
 })
 
+const chapterDate = computed(() => {
+  const chapter = store.chapters.get(store.currentChapterId)
+  const dateParts = (chapter?.title || '').split('.').map(Number)
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
+})
+
 function onAnswerClick(index: number) {
   selectedAnswer.value = index
   const correct = props.page.answers[index].correct
@@ -74,6 +80,18 @@ function onAnswerClick(index: number) {
     score: store.currentChapterScore,
     answers: new Map(store.currentChapterAnswers),
   })
+  // add to streak if current date is the chapter date
+  const today = new Date()
+  const isSameDay =
+    today.getDate() === chapterDate.value.getDate() &&
+    today.getMonth() === chapterDate.value.getMonth() &&
+    today.getFullYear() === chapterDate.value.getFullYear()
+  if (isSameDay && correct) {
+    store.attemptStreak += 1
+  } else if (isSameDay && !correct) {
+    store.attemptStreak = 0
+  }
+
   store
     .sendProgressChapterDataToApi(store.currentChapterId)
     .then(() =>
