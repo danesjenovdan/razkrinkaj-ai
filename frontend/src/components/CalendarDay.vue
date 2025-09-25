@@ -38,6 +38,27 @@ const isToday = computed(() => {
   )
 })
 
+const didAnswerCorrectly = computed<boolean | null>(() => {
+  if (store.finishedChapters.has(props.chapter.id)) {
+    const chapterData = store.finishedChapters.get(props.chapter.id)!
+    const answers = Array.from(chapterData.answers.values())
+    return answers.every(answer => answer.correct)
+  } else if (store.inProgressChapters.has(props.chapter.id)) {
+    const chapterData = store.inProgressChapters.get(props.chapter.id)!
+    const answers = Array.from(chapterData.answers.values())
+    return answers.every(answer => answer.correct)
+  }
+  return null
+})
+const starVariant = computed(() => {
+  if (didAnswerCorrectly.value === true) {
+    return 'success'
+  } else if (didAnswerCorrectly.value === false) {
+    return 'fail'
+  }
+  return 'regular'
+})
+
 const isHidden = computed(() => {
   if (props.chapter.is_feedback && (isLocked.value || isFinished.value)) {
     return true
@@ -68,6 +89,8 @@ onMounted(() => {
       today: isToday,
       disabled: isLocked,
       completed: isFinished,
+      success: didAnswerCorrectly === true,
+      fail: didAnswerCorrectly === false,
     }"
     :to="
       !isLocked
@@ -77,7 +100,7 @@ onMounted(() => {
   >
     <h2 class="title">{{ chapter.title }}</h2>
     <div v-if="!isLocked && !isToday" class="icon icon--star">
-      <StarIcon variant="regular" />
+      <StarIcon :variant="starVariant" />
     </div>
     <div v-else-if="isToday" class="text">REŠI!</div>
     <div v-else-if="isLocked" class="icon icon--lock">
@@ -139,6 +162,24 @@ onMounted(() => {
     font-weight: 600;
     line-height: 2;
     text-align: center;
+  }
+
+  &.success {
+    $day-bg-svg-string-success: string.replace(
+      $day-bg-svg-string,
+      '#FFF',
+      '#D8FFAF'
+    );
+    background-image: url.svg($day-bg-svg-string-success);
+  }
+
+  &.fail {
+    $day-bg-svg-string-fail: string.replace(
+      $day-bg-svg-string,
+      '#FFF',
+      '#FFBA9E'
+    );
+    background-image: url.svg($day-bg-svg-string-fail);
   }
 
   &.today {
