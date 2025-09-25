@@ -17,6 +17,8 @@ const selectedAnswer = ref<number | null>(null)
 const modalOpen = ref(false)
 const modalExplanationId = ref<number | null>(null)
 
+const percentPeopleCorrect = ref(-1)
+
 function getAnswerBySlug(slug: string) {
   for (const [id, explanation] of store.explanations) {
     if (slugify(explanation.name) === slug) {
@@ -72,7 +74,15 @@ function onAnswerClick(index: number) {
     score: store.currentChapterScore,
     answers: new Map(store.currentChapterAnswers),
   })
-  store.sendProgressChapterDataToApi(store.currentChapterId)
+  store
+    .sendProgressChapterDataToApi(store.currentChapterId)
+    .then(() =>
+      store.fetchPageCorrectPercent(store.currentChapterId, props.page.id),
+    )
+    .then(value => {
+      percentPeopleCorrect.value = value
+    })
+
   // persist data to local storage
   store.saveLocalStorage()
   emit('done')
@@ -97,6 +107,11 @@ onMounted(() => {
     const index = store.currentChapterAnswers.get(props.page.id)?.answerIndex
     if (index != null) {
       selectedAnswer.value = index
+      store
+        .fetchPageCorrectPercent(store.currentChapterId, props.page.id)
+        .then(value => {
+          percentPeopleCorrect.value = value
+        })
       emit('done')
     }
   }
@@ -172,7 +187,14 @@ onBeforeUnmount(() => {
     </div>
     <div v-if="selectedAnswer !== null" class="answer-description-wrapper">
       <div class="answer-stats">
-        Na to vprašanje je pravilno odgovorilo <em>56 %</em> uporabnikov.
+        Na to vprašanje je pravilno odgovorilo
+        <template v-if="percentPeopleCorrect !== -1">
+          <em>{{ percentPeopleCorrect }} %</em>
+        </template>
+        <template v-else>
+          <em>...</em>
+        </template>
+        uporabnikov.
       </div>
       <h2>OBRAZLOŽITEV</h2>
       <div class="answer-description">

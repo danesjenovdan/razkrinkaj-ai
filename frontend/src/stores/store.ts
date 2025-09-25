@@ -276,6 +276,20 @@ export const useStore = defineStore('store', () => {
     )
   }
 
+  async function fetchPageCorrectPercent(chapterId: number, pageId: number) {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/chapter/${chapterId}/page/${pageId}/stats/`,
+      )
+      if (response.status == 200) {
+        return response.data.percent_correct
+      }
+    } catch (error) {
+      console.error('fetchPageCorrectPercent', error)
+    }
+    return null
+  }
+
   return {
     initHomeData,
     homeDataLoaded,
@@ -306,5 +320,6 @@ export const useStore = defineStore('store', () => {
     score,
     sendFinishedChapterDataToApi,
     sendProgressChapterDataToApi,
+    fetchPageCorrectPercent,
   }
 })
