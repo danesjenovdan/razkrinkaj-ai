@@ -1,4 +1,4 @@
-import type { Chapter, Explanation } from '@/types'
+import type { Chapter, Explanation, LeaderboardData } from '@/types'
 import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
@@ -292,6 +292,20 @@ export const useStore = defineStore('store', () => {
     return null
   }
 
+  async function fetchLeaderboard(): Promise<LeaderboardData | null> {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/leaderboard/?attempt_guid=${attemptGUID.value}`,
+      )
+      if (response.status == 200) {
+        return response.data
+      }
+    } catch (error) {
+      console.error('fetchLeaderboard', error)
+    }
+    return null
+  }
+
   return {
     initHomeData,
     homeDataLoaded,
@@ -324,5 +338,6 @@ export const useStore = defineStore('store', () => {
     sendFinishedChapterDataToApi,
     sendProgressChapterDataToApi,
     fetchPageCorrectPercent,
+    fetchLeaderboard,
   }
 })

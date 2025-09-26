@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios'
-import type { Chapter } from '@/types'
+import type { Chapter, LeaderboardData } from '@/types'
 import { onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import PageFooter from '@/components/PageFooter.vue'
@@ -14,6 +14,8 @@ const dailyReminderEmail = ref('')
 const dailyReminderConsent = ref(false)
 const newsletterConsent = ref(false)
 const dailyReminderLoading = ref(false)
+
+const leaderboardData = ref<LeaderboardData | null>(null)
 
 async function onDailyReminderSubmit() {
   dailyReminderLoading.value = true
@@ -142,6 +144,11 @@ onMounted(() => {
   //     store.unlockedChapters.push(nextChapterId)
   //   }
   // }
+
+  // fetch leaderboard data
+  store.fetchLeaderboard().then(data => {
+    leaderboardData.value = data
+  })
 
   // persist data to local storage
   store.saveLocalStorage()
@@ -302,19 +309,16 @@ onMounted(() => {
         </div>
       </div>
       <div class="page-gutter">
-        <div class="leaderboard">
-          <div class="leaderboard-entry">
-            <div class="place">1.</div>
+        <div v-if="leaderboardData" class="leaderboard">
+          <div
+            v-for="entry in leaderboardData.leaderboard"
+            class="leaderboard-entry"
+            :key="entry.rank"
+          >
+            <div class="place">{{ entry.rank }}.</div>
             <div class="content">
-              <div class="name">Bojko</div>
-              <div class="score">XX</div>
-            </div>
-          </div>
-          <div class="leaderboard-entry">
-            <div class="place">2.</div>
-            <div class="content">
-              <div class="name">Bojko</div>
-              <div class="score">XX</div>
+              <div class="name">{{ entry.attempt_guid }}</div>
+              <div class="score">{{ entry.total_score }}</div>
             </div>
           </div>
         </div>

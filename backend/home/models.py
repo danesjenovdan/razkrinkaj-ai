@@ -210,12 +210,21 @@ class FinishedChapterData(models.Model):
 class ManipulationExplanation(models.Model):
     name = models.CharField(max_length=255, verbose_name="Ime")
     description = models.CharField(max_length=255, verbose_name="Opis")
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Slika",
+    )
     content = RichTextField(verbose_name="Vsebina")
     order = models.IntegerField(default=0, verbose_name="Vrstni red")
 
     panels = [
         FieldPanel("name"),
         FieldPanel("description"),
+        FieldPanel("image"),
         FieldPanel("content"),
     ]
 

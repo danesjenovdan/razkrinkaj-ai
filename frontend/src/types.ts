@@ -57,7 +57,21 @@ export type Explanation = {
   id: number
   name: string
   description: string
+  image: ImageDescription | null
   content: string
   content_images: ImageDescription[]
   order: number
+}
+
+export type LeaderboardDataEntry = {
+  attempt_guid: string
+  total_score: number
+  rank: number
+}
+
+export type LeaderboardData = {
+  attempt_guid: string
+  my_score: number
+  my_rank: number
+  leaderboard: LeaderboardDataEntry[]
 }

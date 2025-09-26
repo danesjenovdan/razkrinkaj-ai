@@ -4,6 +4,7 @@ from .views import (
     ChapterView,
     FinishedChapterView,
     HomeView,
+    LeaderboardView,
     PageStatsView,
     ProgressChapterView,
 )
@@ -26,5 +27,10 @@ urlpatterns = [
         "chapter/<int:chapter_id>/page/<int:page_id>/stats/",
         PageStatsView.as_view(),
         name="page_stats",
+    ),
+    path(
+        "leaderboard/",
+        LeaderboardView.as_view(),
+        name="leaderboard",
     ),
 ]
