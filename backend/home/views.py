@@ -1,8 +1,8 @@
 import json
 from collections import defaultdict
 
-from django.db.models import Count, Q
-from django.http import JsonResponse
+from django.db.models import Count, Q, Sum
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -264,6 +264,51 @@ class PageStatsView(View):
                 "page_id": page.id,
                 "total_answers": total_answers,
                 "percent_correct": percent_correct,
+            }
+        )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LeaderboardView(View):
+    def get(self, request):
+        attempt_guid = request.GET.get("attempt_guid", None)
+        if not attempt_guid:
+            raise Http404("No guid provided")
+
+        # get my score
+        my_score = (
+            FinishedChapterData.objects.filter(attempt_guid=attempt_guid).aggregate(
+                total_score=Sum("score")
+            )["total_score"]
+            or 0
+        )
+        my_rank = (
+            FinishedChapterData.objects.values("attempt_guid")
+            .annotate(total_score=Sum("score"))
+            .filter(total_score__gt=my_score)
+            .distinct()
+            .count()
+            + 1
+        )
+
+        top_scores = list(
+            FinishedChapterData.objects.values("attempt_guid")
+            .annotate(total_score=Sum("score"))
+            .order_by("-total_score")
+        )
+
+        loop_rank = 0
+        for i, entry in enumerate(top_scores):
+            if i == 0 or entry["total_score"] < top_scores[i - 1]["total_score"]:
+                loop_rank += 1
+            entry["rank"] = loop_rank
+
+        return JsonResponse(
+            {
+                "attempt_guid": attempt_guid,
+                "my_score": my_score,
+                "my_rank": my_rank,
+                "leaderboard": list(top_scores),
             }
         )
 

@@ -61,3 +61,16 @@ export type Explanation = {
   content_images: ImageDescription[]
   order: number
 }
+
+export type LeaderboardDataEntry = {
+  attempt_guid: string
+  total_score: number
+  rank: number
+}
+
+export type LeaderboardData = {
+  attempt_guid: string
+  my_score: number
+  my_rank: number
+  leaderboard: LeaderboardDataEntry[]
+}
