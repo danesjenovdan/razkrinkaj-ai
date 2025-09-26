@@ -152,6 +152,7 @@ class HomeView(View):
                         "id": explanation.id,
                         "name": explanation.name,
                         "description": explanation.description,
+                        "image": serialize_image_url(explanation.image),
                         "content": richtext(explanation.content),
                         "content_images": serialize_rich_text_images(
                             explanation.content

@@ -71,8 +71,14 @@ onMounted(() => {
           >
             <button @click="selectAnswer(id)">
               <div class="icon">
-                <div class="image"></div>
+                <div v-if="explanation.image" class="image">
+                  <img
+                    :src="explanation.image.url"
+                    :alt="explanation.image.alt"
+                  />
+                </div>
                 <svg
+                  v-else
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 54 56"
@@ -168,22 +174,14 @@ section.explanations-section {
           will-change: scale, box-shadow, width;
 
           .icon {
-            display: grid;
-            grid-template-areas: 'stack';
-            width: 3.25rem;
-            height: 3.25rem;
+            flex-shrink: 0;
+            width: 3.5rem;
+            height: 3.5rem;
 
-            svg {
-              grid-area: stack;
+            svg,
+            img {
               width: 100%;
               height: 100%;
-            }
-
-            .image {
-              grid-area: stack;
-              margin: 0.125rem;
-              border-radius: 50%;
-              object-fit: cover;
             }
           }
 
@@ -241,9 +239,9 @@ section.explanations-section {
             cursor: default;
 
             .text {
-              font-weight: 600;
-              text-decoration: underline;
-              text-decoration-thickness: 1px;
+              // font-weight: 600;
+              // text-decoration: underline;
+              // text-decoration-thickness: 1px;
             }
 
             .arrow {

@@ -57,6 +57,7 @@ export type Explanation = {
   id: number
   name: string
   description: string
+  image: ImageDescription | null
   content: string
   content_images: ImageDescription[]
   order: number
