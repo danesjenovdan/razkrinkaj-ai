@@ -4,6 +4,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import ButtonAnswer from './ButtonAnswer.vue'
 import RichText from './RichText.vue'
+import ShareExplanation from './ShareExplanation.vue'
 import { preloadPageImages } from '@/utils/image'
 import { slugify } from '@/utils/stringify'
 
@@ -278,6 +279,7 @@ onBeforeUnmount(() => {
           </div>
           <RichText :content="modalExplanation.content" />
         </div>
+        <ShareExplanation :explanation="modalExplanation" />
       </div>
     </div>
   </div>
@@ -479,6 +481,12 @@ onBeforeUnmount(() => {
             font-size: 1.25rem;
           }
         }
+      }
+
+      .share-explanation {
+        position: absolute;
+        bottom: -2.5rem;
+        right: 0.125rem;
       }
     }
   }

@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import { slugify } from '@/utils/stringify'
+import ShareExplanation from './ShareExplanation.vue'
 
 const props = defineProps<{
   updateHash: boolean
@@ -129,6 +130,10 @@ onMounted(() => {
         ></div>
       </div>
     </div>
+    <ShareExplanation
+      v-if="store.explanations.has(selectedId)"
+      :explanation="store.explanations.get(selectedId)!"
+    />
   </section>
 </template>
 
@@ -294,6 +299,13 @@ section.explanations-section {
         }
       }
     }
+  }
+
+  .share-explanation {
+    float: right;
+    margin-top: 1rem;
+    margin-right: 0.125rem;
+    text-align: center;
   }
 }
 </style>
