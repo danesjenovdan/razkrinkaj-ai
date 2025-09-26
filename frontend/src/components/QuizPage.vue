@@ -250,8 +250,31 @@ onBeforeUnmount(() => {
         </button>
         <div class="modal-body">
           <div class="title-section">
-            <div class="name">{{ modalExplanation.name }}</div>
-            <div class="desc">{{ modalExplanation.description }}</div>
+            <div class="icon">
+              <div v-if="modalExplanation.image" class="image">
+                <img
+                  :src="modalExplanation.image.url"
+                  :alt="modalExplanation.image.alt"
+                />
+              </div>
+              <svg
+                v-else
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 54 56"
+              >
+                <path
+                  stroke="#000"
+                  stroke-linecap="round"
+                  stroke-width="3"
+                  d="M32.2403 1.8834c-3.9584.1638-11.8909 1.8037-16.6362 3.8285-4.4638 1.9047-9.1643 7.4747-11.8237 12.2406-2.207 3.955-2.287 13.287-.0267 19.8766 1.5512 4.5227 6.3006 7.6846 10.4175 10.5055 3.9553 2.7103 8.1633 4.3033 13.1917 5.258 8.8376 1.6779 12.8788-2.6694 17.5425-6.6685 5.0245-4.3084 7.0797-10.0617 6.986-24.7607-.04-6.2785-3.5646-9.994-6.5489-13.6867-3.9404-2.6593-7.0002-4.1923-9.0166-4.7698-1.0158-.2909-2.0165-.5774-6.0387-.749"
+                />
+              </svg>
+            </div>
+            <div>
+              <div class="name">{{ modalExplanation.name }}</div>
+              <div class="desc">{{ modalExplanation.description }}</div>
+            </div>
           </div>
           <RichText :content="modalExplanation.content" />
         </div>
@@ -429,10 +452,24 @@ onBeforeUnmount(() => {
 
         .title-section {
           flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
           font-weight: 600;
 
+          .icon {
+            flex-shrink: 0;
+            width: 5rem;
+            height: 5rem;
+
+            svg,
+            img {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
           .name {
-            margin-bottom: 0.25rem;
             font-family: var(--font-family-alt);
             font-size: 2rem;
             text-transform: uppercase;
