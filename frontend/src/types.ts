@@ -73,5 +73,6 @@ export type LeaderboardData = {
   attempt_guid: string
   my_score: number
   my_rank: number
-  leaderboard: LeaderboardDataEntry[]
+  top_leaderboard: LeaderboardDataEntry[]
+  ranked_near_me: LeaderboardDataEntry[]
 }

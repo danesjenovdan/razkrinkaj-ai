@@ -311,13 +311,43 @@ onMounted(() => {
       <div class="page-gutter">
         <div v-if="leaderboardData" class="leaderboard">
           <div
-            v-for="entry in leaderboardData.leaderboard"
-            class="leaderboard-entry"
+            v-for="entry in leaderboardData.top_leaderboard"
+            :class="{
+              'leaderboard-entry': true,
+              me: entry.attempt_guid === leaderboardData.attempt_guid,
+            }"
             :key="entry.rank"
           >
             <div class="place">{{ entry.rank }}.</div>
             <div class="content">
-              <div class="name">{{ entry.attempt_guid }}</div>
+              <div class="name">
+                {{
+                  entry.attempt_guid === leaderboardData.attempt_guid
+                    ? 'Tvoj rezultat'
+                    : entry.attempt_guid
+                }}
+              </div>
+              <div class="score">{{ entry.total_score }}</div>
+            </div>
+          </div>
+          <div class="ellipsis">...</div>
+          <div
+            v-for="entry in leaderboardData.ranked_near_me"
+            :class="{
+              'leaderboard-entry': true,
+              me: entry.attempt_guid === leaderboardData.attempt_guid,
+            }"
+            :key="entry.rank"
+          >
+            <div class="place">{{ entry.rank }}.</div>
+            <div class="content">
+              <div class="name">
+                {{
+                  entry.attempt_guid === leaderboardData.attempt_guid
+                    ? 'Tvoj rezultat'
+                    : entry.attempt_guid
+                }}
+              </div>
               <div class="score">{{ entry.total_score }}</div>
             </div>
           </div>
@@ -628,6 +658,26 @@ main {
           font-weight: 700;
         }
       }
+
+      &.me {
+        .content {
+          background-color: var(--manipulacija-color-12);
+
+          .name {
+            font-weight: 700;
+          }
+        }
+      }
+    }
+
+    .ellipsis {
+      margin-top: -0.2em;
+      margin-bottom: 0.4em;
+      font-family: var(--font-family-alt);
+      font-size: 2.25rem;
+      line-height: 1;
+      font-weight: 700;
+      text-align: center;
     }
   }
 

@@ -1,7 +1,8 @@
 import json
 from collections import defaultdict
 
-from django.db.models import Count, Q, Sum
+from django.db.models import Count, F, Q, Sum, Window
+from django.db.models.functions import DenseRank
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.utils.decorators import method_decorator
@@ -276,40 +277,104 @@ class LeaderboardView(View):
         if not attempt_guid:
             raise Http404("No guid provided")
 
-        # get my score
         my_score = (
-            FinishedChapterData.objects.filter(attempt_guid=attempt_guid).aggregate(
-                total_score=Sum("score")
-            )["total_score"]
-            or 0
+            FinishedChapterData.objects.filter(attempt_guid=attempt_guid)
+            .aggregate(total_score=Sum("score"))
+            .get("total_score", 0)
         )
+
         my_rank = (
             FinishedChapterData.objects.values("attempt_guid")
             .annotate(total_score=Sum("score"))
             .filter(total_score__gt=my_score)
+            .values("total_score")
             .distinct()
             .count()
             + 1
         )
 
-        top_scores = list(
+        top_scores = (
             FinishedChapterData.objects.values("attempt_guid")
             .annotate(total_score=Sum("score"))
             .order_by("-total_score")
+            .values_list("total_score", flat=True)
+            .distinct()[:3]
         )
 
-        loop_rank = 0
-        for i, entry in enumerate(top_scores):
-            if i == 0 or entry["total_score"] < top_scores[i - 1]["total_score"]:
-                loop_rank += 1
-            entry["rank"] = loop_rank
+        guids_in_top_places = (
+            FinishedChapterData.objects.values("attempt_guid")
+            .annotate(total_score=Sum("score"))
+            .filter(total_score__in=top_scores)
+        )
+
+        ranked_guids = guids_in_top_places.annotate(
+            rank=Window(
+                expression=DenseRank(),
+                order_by=F("total_score").desc(),
+            )
+        ).order_by("rank")
+
+        # limit to 3 entries per each rank
+        limited_ranked_guids = []
+        current_rank = None
+        current_rank_count = 0
+        for entry in ranked_guids:
+            if entry["rank"] != current_rank:
+                current_rank = entry["rank"]
+                current_rank_count = 1
+                limited_ranked_guids.append(entry)
+            else:
+                if current_rank_count < 3:
+                    current_rank_count += 1
+                    limited_ranked_guids.append(entry)
+
+        ranked_near_me = []
+        if my_rank > 1:
+            score_above_me = (
+                FinishedChapterData.objects.values("attempt_guid")
+                .annotate(total_score=Sum("score"))
+                .filter(total_score__gt=my_score)
+                .order_by("total_score")
+                .first()
+            )
+            if score_above_me:
+                ranked_near_me.append(
+                    {
+                        "attempt_guid": score_above_me["attempt_guid"],
+                        "total_score": score_above_me["total_score"],
+                        "rank": my_rank - 1,
+                    }
+                )
+            ranked_near_me.append(
+                {
+                    "attempt_guid": attempt_guid,
+                    "total_score": my_score,
+                    "rank": my_rank,
+                }
+            )
+            score_below_me = (
+                FinishedChapterData.objects.values("attempt_guid")
+                .annotate(total_score=Sum("score"))
+                .filter(total_score__lt=my_score)
+                .order_by("-total_score")
+                .first()
+            )
+            if score_below_me:
+                ranked_near_me.append(
+                    {
+                        "attempt_guid": score_below_me["attempt_guid"],
+                        "total_score": score_below_me["total_score"],
+                        "rank": my_rank + 1,
+                    }
+                )
 
         return JsonResponse(
             {
                 "attempt_guid": attempt_guid,
                 "my_score": my_score,
                 "my_rank": my_rank,
-                "leaderboard": list(top_scores),
+                "top_leaderboard": list(limited_ranked_guids),
+                "ranked_near_me": ranked_near_me,
             }
         )
 
