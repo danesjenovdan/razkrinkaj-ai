@@ -38,6 +38,7 @@ onMounted(() => {
   <main>
     <div class="page-gutter">
       <div class="intro">
+        <div class="introduction" v-html="store.introductionDescription"></div>
         <h1 class="title">Preizkusi svoje spretnosti</h1>
         <div class="description">
           Vsak dan v mesecu objavimo manipulativen citat.<br />
@@ -82,7 +83,15 @@ onMounted(() => {
 <style scoped lang="scss">
 main {
   .intro {
-    padding-block: 4.4375rem 3rem;
+    padding-block: 3rem;
+    max-width: 550px;
+    margin-inline: auto;
+
+    .introduction {
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+    }
 
     h1 {
       margin-bottom: 1rem;
