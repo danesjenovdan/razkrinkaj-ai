@@ -72,7 +72,7 @@ onMounted(() => {
     <div class="page-gutter bg-manipulacija-color-7">
       <div class="explanations">
         <a name="more"></a>
-        <ExplanationsSection />
+        <ExplanationsSection :update-hash="false" />
       </div>
     </div>
   </main>

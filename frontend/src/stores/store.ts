@@ -25,6 +25,7 @@ export const useStore = defineStore('store', () => {
   const userGUID = ref('')
   // attempt guid (does change after reset)
   const attemptGUID = ref('')
+  const attemptStreak = ref(0)
 
   // intro texts
   const introductionTitle = ref('')
@@ -95,6 +96,7 @@ export const useStore = defineStore('store', () => {
 
   function clearAllProgress() {
     attemptGUID.value = generateGUID()
+    attemptStreak.value = 0
     justUnlockedChapters.value = []
     unlockedChapters.value = []
     finishedChapters.clear()
@@ -276,6 +278,20 @@ export const useStore = defineStore('store', () => {
     )
   }
 
+  async function fetchPageCorrectPercent(chapterId: number, pageId: number) {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/api/chapter/${chapterId}/page/${pageId}/stats/`,
+      )
+      if (response.status == 200) {
+        return response.data.percent_correct
+      }
+    } catch (error) {
+      console.error('fetchPageCorrectPercent', error)
+    }
+    return null
+  }
+
   return {
     initHomeData,
     homeDataLoaded,
@@ -298,6 +314,7 @@ export const useStore = defineStore('store', () => {
     currentChapterId,
     currentChapterScore,
     currentChapterAnswers,
+    attemptStreak,
     setCurrentChapter,
     clearCurrentChapter,
     clearAllProgress,
@@ -306,5 +323,6 @@ export const useStore = defineStore('store', () => {
     score,
     sendFinishedChapterDataToApi,
     sendProgressChapterDataToApi,
+    fetchPageCorrectPercent,
   }
 })

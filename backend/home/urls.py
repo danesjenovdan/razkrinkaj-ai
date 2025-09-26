@@ -1,6 +1,12 @@
 from django.urls import path
 
-from .views import ChapterView, FinishedChapterView, HomeView, ProgressChapterView
+from .views import (
+    ChapterView,
+    FinishedChapterView,
+    HomeView,
+    PageStatsView,
+    ProgressChapterView,
+)
 
 urlpatterns = [
     path("home/", HomeView.as_view(), name="home"),
@@ -15,5 +21,10 @@ urlpatterns = [
         "chapter/<int:id>/progress/",
         ProgressChapterView.as_view(),
         name="progress_chapter",
+    ),
+    path(
+        "chapter/<int:chapter_id>/page/<int:page_id>/stats/",
+        PageStatsView.as_view(),
+        name="page_stats",
     ),
 ]

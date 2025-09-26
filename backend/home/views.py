@@ -243,6 +243,31 @@ class FinishedChapterView(View):
         return JsonResponse({"status": "ok"})
 
 
+@method_decorator(csrf_exempt, name="dispatch")
+class PageStatsView(View):
+    def get(self, request, chapter_id, page_id):
+        chapter = get_object_or_404(ChapterPage, id=chapter_id)
+        page = get_object_or_404(ChapterQuizSubPage, id=page_id)
+
+        total_answers = PageAnswerData.objects.filter(page=page).count()
+        if total_answers == 0:
+            percent_correct = None
+        else:
+            correct_answers = PageAnswerData.objects.filter(
+                page=page, correct=True
+            ).count()
+            percent_correct = round((correct_answers / total_answers) * 100)
+
+        return JsonResponse(
+            {
+                "chapter_id": chapter.id,
+                "page_id": page.id,
+                "total_answers": total_answers,
+                "percent_correct": percent_correct,
+            }
+        )
+
+
 def admin_answer_analytics(request):
     dangling_empty_page_answer_data_count = (
         PageAnswerData.objects.all().filter(finishedchapterdata=None).count()
