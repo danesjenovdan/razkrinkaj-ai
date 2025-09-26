@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RootView from '../views/RootView.vue'
-import IntroView from '../views/IntroView.vue'
+// import IntroView from '../views/IntroView.vue'
 import TacticsView from '../views/TacticsView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import ChapterView from '../views/ChapterView.vue'
@@ -27,13 +27,13 @@ const router = createRouter({
         {
           path: '',
           name: 'intro',
-          component: IntroView,
-        },
-        {
-          path: 'koledar',
-          name: 'calendar',
           component: CalendarView,
         },
+        // {
+        //   path: 'koledar',
+        //   name: 'calendar',
+        //   component: CalendarView,
+        // },
         {
           path: 'taktike',
           name: 'tactics',
