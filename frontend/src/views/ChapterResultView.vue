@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from 'axios'
 import type { Chapter, LeaderboardData } from '@/types'
 import { onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
@@ -10,43 +9,7 @@ const props = defineProps<{ chapter: Chapter }>()
 
 const store = useStore()
 
-const dailyReminderEmail = ref('')
-const dailyReminderConsent = ref(false)
-const newsletterConsent = ref(false)
-const dailyReminderLoading = ref(false)
-
 const leaderboardData = ref<LeaderboardData | null>(null)
-
-async function onDailyReminderSubmit() {
-  dailyReminderLoading.value = true
-  alert('TODO, kako bomo to implementirali?')
-  return
-  try {
-    const response = await axios.post(
-      'https://podpri.lb.djnd.si/api/subscribe/',
-      {
-        email: dailyReminderEmail.value,
-        segment_id: 21,
-      },
-    )
-    if (response.data.msg === 'mail sent') {
-      dailyReminderEmail.value = ''
-      dailyReminderConsent.value = false
-      newsletterConsent.value = false
-      dailyReminderLoading.value = false
-      alert(
-        'Hvala! Poslali smo ti sporočilo s povezavo, na kateri lahko potrdiš prijavo!',
-      )
-    } else {
-      dailyReminderLoading.value = false
-      alert('Prišlo je do napake :(')
-    }
-  } catch (error) {
-    console.error(error)
-    dailyReminderLoading.value = false
-    alert('Prišlo je do napake :(')
-  }
-}
 
 // const totalChapterScore = computed(() => {
 //   if (props.chapter.pages) {
@@ -170,22 +133,11 @@ onMounted(() => {
             </div>
           </RouterLink>
         </div>
-      </div>
-      <div class="scroller-container">
-        <div class="scroller">
-          🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ
-          REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ
-          REZULTAT 🏆🏆
-        </div>
-        <div class="scroller">
-          🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ
-          REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ REZULTAT 🏆🏆🏆 TVOJ
-          REZULTAT 🏆🏆
-        </div>
-      </div>
-    </div>
-    <div class="bg-manipulacija-color-3">
-      <div class="page-gutter">
+        <h2 class="section-title">
+          <span class="emoji">🏆🏆🏆</span>
+          <span class="text">TVOJ REZULTAT</span>
+          <span class="emoji">🏆🏆🏆</span>
+        </h2>
         <div class="streak-container">
           <div class="stat">
             <div class="icon">
@@ -233,82 +185,15 @@ onMounted(() => {
             <div class="desc">točk</div>
           </div>
         </div>
-        <div>
-          <div class="daily-reminder-block">
-            <span class="semi-bold"> Želiš prejeti dnevni opomnik? </span>
-            <form
-              class="daily-reminder-form"
-              @submit.prevent="onDailyReminderSubmit"
-            >
-              <div class="form-group">
-                <label>
-                  Vpiši svoj e-naslov
-                  <input
-                    type="email"
-                    id="daily-reminder-email"
-                    required
-                    v-model="dailyReminderEmail"
-                  />
-                </label>
-              </div>
-              <div class="form-group">
-                <div class="checkbox">
-                  <input
-                    type="checkbox"
-                    id="daily-reminder-checkbox"
-                    required
-                    v-model="dailyReminderConsent"
-                  />
-                  <label for="daily-reminder-checkbox">
-                    <span>
-                      Strinjam se, da mi Danes je nov dan pošlje dnevni opomnik.
-                    </span>
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="checkbox">
-                  <input
-                    type="checkbox"
-                    id="daily-reminder-checkbox"
-                    required
-                    v-model="newsletterConsent"
-                  />
-                  <label for="daily-reminder-checkbox">
-                    <span>
-                      Strinjam se, da mi Danes je nov dan po e-pošti pošilja
-                      Občasnik in druga obvestila.
-                    </span>
-                  </label>
-                </div>
-              </div>
-              <div class="form-group">
-                <button
-                  type="submit"
-                  class="button-link submit-button"
-                  :disabled="dailyReminderLoading"
-                >
-                  NAROČI SE
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        <hr class="jagged-line" />
       </div>
-      <div class="scroller-container leaderboard-scroller">
-        <div class="scroller">
-          👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA LESTVICA
-          👑👑👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA
-          LESTVICA 👑👑
-        </div>
-        <div class="scroller">
-          👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA LESTVICA
-          👑👑👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA LESTVICA 👑👑👑 TRENUTNA
-          LESTVICA 👑👑
-        </div>
-      </div>
+    </div>
+    <div class="leaderboard-section bg-manipulacija-color-3">
       <div class="page-gutter">
+        <div class="section-title">
+          <span class="emoji">👑👑👑</span>
+          <span class="text">TRENUTNA LESTVICA</span>
+          <span class="emoji">👑👑👑</span>
+        </div>
         <div v-if="leaderboardData" class="leaderboard">
           <div
             v-for="entry in leaderboardData.top_leaderboard"
@@ -353,9 +238,9 @@ onMounted(() => {
           </div>
         </div>
         <div>
-          <h1 style="text-align: center; padding-block: 2rem; margin: 0">
-            TODO NICK NAME
-          </h1>
+          <div>
+            Tvoj rezultat trenutno ni viden. Se želiš vpisati na lestvico?
+          </div>
         </div>
       </div>
     </div>
@@ -388,10 +273,12 @@ onMounted(() => {
 @use '@/assets/variables' as vars;
 
 main {
-  padding-bottom: 2rem;
-
   .header-section {
-    padding-bottom: 6rem;
+    padding-bottom: 4.125rem;
+
+    @media (max-width: 576px) {
+      padding-bottom: 2rem;
+    }
   }
 
   .header-content {
@@ -400,7 +287,11 @@ main {
     justify-content: center;
     max-width: 650px;
     margin-inline: auto;
-    padding-block: 3.5rem;
+    padding-block: 3.5rem 3rem;
+
+    @media (max-width: 576px) {
+      padding-block: 2rem 1.5rem;
+    }
 
     .title {
       display: flex;
@@ -408,36 +299,37 @@ main {
       .title-logo {
         width: 450px;
         height: auto;
+
+        @media (max-width: 576px) {
+          width: 200px;
+        }
       }
     }
   }
 
-  .scroller-container {
-    position: relative;
-    height: 3rem;
+  .section-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
     font-size: 2.25rem;
     font-weight: 700;
-    overflow: hidden;
+    text-align: center;
 
-    @keyframes infinite-scroll {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
+    @media (max-width: 576px) {
+      font-size: 1.5rem;
     }
 
-    .scroller {
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: inline-block;
+    .emoji {
       white-space: nowrap;
-      animation: infinite-scroll 20s linear infinite;
+      letter-spacing: -4px;
+    }
 
-      &:last-child {
-        translate: 100% 0;
+    .text {
+      line-height: 1.1;
+
+      @media (max-width: 576px) {
+        margin-inline: 0.5rem;
       }
     }
   }
@@ -447,12 +339,18 @@ main {
     justify-content: space-between;
     max-width: 600px;
     margin-inline: auto;
-    translate: 0 -4.5rem;
-    margin-bottom: -2rem;
+    margin-top: 1.5rem;
     padding: 2.75rem 3.75rem;
     background-image: url('/jagged-border-streak.svg');
     background-repeat: no-repeat;
     background-size: 100% 100%;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem 1.75rem;
+    }
 
     .stat {
       display: flex;
@@ -462,6 +360,10 @@ main {
       .icon {
         width: auto;
         height: 3.5rem;
+
+        @media (max-width: 576px) {
+          height: 2.5rem;
+        }
 
         svg {
           width: 100%;
@@ -474,144 +376,36 @@ main {
         font-size: 4.5rem;
         font-weight: 500;
         line-height: 1;
+
+        @media (max-width: 576px) {
+          font-size: 2.5rem;
+        }
       }
 
       .desc {
         width: min-content;
         font-size: 1.3125rem;
         font-weight: 600;
-      }
-    }
-  }
 
-  .daily-reminder-block {
-    $button-link-bg-string: '<svg viewBox="0 0 119 36" preserveAspectRatio="none" fill="#FFF"><path vector-effect="non-scaling-stroke" stroke="#000" stroke-width="3" d="M59.5 1.5c28.4851 0 43.069 2.806 50.494 6.3027 3.67 1.7285 5.486 3.578 6.419 5.2442.937 1.6733 1.087 3.3424 1.087 4.9531 0 1.6885-.06 3.3538-.882 5.0225-.806 1.6363-2.448 3.4643-5.993 5.1816C103.428 31.6906 88.8592 34.5 59.5 34.5s-43.9276-2.8094-51.125-6.2959c-3.545-1.7173-5.1868-3.5453-5.9932-5.1816C1.5596 21.3538 1.5 19.6885 1.5 18c0-1.6107.1502-3.2798 1.087-4.9531.9326-1.6662 2.7487-3.5157 6.4189-5.2442C16.4306 4.306 31.0148 1.5 59.5 1.5Z"/></svg>';
-    max-width: 340px;
-    margin-inline: auto;
-    margin-bottom: 4rem;
-
-    .semi-bold {
-      font-weight: 600;
-    }
-
-    .daily-reminder-form {
-      .form-group {
-        margin-top: 0.5rem;
-
-        label {
-          display: flex;
-          flex-direction: column;
-          font-size: 0.75rem;
-          line-height: 1.3;
-
-          input {
-            margin-top: 0.25rem;
-            padding: 0.2em 0.5em;
-            background: var(--manipulacija-color-8);
-            border: 3px solid #000;
-            border-radius: 5px;
-            font-weight: 500;
-            font-size: 1rem;
-            line-height: 1rem;
-          }
-        }
-
-        .checkbox {
-          display: flex;
-          gap: 0.5em;
-
-          input[type='checkbox'] {
-            appearance: none;
-            display: grid;
-            place-items: center;
-            background: var(--manipulacija-color-8);
-            margin: 0;
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 1.5rem;
-            border: 3px solid #000;
-            border-radius: 5px;
-
-            &:checked {
-              &::before {
-                content: '';
-                display: block;
-                width: 0.4em;
-                height: 0.8em;
-                margin-top: -0.2em;
-                border: 0 solid currentColor;
-                border-width: 0 2px 2px 0;
-                transform-origin: center;
-                transform: rotate(45deg);
-              }
-            }
-          }
-        }
-      }
-
-      .button-link {
-        display: inline-flex;
-        gap: 0.5em;
-        align-items: center;
-        padding: 0.4em 1.125em 0.3em;
-        background-color: transparent;
-        background-image: url.svg($button-link-bg-string);
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        font-family: var(--font-family-alt);
-        font-size: 1.125rem;
-        font-weight: 600;
-        line-height: 1.3;
-        color: inherit;
-        text-decoration: none;
-        cursor: pointer;
-        transition:
-          scale 0.15s ease-in-out,
-          filter 0.15s ease-in-out;
-        will-change: scale, filter;
-
-        &:not(:disabled):hover {
-          scale: 1.05;
-          filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
-        }
-      }
-
-      .submit-button {
-        $button-link-bg-string-submit: string.replace(
-          $button-link-bg-string,
-          '#FFF',
-          '#{vars.$manipulacija-color-6}'
-        );
-        background-image: url.svg($button-link-bg-string-submit);
-        margin-top: 0.5rem;
-        border: 0;
-
-        &:disabled {
-          cursor: wait;
-          filter: grayscale(1);
+        @media (max-width: 576px) {
+          font-size: 1rem;
         }
       }
     }
   }
 
-  hr.jagged-line {
-    margin: 0 auto;
-    border: none;
-    background-image: url('/jagged-line-blue.svg');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    width: 603px;
-    height: 11px;
-  }
-
-  .leaderboard-scroller {
-    margin-top: 3.5rem;
+  .leaderboard-section {
+    padding-block: 3rem 4rem;
   }
 
   .leaderboard {
     max-width: 400px;
     margin-inline: auto;
     padding-block: 1.5rem;
+
+    @media (max-width: 576px) {
+      width: 100%;
+    }
 
     .leaderboard-entry {
       display: flex;
@@ -635,12 +429,19 @@ main {
         font-weight: 600;
         font-size: 2rem;
         z-index: 1;
+
+        @media (max-width: 576px) {
+          width: 48px;
+          height: 48px;
+          font-size: 1.5rem;
+        }
       }
 
       .content {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 0.5rem;
         width: 100%;
         margin-left: -2rem;
         padding: 0.5rem 1rem 0.5rem 2.5rem;
@@ -648,15 +449,32 @@ main {
         border: 3px solid black;
         border-radius: 1rem;
 
+        @media (max-width: 576px) {
+          margin-left: -1.5rem;
+          padding: 0.25rem 0.75rem 0.25rem 2rem;
+        }
+
         .name {
           flex: 1;
           font-size: 1.25rem;
           font-weight: 600;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          @media (max-width: 576px) {
+            font-size: 1rem;
+          }
         }
 
         .score {
-          font-size: 1.25rem;
-          font-weight: 700;
+          font-family: var(--font-family-alt);
+          font-size: 1.5rem;
+          font-weight: 600;
+
+          @media (max-width: 576px) {
+            font-size: 1.25rem;
+          }
         }
       }
 
@@ -683,7 +501,7 @@ main {
   }
 
   .share-section {
-    padding-block: 3rem 4rem;
+    padding-block: 3rem;
 
     .share-with-us {
       max-width: 600px;
@@ -694,6 +512,10 @@ main {
         font-size: 1.5rem;
         font-weight: 600;
         margin-bottom: 1.25rem;
+
+        @media (max-width: 576px) {
+          font-size: 1.25rem;
+        }
       }
 
       .buttons {
