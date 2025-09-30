@@ -136,11 +136,20 @@ onMounted(() => {
     filter 0.15s ease-in-out;
   will-change: scale, rotate, filter;
 
+  @media (max-width: 576px) {
+    padding: 0.8125rem 0.5rem;
+  }
+
   .title {
     margin-bottom: 0.625rem;
     font-size: 1rem;
     font-weight: 600;
     text-align: center;
+
+    @media (max-width: 576px) {
+      margin-bottom: 0.25rem;
+      font-size: 0.875rem;
+    }
   }
 
   .icon {
@@ -148,8 +157,17 @@ onMounted(() => {
     height: 4.8125rem;
     margin-inline: auto;
 
+    @media (max-width: 576px) {
+      width: 4rem;
+      height: 3.85rem;
+    }
+
     &.icon--lock {
       width: 2.875rem;
+
+      @media (max-width: 576px) {
+        width: 2.25rem;
+      }
     }
 
     svg {
@@ -164,6 +182,10 @@ onMounted(() => {
     font-weight: 600;
     line-height: 2;
     text-align: center;
+
+    @media (max-width: 576px) {
+      font-size: 1.75rem;
+    }
   }
 
   &.success {

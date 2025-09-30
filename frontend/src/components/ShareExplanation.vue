@@ -35,6 +35,16 @@ const urlValue = computed(() => {
     gap: 0.5rem;
     font-weight: 500;
 
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: left;
+    }
+
+    span {
+      white-space: nowrap;
+    }
+
     input {
       width: 380px;
       padding: 0.2em 0.5em;
@@ -44,6 +54,10 @@ const urlValue = computed(() => {
       font-weight: 500;
       font-size: 1rem;
       line-height: 1rem;
+
+      @media (max-width: 576px) {
+        width: 100%;
+      }
     }
   }
 }

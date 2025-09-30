@@ -77,6 +77,10 @@ onMounted(() => {
     ul,
     ol {
       font-size: 1.125rem;
+
+      @media (max-width: 576px) {
+        font-size: 1rem;
+      }
     }
 
     ul {

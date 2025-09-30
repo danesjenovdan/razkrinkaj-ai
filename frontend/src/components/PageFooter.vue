@@ -137,6 +137,12 @@ footer {
     padding-top: 3.25rem;
     padding-bottom: 2.375rem;
 
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 1.25rem;
+      padding-block: 1.25rem;
+    }
+
     .footer-col {
       flex: 1;
       max-width: 24rem;
@@ -282,6 +288,12 @@ footer {
     margin-inline: auto;
     width: var(--page-width);
     font-size: 0.75rem;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+    }
 
     .footer-col {
       display: flex;

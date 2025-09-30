@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   title: string
+  description?: string
   score: number
 }>()
 </script>
@@ -34,6 +35,7 @@ defineProps<{
           <strong>{{ score }}</strong>
         </div>
       </div>
+      <div v-if="description" class="description" v-html="description"></div>
       <hr class="jagged-line" />
     </div>
   </header>
@@ -49,7 +51,11 @@ defineProps<{
     justify-content: space-between;
     max-width: 650px;
     margin-inline: auto;
-    padding-block: 3.5rem;
+    padding-block: 3.5rem 3rem;
+
+    @media (max-width: 576px) {
+      padding-block: 2rem 1.5rem;
+    }
 
     .title {
       display: flex;
@@ -57,6 +63,10 @@ defineProps<{
       .title-logo {
         width: 450px;
         height: auto;
+
+        @media (max-width: 576px) {
+          width: 200px;
+        }
       }
     }
 
@@ -75,6 +85,10 @@ defineProps<{
       svg {
         width: 2.875rem;
         height: auto;
+
+        @media (max-width: 576px) {
+          width: 1.5rem;
+        }
       }
 
       strong {
@@ -84,7 +98,26 @@ defineProps<{
         font-weight: 500;
         color: #fff;
         text-align: center;
+
+        @media (max-width: 576px) {
+          font-size: 1.5rem;
+          min-width: 1.5rem;
+        }
       }
+    }
+  }
+
+  .description {
+    max-width: 800px;
+    margin-inline: auto;
+    margin-bottom: 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+
+    @media (max-width: 576px) {
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
     }
   }
 
@@ -94,7 +127,7 @@ defineProps<{
     background-image: url('/jagged-line.svg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    width: 603px;
+    width: min(603px, 100%);
     height: 11px;
   }
 }

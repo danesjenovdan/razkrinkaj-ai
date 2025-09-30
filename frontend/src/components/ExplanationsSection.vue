@@ -119,7 +119,9 @@ onMounted(() => {
               selected: id === selectedIdMobile,
             }"
           >
-            <div class="answer-text" v-html="explanation.content"></div>
+            <div class="answer-text">
+              <RichText :content="explanation.content" />
+            </div>
           </div>
         </template>
       </div>
@@ -149,6 +151,11 @@ section.explanations-section {
     font-size: 2.25rem;
     font-weight: 700;
     text-align: center;
+
+    @media (max-width: 576px) {
+      margin-bottom: 1rem;
+      font-size: 1.75rem;
+    }
   }
 
   .questions-and-answers {
@@ -158,6 +165,11 @@ section.explanations-section {
 
     .questions {
       margin-top: 2rem;
+
+      @media (max-width: 576px) {
+        margin-top: 0;
+        grid-column: span 2;
+      }
 
       .question {
         button {
@@ -244,6 +256,10 @@ section.explanations-section {
             z-index: 1;
             cursor: default;
 
+            @media (max-width: 576px) {
+              width: 100%;
+            }
+
             .arrow {
               display: block;
             }
@@ -261,6 +277,15 @@ section.explanations-section {
       .inline-answer {
         display: none;
       }
+
+      .question.selectedMobile + .inline-answer {
+        display: block;
+        margin-top: -0.5rem;
+        padding: 1.5rem;
+        background-color: #fff;
+        border: 3px solid #000;
+        border-radius: 5px;
+      }
     }
 
     .answer {
@@ -270,15 +295,21 @@ section.explanations-section {
       background-repeat: no-repeat;
       background-size: 100% 100%;
 
+      @media (max-width: 576px) {
+        display: none;
+      }
+
       .answer-text {
         grid-area: stack;
         margin: 0.25rem;
         padding: 2.1875rem 2.9375rem 2.5625rem 3.8125rem;
-
-        .rich-text {
-          padding-block: 0;
-        }
       }
+    }
+  }
+
+  .answer-text {
+    .rich-text {
+      padding-block: 0;
     }
   }
 
@@ -287,6 +318,10 @@ section.explanations-section {
     margin-top: 1rem;
     margin-right: 0.125rem;
     text-align: center;
+
+    @media (max-width: 576px) {
+      float: none;
+    }
   }
 }
 </style>

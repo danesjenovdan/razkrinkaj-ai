@@ -81,6 +81,10 @@ const componentName = computed(() =>
     filter 0.15s ease-in-out;
   will-change: scale, filter;
 
+  @media (max-width: 576px) {
+    font-size: 1.75rem;
+  }
+
   &.button-color-primary {
     $button-bg-svg-string-primary: string.replace(
       vars.$button-bg-svg-string,
