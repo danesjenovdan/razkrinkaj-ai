@@ -370,6 +370,7 @@ onMounted(() => {
               class="button"
               button-text="POSREDUJ NAM JO!"
               href="mailto:tadej@danesjenovdan.si"
+              target="_blank"
               icon="hand"
               color="white"
             />

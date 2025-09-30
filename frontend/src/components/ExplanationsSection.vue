@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import { useStore } from '@/stores/store'
 import { slugify } from '@/utils/stringify'
 import ShareExplanation from './ShareExplanation.vue'
+import RichText from './RichText.vue'
 
 const props = defineProps<{
   updateHash: boolean
@@ -123,11 +124,11 @@ onMounted(() => {
         </template>
       </div>
       <div class="answer">
-        <div
-          ref="answer-element"
-          class="answer-text"
-          v-html="store.explanations.get(selectedId)?.content"
-        ></div>
+        <div class="answer-text">
+          <RichText
+            :content="store.explanations.get(selectedId)?.content || ''"
+          />
+        </div>
       </div>
     </div>
     <ShareExplanation
@@ -243,12 +244,6 @@ section.explanations-section {
             z-index: 1;
             cursor: default;
 
-            .text {
-              // font-weight: 600;
-              // text-decoration: underline;
-              // text-decoration-thickness: 1px;
-            }
-
             .arrow {
               display: block;
             }
@@ -280,22 +275,8 @@ section.explanations-section {
         margin: 0.25rem;
         padding: 2.1875rem 2.9375rem 2.5625rem 3.8125rem;
 
-        :deep(h3) {
-          margin-top: 0;
-          margin-bottom: 1.125rem;
-          font-size: 1.3125rem;
-          font-weight: 600;
-        }
-
-        :deep(p) {
-          margin-top: 0;
-          margin-bottom: 1.125rem;
-          font-size: 1.125rem;
-          line-height: 1.3;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
+        .rich-text {
+          padding-block: 0;
         }
       }
     }

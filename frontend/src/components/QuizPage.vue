@@ -175,7 +175,7 @@ onBeforeUnmount(() => {
         />
       </svg>
     </div>
-    <div v-if="page.source_text" class="source-text">
+    <div v-if="page.source_text && selectedAnswer !== null" class="source-text">
       <RichText :content="page.source_text" />
     </div>
     <div class="answers">
@@ -209,6 +209,10 @@ onBeforeUnmount(() => {
       </div>
     </div>
     <div v-if="selectedAnswer !== null" class="answer-description-wrapper">
+      <h2>OBRAZLOŽITEV</h2>
+      <div class="answer-description">
+        <RichText :content="page.answer_description" />
+      </div>
       <div class="answer-stats">
         Na to vprašanje je pravilno odgovorilo
         <template v-if="percentPeopleCorrect !== -1">
@@ -218,10 +222,6 @@ onBeforeUnmount(() => {
           <em>...</em>
         </template>
         uporabnikov.
-      </div>
-      <h2>OBRAZLOŽITEV</h2>
-      <div class="answer-description">
-        <RichText :content="page.answer_description" />
       </div>
     </div>
     <div v-if="modalOpen && modalExplanation !== null" class="help-modal">
@@ -394,9 +394,10 @@ onBeforeUnmount(() => {
     margin-top: 3rem;
 
     .answer-stats {
-      max-width: 514px;
+      max-width: 700px;
       margin-inline: auto;
-      padding: 1rem;
+      margin-top: 2.5rem;
+      padding: 1.125rem 1rem 1.25rem 1rem;
       $percentile-bg-svg-string-default: string.replace(
         vars.$percentile-bg-svg-string,
         '#FFF',
@@ -405,7 +406,7 @@ onBeforeUnmount(() => {
       background-image: url.svg($percentile-bg-svg-string-default);
       background-repeat: no-repeat;
       background-size: 100% 100%;
-      font-size: 1.75rem;
+      font-size: 1.3125rem;
       line-height: 1;
       font-weight: 500;
       text-align: center;
@@ -414,7 +415,7 @@ onBeforeUnmount(() => {
       em {
         font-family: var(--font-family-alt);
         font-style: normal;
-        font-size: 2.25rem;
+        font-size: 2rem;
         font-weight: 600;
       }
     }
