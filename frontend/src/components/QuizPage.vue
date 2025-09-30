@@ -212,7 +212,7 @@ onBeforeUnmount(() => {
       </div>
       <div v-if="selectedAnswer === null" class="answer-info">
         <strong>Previdno:</strong> Napačen odgovor prinaša minus točke.<br />
-        Če nisi prepričan_a preveri opis.
+        Če nisi prepričan_a, preveri opis.
       </div>
     </div>
     <div v-if="selectedAnswer !== null" class="answer-description-wrapper">
@@ -319,6 +319,11 @@ onBeforeUnmount(() => {
     font-weight: 500;
     text-align: center;
 
+    @media (max-width: 576px) {
+      padding: 1.5rem 3rem;
+      font-size: 1.375rem;
+    }
+
     &.question-with-image {
       padding: 2rem;
     }
@@ -326,6 +331,10 @@ onBeforeUnmount(() => {
     .quotes {
       width: 3.5rem;
       height: auto;
+
+      @media (max-width: 576px) {
+        width: 2.5rem;
+      }
 
       &:last-child {
         transform: scale(-1);
@@ -392,6 +401,11 @@ onBeforeUnmount(() => {
         background: transparent;
         flex-shrink: 0;
         cursor: help;
+
+        @media (max-width: 576px) {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
 
         svg {
           width: 100%;
@@ -485,13 +499,16 @@ onBeforeUnmount(() => {
       display: flex;
       flex-direction: column;
       width: 100%;
-      max-width: 700px;
-      max-height: calc(100vh - 5rem);
+      max-width: min(700px, calc(100% - 2rem));
+      max-height: calc(100vh - 6rem);
       margin-inline: auto;
       padding: 0.5rem;
       background-image: url('/jagged-border.svg');
       background-repeat: no-repeat;
       background-size: 100% 100%;
+
+      position: relative;
+      top: -2rem;
 
       .close-button {
         position: absolute;
@@ -514,6 +531,10 @@ onBeforeUnmount(() => {
         padding: 2rem 2.25rem;
         overflow-y: auto;
 
+        @media (max-width: 576px) {
+          padding: 1.5rem 1.375rem;
+        }
+
         .title-section {
           flex: 1;
           display: flex;
@@ -526,6 +547,11 @@ onBeforeUnmount(() => {
             width: 5rem;
             height: 5rem;
 
+            @media (max-width: 576px) {
+              width: 4rem;
+              height: 4rem;
+            }
+
             svg,
             img {
               width: 100%;
@@ -537,10 +563,18 @@ onBeforeUnmount(() => {
             font-family: var(--font-family-alt);
             font-size: 2rem;
             text-transform: uppercase;
+
+            @media (max-width: 576px) {
+              font-size: 1.375rem;
+            }
           }
 
           .desc {
             font-size: 1.25rem;
+
+            @media (max-width: 576px) {
+              font-size: 1.125rem;
+            }
           }
         }
       }
@@ -549,6 +583,11 @@ onBeforeUnmount(() => {
         position: absolute;
         bottom: -2.5rem;
         right: 0.125rem;
+
+        @media (max-width: 576px) {
+          left: 0.125rem;
+          bottom: -4rem;
+        }
       }
     }
   }

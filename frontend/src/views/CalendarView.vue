@@ -51,7 +51,7 @@ onMounted(() => {
           <h1 class="title">Preizkusi svoje spretnosti</h1>
           <div class="description">
             Vsak dan v mesecu objavimo manipulativen citat.<br />
-            Ugotovi za katero vrsto manipulacije gre.
+            Ugotovi, za katero vrsto manipulacije gre.
           </div>
         </div>
         <div class="calendar">

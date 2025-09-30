@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useStore } from '@/stores/store'
+import { slugify } from '@/utils/stringify'
 
-defineProps<{
+const props = defineProps<{
   buttonText: string
   correct: boolean
   revealed: boolean
@@ -13,6 +15,21 @@ const store = useStore()
 
 const chapter = store.chapters.get(store.currentChapterId)
 if (!chapter) throw new Error('Chapter not found')
+
+function getAnswerBySlug(slug: string) {
+  for (const [id, explanation] of store.explanations) {
+    if (slugify(explanation.name) === slug) {
+      return id
+    }
+  }
+  return -1
+}
+
+const explanation = computed(() => {
+  const explanationId = getAnswerBySlug(slugify(props.buttonText))
+  if (explanationId == null) return null
+  return store.explanations.get(explanationId) || null
+})
 </script>
 
 <template>
@@ -28,8 +45,17 @@ if (!chapter) throw new Error('Chapter not found')
     }"
   >
     <span class="answer-left">
-      <span v-if="!selected || chapter.is_feedback" class="circle"></span>
-      <span v-else class="icon">
+      <span v-if="explanation && explanation.image" class="icon">
+        <img :src="explanation.image.url" :alt="explanation.image.alt" />
+      </span>
+      <span class="answer-text">{{ buttonText }}</span>
+    </span>
+    <div class="answer-right">
+      <span v-if="selected && points > 0" class="score">
+        <strong>{{ correct ? '+' : '-' }} {{ points }}</strong>
+        točk
+      </span>
+      <span v-if="revealed" class="icon">
         <svg
           v-if="correct"
           xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +72,7 @@ if (!chapter) throw new Error('Chapter not found')
           />
         </svg>
         <svg
-          v-else
+          v-else-if="!correct && selected"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 26 27"
@@ -61,12 +87,7 @@ if (!chapter) throw new Error('Chapter not found')
           />
         </svg>
       </span>
-      <span>{{ buttonText }}</span>
-    </span>
-    <span v-if="selected && points > 0" class="score">
-      <strong>{{ correct ? '+' : '-' }} {{ points }}</strong>
-      točk
-    </span>
+    </div>
   </button>
 </template>
 
@@ -116,11 +137,11 @@ if (!chapter) throw new Error('Chapter not found')
 .button-answer {
   position: relative;
   display: flex;
-  gap: 0.68rem;
+  gap: 0.5rem;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 1.125rem 1.125rem 1.125rem 2.375rem;
+  padding: 0.625rem 1.125rem 0.625rem 0.625rem;
   background: transparent;
   background-image: url.svg(vars.$button-answer-bg-svg-string);
   background-repeat: no-repeat;
@@ -133,32 +154,69 @@ if (!chapter) throw new Error('Chapter not found')
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-  transition:
-    scale 0.15s ease-in-out,
-    filter 0.15s ease-in-out;
   will-change: scale, filter;
+
+  @media (max-width: 576px) {
+    padding: 0.25rem 0.75rem 0.25rem 0.5rem;
+    font-size: 1.125rem;
+  }
 
   .answer-left {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem;
     align-items: center;
+    min-height: 2.5rem;
 
-    .circle,
+    @media (max-width: 576px) {
+      gap: 0.25rem;
+    }
+
     .icon {
       flex-shrink: 0;
+      width: 2.5rem;
+      height: 2.5rem;
+
+      @media (max-width: 576px) {
+        width: 2rem;
+        height: 2rem;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .answer-text:first-child {
+      margin-left: 3rem;
+
+      @media (max-width: 576px) {
+        margin-left: 2.5rem;
+      }
+    }
+  }
+
+  .answer-right {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+
+    @media (max-width: 576px) {
+      gap: 0.25rem;
+    }
+
+    .icon {
+      flex-shrink: 0;
+      display: flex;
       width: 1.5rem;
       height: 1.5rem;
       margin-block: -0.2em;
-    }
 
-    .circle {
-      background-color: #fff;
-      border: 3px solid var(--color-text);
-      border-radius: 9999rem;
-    }
-
-    .icon {
-      display: flex;
+      @media (max-width: 576px) {
+        width: 1.125rem;
+        height: 1.125rem;
+      }
 
       svg {
         width: 100%;
@@ -176,6 +234,10 @@ if (!chapter) throw new Error('Chapter not found')
     line-height: 1.3;
     font-weight: 500;
     animation: bounceIn 0.66s;
+
+    @media (max-width: 576px) {
+      font-size: 0.875rem;
+    }
 
     strong {
       font-weight: 700;
@@ -220,6 +282,27 @@ if (!chapter) throw new Error('Chapter not found')
         url.svg($button-answer-bg-svg-string-incorrect);
       font-weight: 600;
     }
+  }
+
+  &:not(.revealed):hover {
+    $button-answer-bg-svg-string-hover: string.replace(
+      vars.$button-answer-bg-svg-string,
+      '#FFF',
+      '#C6D0FC'
+    );
+    $button-answer-bg-svg-string-hover: string.replace(
+      $button-answer-bg-svg-string-hover,
+      '<path ',
+      '<defs><filter id="shadow"><feFlood flood-color="#4063F6" /><feComposite operator="out" in2="SourceGraphic" /><feMorphology operator="dilate" radius="2" /><feGaussianBlur stdDeviation="6" /><feComposite operator="atop" in2="SourceGraphic" /></filter></defs><path filter="url(#shadow)" '
+    );
+    $button-answer-bg-svg-string-hover-border: string.replace(
+      vars.$button-answer-bg-svg-string,
+      '#FFF',
+      'none'
+    );
+    background-image: url.svg($button-answer-bg-svg-string-hover-border),
+      url.svg($button-answer-bg-svg-string-hover);
+    filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
   }
 }
 </style>
