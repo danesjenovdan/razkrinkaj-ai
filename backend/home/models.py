@@ -120,6 +120,10 @@ class ChapterQuizSubPage(Page):
         blank=True,
         verbose_name="Vprašanje",
     )
+    source_text = RichTextField(
+        blank=True,
+        verbose_name="Vir",
+    )
     answers = StreamField(
         [
             (
@@ -149,6 +153,7 @@ class ChapterQuizSubPage(Page):
         # FieldPanel("image"),
         # FieldPanel("image_answer"),
         FieldPanel("question"),
+        FieldPanel("source_text"),
         FieldPanel("answers"),
         FieldPanel("points"),
         FieldPanel("answer_description"),
