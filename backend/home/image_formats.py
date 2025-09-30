@@ -13,7 +13,7 @@ unregister_image_format("right")
 unregister_image_format("fullwidth")
 
 THUMBNAIL_RENDITION_NAME = "width-50|format-jpeg|jpegquality-30"
-REGULAR_RENDITION_NAME = "width-800|format-jpeg|jpegquality-60"
+REGULAR_RENDITION_NAME = "width-1080|format-jpeg|jpegquality-60"
 ICON_RENDITION_NAME = "width-218|format-jpeg|jpegquality-60"
 
 

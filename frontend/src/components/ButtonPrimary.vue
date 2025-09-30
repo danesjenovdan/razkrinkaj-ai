@@ -6,6 +6,7 @@ const props = withDefaults(
     buttonText?: string
     link?: object
     href?: string
+    target?: string
     icon?: string
     sideIcon?: string
     color?: string
@@ -27,6 +28,7 @@ const componentName = computed(() =>
     :is="componentName"
     :to="link"
     :href="href"
+    :target="target"
     :class="['button-primary', `button-color-${color}`]"
   >
     <span v-if="sideIcon" class="side-icon">

@@ -103,7 +103,7 @@ def serialize_chapter_sub_page(page):
         data.update(
             {
                 "type": "quiz",
-                "image": None,  # DISABLED serialize_image_url(page.image),
+                "image": serialize_image_url(page.image),
                 "image_answer": None,  # DISABLED serialize_image_url(page.image_answer),
                 "question": page.question,
                 "source_text": richtext(page.source_text),
