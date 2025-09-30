@@ -262,6 +262,10 @@ section.explanations-section {
 
             .arrow {
               display: block;
+
+              @media (max-width: 576px) {
+                display: none;
+              }
             }
           }
         }
@@ -278,13 +282,15 @@ section.explanations-section {
         display: none;
       }
 
-      .question.selectedMobile + .inline-answer {
-        display: block;
-        margin-top: -0.5rem;
-        padding: 1.5rem;
-        background-color: #fff;
-        border: 3px solid #000;
-        border-radius: 5px;
+      @media (max-width: 576px) {
+        .question.selectedMobile + .inline-answer {
+          display: block;
+          margin-top: -0.5rem;
+          padding: 1.5rem;
+          background-color: #fff;
+          border: 3px solid #000;
+          border-radius: 5px;
+        }
       }
     }
 
