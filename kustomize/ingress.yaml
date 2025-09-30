@@ -34,10 +34,21 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - manipulacija.lb.djnd.si
+        - manipulacija.danesjenovdan.si
+        - manipulacija.djnd.si
       secretName: manipulacija-frontend-tls
   rules:
-    - host: manipulacija.lb.djnd.si
+    - host: manipulacija.danesjenovdan.si
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: manipulacija-frontend
+                port:
+                  number: 80
+    - host: manipulacija.djnd.si
       http:
         paths:
           - path: /
