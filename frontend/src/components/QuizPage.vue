@@ -144,7 +144,14 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="quiz-page">
-    <div v-if="page.question" class="question">
+    <div v-if="page.image" class="question question-with-image">
+      <img
+        :src="page.image.url"
+        :alt="page.question || ''"
+        class="question-image"
+      />
+    </div>
+    <div v-else-if="page.question" class="question">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 58 40"
@@ -312,6 +319,10 @@ onBeforeUnmount(() => {
     font-weight: 500;
     text-align: center;
 
+    &.question-with-image {
+      padding: 2rem;
+    }
+
     .quotes {
       width: 3.5rem;
       height: auto;
@@ -319,6 +330,11 @@ onBeforeUnmount(() => {
       &:last-child {
         transform: scale(-1);
       }
+    }
+
+    .question-image {
+      width: 100%;
+      height: auto;
     }
   }
 

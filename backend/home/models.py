@@ -150,7 +150,7 @@ class ChapterQuizSubPage(Page):
     )
 
     content_panels = Page.content_panels + [
-        # FieldPanel("image"),
+        FieldPanel("image"),
         # FieldPanel("image_answer"),
         FieldPanel("question"),
         FieldPanel("source_text"),
