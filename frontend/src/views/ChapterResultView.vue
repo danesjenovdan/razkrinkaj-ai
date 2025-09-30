@@ -361,20 +361,20 @@ main {
     text-align: center;
 
     @media (max-width: 576px) {
-      font-size: 1.5rem;
+      font-size: 1.375rem;
     }
 
     .emoji {
       white-space: nowrap;
-      letter-spacing: -4px;
+
+      @media (max-width: 576px) {
+        font-size: 1.125rem;
+      }
     }
 
     .text {
+      margin-inline: 0.66rem;
       line-height: 1.1;
-
-      @media (max-width: 576px) {
-        margin-inline: 0.5rem;
-      }
     }
   }
 
