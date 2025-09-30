@@ -175,7 +175,11 @@ onBeforeUnmount(() => {
         />
       </svg>
     </div>
+    <div v-if="page.source_text" class="source-text">
+      <RichText :content="page.source_text" />
+    </div>
     <div class="answers">
+      <h2>Prepoznaš retorični trik?</h2>
       <div v-for="(answer, index) in page.answers" :key="index" class="answer">
         <ButtonAnswer
           :buttonText="answer.text"
@@ -318,11 +322,40 @@ onBeforeUnmount(() => {
     }
   }
 
+  .source-text {
+    max-width: 603px;
+    margin: 0 auto;
+
+    .rich-text {
+      padding-block: 0.25rem;
+      padding: 0.25rem;
+      text-align: right;
+
+      :deep(.rich-content) {
+        p {
+          font-size: 1rem;
+        }
+
+        a {
+          color: inherit;
+          text-decoration: underline;
+          font-weight: inherit;
+        }
+      }
+    }
+  }
+
+  h2 {
+    margin-top: 4.5rem;
+    margin-bottom: 0;
+    font-size: 2.25rem;
+    text-align: center;
+  }
+
   .answers {
     display: grid;
     gap: 0.875rem;
     max-width: 455px;
-    margin-top: 2rem;
     margin-inline: auto;
 
     .answer {
@@ -386,13 +419,6 @@ onBeforeUnmount(() => {
       }
     }
 
-    h2 {
-      margin-top: 4.5rem;
-      margin-bottom: 0;
-      font-size: 2.25rem;
-      text-align: center;
-    }
-
     .answer-description {
       max-width: 700px;
       margin-inline: auto;
@@ -414,7 +440,7 @@ onBeforeUnmount(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #4063f6b2;
+    background: var(--manipulacija-color-7);
     backdrop-filter: blur(4px);
     z-index: 10;
 

@@ -34,6 +34,7 @@ export type QuizPage = BasePage & {
   image: ImageDescription | null
   image_answer: ImageDescription | null
   question: string
+  source_text: string
   answers: PageAnswer[]
   points: number
   answer_description: string

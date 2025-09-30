@@ -108,7 +108,7 @@ onMounted(() => {
 
     b,
     strong {
-      font-weight: 700;
+      font-weight: 600;
     }
 
     i,

@@ -106,6 +106,7 @@ def serialize_chapter_sub_page(page):
                 "image": None,  # DISABLED serialize_image_url(page.image),
                 "image_answer": None,  # DISABLED serialize_image_url(page.image_answer),
                 "question": page.question,
+                "source_text": richtext(page.source_text),
                 "answers": [serialize_answer(answer) for answer in page.answers],
                 "points": page.points,
                 "answer_description": richtext(page.answer_description),
