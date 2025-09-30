@@ -366,6 +366,11 @@ onBeforeUnmount(() => {
     margin-bottom: 0;
     font-size: 2.25rem;
     text-align: center;
+
+    @media (max-width: 576px) {
+      margin-top: 2rem;
+      font-size: 1.3125rem;
+    }
   }
 
   .answers {
@@ -428,11 +433,21 @@ onBeforeUnmount(() => {
       text-align: center;
       rotate: -1.7deg;
 
+      @media (max-width: 576px) {
+        font-size: 1.125rem;
+      }
+
       em {
         font-family: var(--font-family-alt);
         font-style: normal;
         font-size: 2rem;
         font-weight: 600;
+        white-space: nowrap;
+        margin-inline: 0.125em;
+
+        @media (max-width: 576px) {
+          font-size: 1.5rem;
+        }
       }
     }
 
@@ -444,6 +459,10 @@ onBeforeUnmount(() => {
       background-image: url('/jagged-border.svg');
       background-repeat: no-repeat;
       background-size: 100% 100%;
+
+      @media (max-width: 576px) {
+        padding: 1.3125rem;
+      }
 
       .rich-text {
         padding-block: 0;

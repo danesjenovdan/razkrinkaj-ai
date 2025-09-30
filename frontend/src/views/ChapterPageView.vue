@@ -125,6 +125,10 @@ main {
   .intro {
     padding-block: 4.4375rem 0;
 
+    @media (max-width: 576px) {
+      padding-block: 2rem 0;
+    }
+
     h1 {
       margin-bottom: 0;
       font-size: 1.3125rem;
@@ -135,6 +139,10 @@ main {
 
   .page-content {
     padding-bottom: 7rem;
+
+    @media (max-width: 576px) {
+      padding-bottom: 4rem;
+    }
   }
 
   .button {

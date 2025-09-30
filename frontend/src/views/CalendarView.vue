@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/stores/store'
 import ScoreHeader from '@/components/ScoreHeader.vue'
 import CalendarDay from '@/components/CalendarDay.vue'
@@ -9,6 +9,7 @@ import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import ExplanationsSection from '@/components/ExplanationsSection.vue'
 
 const router = useRouter()
+const route = useRoute()
 const store = useStore()
 
 function onResetClick() {
@@ -62,9 +63,9 @@ onMounted(() => {
         </div>
         <div class="buttons">
           <ButtonPrimary
+            v-if="route.query.showReset === '1'"
             class="button"
             buttonText="Začni znova"
-            icon="refresh"
             color="white"
             @click="onResetClick"
           />
@@ -96,23 +97,35 @@ main {
     max-width: 550px;
     margin-inline: auto;
 
+    @media (max-width: 576px) {
+      padding-block: 2rem;
+    }
+
     .introduction {
       font-size: 1.5rem;
       font-weight: 500;
       text-align: center;
     }
 
-    h1 {
+    .title {
       margin-bottom: 1rem;
       font-size: 2.25rem;
       text-align: center;
       text-transform: uppercase;
+
+      @media (max-width: 576px) {
+        font-size: 1.75rem;
+      }
     }
 
     .description {
       font-size: 1.5rem;
       font-weight: 500;
       text-align: center;
+
+      @media (max-width: 576px) {
+        font-size: 1.125rem;
+      }
     }
   }
 
@@ -123,8 +136,13 @@ main {
     grid-template-columns: repeat(auto-fit, 8.5625rem);
     gap: 1.25rem;
     width: 100%;
-    max-width: 1080px;
+    max-width: min(1080px, 100%);
     margin-inline: auto;
+
+    @media (max-width: 576px) {
+      grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+      gap: 0.75rem;
+    }
   }
 
   .buttons {
@@ -132,16 +150,28 @@ main {
     padding-block: 4.625rem 7.75rem;
     max-width: 550px;
 
+    @media (max-width: 576px) {
+      padding-block: 2rem 3rem;
+    }
+
     .button {
       margin-top: 2.875rem;
       margin-inline: auto;
       max-width: 404px;
+
+      @media (max-width: 576px) {
+        margin-top: 1.5rem;
+      }
     }
   }
 
   .explanations {
     padding-top: 7.4375rem;
     padding-bottom: 8.8125rem;
+
+    @media (max-width: 576px) {
+      padding-block: 2rem 2rem;
+    }
   }
 }
 </style>

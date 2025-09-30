@@ -53,12 +53,20 @@ defineProps<{
     margin-inline: auto;
     padding-block: 3.5rem 3rem;
 
+    @media (max-width: 576px) {
+      padding-block: 2rem 1.5rem;
+    }
+
     .title {
       display: flex;
 
       .title-logo {
         width: 450px;
         height: auto;
+
+        @media (max-width: 576px) {
+          width: 200px;
+        }
       }
     }
 
@@ -77,6 +85,10 @@ defineProps<{
       svg {
         width: 2.875rem;
         height: auto;
+
+        @media (max-width: 576px) {
+          width: 1.5rem;
+        }
       }
 
       strong {
@@ -86,6 +98,11 @@ defineProps<{
         font-weight: 500;
         color: #fff;
         text-align: center;
+
+        @media (max-width: 576px) {
+          font-size: 1.5rem;
+          min-width: 1.5rem;
+        }
       }
     }
   }
@@ -97,6 +114,11 @@ defineProps<{
     font-size: 1.5rem;
     font-weight: 600;
     text-align: center;
+
+    @media (max-width: 576px) {
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+    }
   }
 
   hr.jagged-line {
@@ -105,7 +127,7 @@ defineProps<{
     background-image: url('/jagged-line.svg');
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    width: 603px;
+    width: min(603px, 100%);
     height: 11px;
   }
 }
