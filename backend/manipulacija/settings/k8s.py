@@ -6,7 +6,10 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "<TODO>")
 
 ALLOWED_HOSTS = ["api.manipulacija.lb.djnd.si"]
 CSRF_TRUSTED_ORIGINS = ["https://api.manipulacija.lb.djnd.si"]
-CORS_ALLOWED_ORIGINS = ["https://manipulacija.lb.djnd.si"]
+CORS_ALLOWED_ORIGINS = [
+    "https://manipulacija.danesjenovdan.si",
+    "https://manipulacija.djnd.si",
+]
 
 WAGTAILADMIN_BASE_URL = "https://api.manipulacija.lb.djnd.si"
 
