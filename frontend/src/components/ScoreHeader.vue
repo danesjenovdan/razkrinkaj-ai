@@ -1,6 +1,7 @@
 <script setup lang="ts">
 defineProps<{
   title: string
+  description?: string
   score: number
 }>()
 </script>
@@ -34,6 +35,7 @@ defineProps<{
           <strong>{{ score }}</strong>
         </div>
       </div>
+      <div v-if="description" class="description" v-html="description"></div>
       <hr class="jagged-line" />
     </div>
   </header>
@@ -49,7 +51,7 @@ defineProps<{
     justify-content: space-between;
     max-width: 650px;
     margin-inline: auto;
-    padding-block: 3.5rem;
+    padding-block: 3.5rem 3rem;
 
     .title {
       display: flex;
@@ -86,6 +88,15 @@ defineProps<{
         text-align: center;
       }
     }
+  }
+
+  .description {
+    max-width: 800px;
+    margin-inline: auto;
+    margin-bottom: 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
   }
 
   hr.jagged-line {

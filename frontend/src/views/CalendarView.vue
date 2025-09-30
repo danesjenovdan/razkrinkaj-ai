@@ -34,49 +34,58 @@ onMounted(() => {
 </script>
 
 <template>
-  <ScoreHeader :title="store.introductionTitle" :score="store.score" />
-  <main>
-    <div class="page-gutter">
-      <div class="intro">
-        <div class="introduction" v-html="store.introductionDescription"></div>
-        <h1 class="title">Preizkusi svoje spretnosti</h1>
-        <div class="description">
-          Vsak dan v mesecu objavimo manipulativen citat.<br />
-          Ugotovi za katero vrsto manipulacije gre.
+  <div class="bg-manipulacija-color-3">
+    <ScoreHeader
+      :title="store.introductionTitle"
+      :description="store.introductionDescription"
+      :score="store.score"
+    />
+    <main>
+      <div class="page-gutter">
+        <div class="intro">
+          <!-- <div
+            class="introduction"
+            v-html="store.introductionDescription"
+          ></div> -->
+          <h1 class="title">Preizkusi svoje spretnosti</h1>
+          <div class="description">
+            Vsak dan v mesecu objavimo manipulativen citat.<br />
+            Ugotovi za katero vrsto manipulacije gre.
+          </div>
+        </div>
+        <div class="calendar">
+          <CalendarDay
+            v-for="[id, chapter] in store.chapters"
+            :key="id"
+            :chapter="chapter"
+          />
+        </div>
+        <div class="buttons">
+          <ButtonPrimary
+            class="button"
+            buttonText="Začni znova"
+            icon="refresh"
+            color="white"
+            @click="onResetClick"
+          />
+          <ButtonPrimary
+            class="button"
+            :buttonText="store.introductionButtonTextSecondary"
+            href="#more"
+            color="secondary"
+            side-icon="hand-down"
+            @click.prevent="scrollToMore"
+          />
         </div>
       </div>
-      <div class="calendar">
-        <CalendarDay
-          v-for="[id, chapter] in store.chapters"
-          :key="id"
-          :chapter="chapter"
-        />
+      <div class="page-gutter bg-manipulacija-color-7">
+        <div class="explanations">
+          <a name="more"></a>
+          <ExplanationsSection :update-hash="false" />
+        </div>
       </div>
-      <div class="buttons">
-        <ButtonPrimary
-          class="button"
-          buttonText="Začni znova"
-          icon="refresh"
-          color="white"
-          @click="onResetClick"
-        />
-        <ButtonPrimary
-          class="button"
-          :buttonText="store.introductionButtonTextSecondary"
-          href="#more"
-          color="secondary"
-          side-icon="hand-down"
-          @click.prevent="scrollToMore"
-        />
-      </div>
-    </div>
-    <div class="page-gutter bg-manipulacija-color-7">
-      <div class="explanations">
-        <a name="more"></a>
-        <ExplanationsSection :update-hash="false" />
-      </div>
-    </div>
-  </main>
+    </main>
+  </div>
   <PageFooter />
 </template>
 
@@ -102,6 +111,7 @@ main {
 
     .description {
       font-size: 1.5rem;
+      font-weight: 500;
       text-align: center;
     }
   }
