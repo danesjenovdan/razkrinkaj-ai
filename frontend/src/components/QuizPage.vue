@@ -200,8 +200,8 @@ onBeforeUnmount(() => {
         </button>
       </div>
       <div v-if="selectedAnswer === null" class="answer-info">
-        <strong>Previdno:</strong> Napačen odgovor prinaša minus točke. Če nisi
-        prepričan_a, odgovori z “Ne vem” ali preveri opis.
+        <strong>Previdno:</strong> Napačen odgovor prinaša minus točke.<br />
+        Če nisi prepričan_a preveri opis.
       </div>
     </div>
     <div v-if="selectedAnswer !== null" class="answer-description-wrapper">
