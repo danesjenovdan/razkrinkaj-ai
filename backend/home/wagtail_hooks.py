@@ -3,7 +3,7 @@ from wagtail import hooks
 from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.snippets import SnippetViewSet
 
-from .models import FinishedChapterData, ManipulationExplanation
+from .models import FinishedChapterData, ManipulationExplanation, NicknameEntry
 from .views import admin_answer_analytics
 
 
@@ -17,8 +17,14 @@ class ManipulationExplanationViewSet(SnippetViewSet):
     list_display = ["name", "description", "order"]
 
 
+class NicknameEntryViewSet(SnippetViewSet):
+    model = NicknameEntry
+    list_display = ["nickname", "user_guid", "attempt_guid", "created_at"]
+
+
 register_snippet(FinishedChapterDataViewSet)
 register_snippet(ManipulationExplanationViewSet)
+register_snippet(NicknameEntryViewSet)
 
 
 @hooks.register("register_admin_urls")

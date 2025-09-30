@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-from django.db.models import Count, F, Q, Sum, Window
+from django.db.models import Count, F, OuterRef, Q, Subquery, Sum, Window
 from django.db.models.functions import DenseRank
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -25,6 +25,7 @@ from .models import (
     FinishedChapterData,
     HomePage,
     ManipulationExplanation,
+    NicknameEntry,
     PageAnswerData,
 )
 
@@ -294,6 +295,13 @@ class LeaderboardView(View):
             + 1
         )
 
+        my_nickname = (
+            NicknameEntry.objects.filter(attempt_guid=attempt_guid)
+            .order_by("-created_at")
+            .values_list("nickname", flat=True)
+            .first()
+        )
+
         top_scores = (
             FinishedChapterData.objects.values("attempt_guid")
             .annotate(total_score=Sum("score"))
@@ -315,6 +323,15 @@ class LeaderboardView(View):
             )
         ).order_by("rank")
 
+        # annotate with nickname if exists
+        ranked_guids = ranked_guids.annotate(
+            nickname=Subquery(
+                NicknameEntry.objects.filter(attempt_guid=OuterRef("attempt_guid"))
+                .order_by("-created_at")
+                .values("nickname")[:1]
+            )
+        )
+
         # limit to 3 entries per each rank
         limited_ranked_guids = []
         current_rank = None
@@ -334,6 +351,15 @@ class LeaderboardView(View):
             score_above_me = (
                 FinishedChapterData.objects.values("attempt_guid")
                 .annotate(total_score=Sum("score"))
+                .annotate(
+                    nickname=Subquery(
+                        NicknameEntry.objects.filter(
+                            attempt_guid=OuterRef("attempt_guid")
+                        )
+                        .order_by("-created_at")
+                        .values("nickname")[:1]
+                    )
+                )
                 .filter(total_score__gt=my_score)
                 .order_by("total_score")
                 .first()
@@ -344,6 +370,7 @@ class LeaderboardView(View):
                         "attempt_guid": score_above_me["attempt_guid"],
                         "total_score": score_above_me["total_score"],
                         "rank": my_rank - 1,
+                        "nickname": score_above_me["nickname"],
                     }
                 )
             ranked_near_me.append(
@@ -351,11 +378,21 @@ class LeaderboardView(View):
                     "attempt_guid": attempt_guid,
                     "total_score": my_score,
                     "rank": my_rank,
+                    "nickname": my_nickname,
                 }
             )
             score_below_me = (
                 FinishedChapterData.objects.values("attempt_guid")
                 .annotate(total_score=Sum("score"))
+                .annotate(
+                    nickname=Subquery(
+                        NicknameEntry.objects.filter(
+                            attempt_guid=OuterRef("attempt_guid")
+                        )
+                        .order_by("-created_at")
+                        .values("nickname")[:1]
+                    )
+                )
                 .filter(total_score__lt=my_score)
                 .order_by("-total_score")
                 .first()
@@ -366,6 +403,7 @@ class LeaderboardView(View):
                         "attempt_guid": score_below_me["attempt_guid"],
                         "total_score": score_below_me["total_score"],
                         "rank": my_rank + 1,
+                        "nickname": score_below_me["nickname"],
                     }
                 )
 
@@ -374,10 +412,60 @@ class LeaderboardView(View):
                 "attempt_guid": attempt_guid,
                 "my_score": my_score,
                 "my_rank": my_rank,
+                "my_nickname": my_nickname,
                 "top_leaderboard": list(limited_ranked_guids),
                 "ranked_near_me": ranked_near_me,
             }
         )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LeaderboardNicknameView(View):
+    def post(self, request):
+        json_body = json.loads(request.body)
+        attempt_guid = json_body.get("attemptGUID", None)
+        user_guid = json_body.get("userGUID", None)
+        nickname = json_body.get("nickname", None)
+
+        if not attempt_guid or not user_guid or not nickname:
+            return JsonResponse(
+                {
+                    "status": 400,
+                    "error": "Missing data",
+                },
+                status=400,
+            )
+
+        if len(nickname) > 20:
+            return JsonResponse(
+                {
+                    "status": 400,
+                    "error": "Nickname too long",
+                },
+                status=400,
+            )
+
+        finished_data = FinishedChapterData.objects.filter(
+            attempt_guid=attempt_guid, user_guid=user_guid
+        )
+        if not finished_data.exists():
+            return JsonResponse(
+                {
+                    "status": 400,
+                    "error": "Wrong GUIDs",
+                },
+                status=400,
+            )
+
+        nickname_entry, created = NicknameEntry.objects.get_or_create(
+            attempt_guid=attempt_guid,
+            user_guid=user_guid,
+            nickname=nickname,
+        )
+
+        if created:
+            return JsonResponse({"status": "ok", "created": True})
+        return JsonResponse({"status": "ok", "created": False})
 
 
 def admin_answer_analytics(request):

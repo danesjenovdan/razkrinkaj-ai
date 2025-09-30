@@ -149,7 +149,6 @@ footer {
     }
 
     .footer-block {
-      $button-link-bg-string: '<svg viewBox="0 0 119 36" preserveAspectRatio="none" fill="#FFF"><path vector-effect="non-scaling-stroke" stroke="#000" stroke-width="3" d="M59.5 1.5c28.4851 0 43.069 2.806 50.494 6.3027 3.67 1.7285 5.486 3.578 6.419 5.2442.937 1.6733 1.087 3.3424 1.087 4.9531 0 1.6885-.06 3.3538-.882 5.0225-.806 1.6363-2.448 3.4643-5.993 5.1816C103.428 31.6906 88.8592 34.5 59.5 34.5s-43.9276-2.8094-51.125-6.2959c-3.545-1.7173-5.1868-3.5453-5.9932-5.1816C1.5596 21.3538 1.5 19.6885 1.5 18c0-1.6107.1502-3.2798 1.087-4.9531.9326-1.6662 2.7487-3.5157 6.4189-5.2442C16.4306 4.306 31.0148 1.5 59.5 1.5Z"/></svg>';
       padding-block: 1.25rem;
       font-size: 1rem;
 
@@ -176,7 +175,7 @@ footer {
         align-items: center;
         padding: 0.4em 1.125em 0.3em;
         background-color: transparent;
-        background-image: url.svg($button-link-bg-string);
+        background-image: url.svg(vars.$button-link-bg-string);
         background-repeat: no-repeat;
         background-size: 100% 100%;
         font-family: var(--font-family-alt);
@@ -199,7 +198,7 @@ footer {
 
       .donate-link {
         $button-link-bg-string-donate: string.replace(
-          $button-link-bg-string,
+          vars.$button-link-bg-string,
           '#FFF',
           '#{vars.$manipulacija-color-2}'
         );
@@ -209,7 +208,7 @@ footer {
 
       .submit-button {
         $button-link-bg-string-submit: string.replace(
-          $button-link-bg-string,
+          vars.$button-link-bg-string,
           '#FFF',
           '#{vars.$manipulacija-color-6}'
         );

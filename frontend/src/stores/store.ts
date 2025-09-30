@@ -306,6 +306,22 @@ export const useStore = defineStore('store', () => {
     return null
   }
 
+  async function submitLeaderboardNickname(nickname: string): Promise<boolean> {
+    try {
+      const response = await axios.post(`${apiUrl}/api/leaderboard/nickname/`, {
+        userGUID: userGUID.value,
+        attemptGUID: attemptGUID.value,
+        nickname,
+      })
+      if (response.status == 200) {
+        return true
+      }
+    } catch (error) {
+      console.error('submitLeaderboardNickname', error)
+    }
+    return false
+  }
+
   return {
     initHomeData,
     homeDataLoaded,
@@ -339,5 +355,6 @@ export const useStore = defineStore('store', () => {
     sendProgressChapterDataToApi,
     fetchPageCorrectPercent,
     fetchLeaderboard,
+    submitLeaderboardNickname,
   }
 })

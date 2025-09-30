@@ -11,6 +11,33 @@ const store = useStore()
 
 const leaderboardData = ref<LeaderboardData | null>(null)
 
+const leaderboardMeText = ref('Tvoj rezultat')
+const nickname = ref('')
+
+async function onSubmitNickname() {
+  if (nickname.value.trim().length === 0) {
+    window.alert('Vzdevek ne sme biti prazen!')
+    return
+  }
+  const success = await store.submitLeaderboardNickname(nickname.value.trim())
+  if (success) {
+    if (leaderboardData.value) {
+      leaderboardData.value.my_nickname = nickname.value.trim()
+    }
+    leaderboardMeText.value = nickname.value.trim()
+    nickname.value = ''
+  } else {
+    window.alert('Prišlo je do napake :(')
+  }
+}
+
+function displayNick(entry: { nickname?: string; attempt_guid: string }) {
+  if (entry.nickname) {
+    return entry.nickname
+  }
+  return `Anonimnež (${entry.attempt_guid.slice(-4).toUpperCase()})`
+}
+
 // const totalChapterScore = computed(() => {
 //   if (props.chapter.pages) {
 //     return props.chapter.pages.reduce((prev, curr) => {
@@ -111,6 +138,9 @@ onMounted(() => {
   // fetch leaderboard data
   store.fetchLeaderboard().then(data => {
     leaderboardData.value = data
+    if (data?.my_nickname) {
+      leaderboardMeText.value = data.my_nickname
+    }
   })
 
   // persist data to local storage
@@ -208,8 +238,8 @@ onMounted(() => {
               <div class="name">
                 {{
                   entry.attempt_guid === leaderboardData.attempt_guid
-                    ? 'Tvoj rezultat'
-                    : entry.attempt_guid
+                    ? leaderboardMeText
+                    : displayNick(entry)
                 }}
               </div>
               <div class="score">{{ entry.total_score }}</div>
@@ -229,18 +259,32 @@ onMounted(() => {
               <div class="name">
                 {{
                   entry.attempt_guid === leaderboardData.attempt_guid
-                    ? 'Tvoj rezultat'
-                    : entry.attempt_guid
+                    ? leaderboardMeText
+                    : displayNick(entry)
                 }}
               </div>
               <div class="score">{{ entry.total_score }}</div>
             </div>
           </div>
         </div>
-        <div>
-          <div>
-            Tvoj rezultat trenutno ni viden. Se želiš vpisati na lestvico?
+        <div v-if="!leaderboardData?.my_nickname" class="add-nickname">
+          <div class="title">
+            Tvoj rezultat trenutno ni viden.<br />
+            Se želiš vpisati na lestvico?
           </div>
+          <form class="nickname-form" @submit.prevent="onSubmitNickname">
+            <label for="nickname">Vpiši svoj vzdevek</label>
+            <input
+              type="text"
+              id="nickname"
+              v-model="nickname"
+              maxlength="20"
+              required
+            />
+            <div>
+              <button type="submit" class="submit-button">VPIŠI ME!</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -497,6 +541,79 @@ main {
       line-height: 1;
       font-weight: 700;
       text-align: center;
+    }
+  }
+
+  .add-nickname {
+    max-width: 340px;
+    margin-inline: auto;
+    margin-top: 1rem;
+
+    .title {
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .nickname-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+
+      input {
+        padding: 0.2em 0.5em;
+        background: var(--manipulacija-color-8);
+        border: 3px solid #000;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1rem;
+      }
+
+      .submit-button {
+        display: inline-flex;
+        gap: 0.5em;
+        align-items: center;
+        padding: 0.4em 1.125em 0.3em;
+        background-color: transparent;
+        background-image: url.svg(vars.$button-link-bg-string);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        border: none;
+        font-family: var(--font-family-alt);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: 1.3;
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          scale 0.15s ease-in-out,
+          filter 0.15s ease-in-out;
+        will-change: scale, filter;
+
+        &:not(:disabled):hover {
+          scale: 1.05;
+          filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
+        }
+      }
+
+      .submit-button {
+        $button-link-bg-string-submit: string.replace(
+          vars.$button-link-bg-string,
+          '#FFF',
+          '#{vars.$manipulacija-color-6}'
+        );
+        background-image: url.svg($button-link-bg-string-submit);
+        margin-top: 0.5rem;
+        border: 0;
+
+        &:disabled {
+          cursor: wait;
+          filter: grayscale(1);
+        }
+      }
     }
   }
 
