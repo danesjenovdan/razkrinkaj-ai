@@ -402,6 +402,11 @@ onBeforeUnmount(() => {
         flex-shrink: 0;
         cursor: help;
 
+        @media (max-width: 576px) {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
+
         svg {
           width: 100%;
           height: 100%;
