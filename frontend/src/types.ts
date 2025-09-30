@@ -68,12 +68,14 @@ export type LeaderboardDataEntry = {
   attempt_guid: string
   total_score: number
   rank: number
+  nickname?: string
 }
 
 export type LeaderboardData = {
   attempt_guid: string
   my_score: number
   my_rank: number
+  my_nickname?: string
   top_leaderboard: LeaderboardDataEntry[]
   ranked_near_me: LeaderboardDataEntry[]
 }

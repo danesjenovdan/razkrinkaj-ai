@@ -212,6 +212,27 @@ class FinishedChapterData(models.Model):
         verbose_name_plural = "Končana poglavja"
 
 
+class NicknameEntry(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Vnešeno ob")
+    user_guid = models.CharField(max_length=255, verbose_name="Uporabnik")
+    attempt_guid = models.CharField(max_length=255, verbose_name="ID poskusa")
+    nickname = models.CharField(max_length=255, verbose_name="Vzdevek")
+
+    def __str__(self):
+        return f"{self.nickname} ({self.attempt_guid})"
+
+    panels = [
+        FieldPanel("created_at", read_only=True),
+        FieldPanel("user_guid"),
+        FieldPanel("attempt_guid"),
+        FieldPanel("nickname"),
+    ]
+
+    class Meta:
+        verbose_name = "Vzdevek"
+        verbose_name_plural = "Vzdevki"
+
+
 class ManipulationExplanation(models.Model):
     name = models.CharField(max_length=255, verbose_name="Ime")
     description = models.CharField(max_length=255, verbose_name="Opis")
