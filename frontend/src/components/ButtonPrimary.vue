@@ -71,7 +71,7 @@ const componentName = computed(() =>
   background-size: 100% 100%;
   font-family: var(--font-family-alt);
   font-size: 2.5rem;
-  line-height: 1;
+  line-height: 1.2;
   font-weight: 600;
   color: var(--color-text);
   text-decoration: none;
