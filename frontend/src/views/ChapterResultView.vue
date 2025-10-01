@@ -257,7 +257,7 @@ onMounted(() => {
                   {{ entry.nickname }}
                 </template>
                 <template v-else>
-                  Anonimnež <em>({{ displayAnonId(entry) }})</em>
+                  Anonimna oseba <em>({{ displayAnonId(entry) }})</em>
                 </template>
               </div>
               <div class="score">{{ entry.total_score }}</div>
@@ -285,7 +285,7 @@ onMounted(() => {
                     {{ entry.nickname }}
                   </template>
                   <template v-else>
-                    Anonimnež <em>({{ displayAnonId(entry) }})</em>
+                    Anonimna oseba <em>({{ displayAnonId(entry) }})</em>
                   </template>
                 </div>
                 <div class="score">{{ entry.total_score }}</div>
