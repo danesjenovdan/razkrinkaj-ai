@@ -46,11 +46,8 @@ async function onSubmitNickname() {
   }
 }
 
-function displayNick(entry: { nickname?: string; attempt_guid: string }) {
-  if (entry.nickname) {
-    return entry.nickname
-  }
-  return `Anonimnež (${entry.attempt_guid.slice(-4).toUpperCase()})`
+function displayAnonId(entry: { attempt_guid: string }) {
+  return entry.attempt_guid.slice(-4).toUpperCase()
 }
 
 // const totalChapterScore = computed(() => {
@@ -251,11 +248,17 @@ onMounted(() => {
             <div class="place">{{ entry.rank }}.</div>
             <div class="content">
               <div class="name">
-                {{
-                  entry.attempt_guid === leaderboardData.attempt_guid
-                    ? leaderboardMeText
-                    : displayNick(entry)
-                }}
+                <template
+                  v-if="entry.attempt_guid === leaderboardData.attempt_guid"
+                >
+                  {{ leaderboardMeText }}
+                </template>
+                <template v-else-if="entry.nickname">
+                  {{ entry.nickname }}
+                </template>
+                <template v-else>
+                  Anonimnež <em>({{ displayAnonId(entry) }})</em>
+                </template>
               </div>
               <div class="score">{{ entry.total_score }}</div>
             </div>
@@ -273,11 +276,17 @@ onMounted(() => {
               <div class="place">{{ entry.rank }}.</div>
               <div class="content">
                 <div class="name">
-                  {{
-                    entry.attempt_guid === leaderboardData.attempt_guid
-                      ? leaderboardMeText
-                      : displayNick(entry)
-                  }}
+                  <template
+                    v-if="entry.attempt_guid === leaderboardData.attempt_guid"
+                  >
+                    {{ leaderboardMeText }}
+                  </template>
+                  <template v-else-if="entry.nickname">
+                    {{ entry.nickname }}
+                  </template>
+                  <template v-else>
+                    Anonimnež <em>({{ displayAnonId(entry) }})</em>
+                  </template>
                 </div>
                 <div class="score">{{ entry.total_score }}</div>
               </div>
@@ -539,6 +548,14 @@ main {
 
           @media (max-width: 576px) {
             font-size: 1rem;
+          }
+
+          em {
+            margin-left: 0.25em;
+            font-family: monospace;
+            font-style: normal;
+            font-size: 0.875rem;
+            font-weight: 600;
           }
         }
 
