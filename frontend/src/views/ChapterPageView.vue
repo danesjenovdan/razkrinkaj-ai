@@ -42,7 +42,16 @@ const formattedTitle = computed(() => {
 const page = computed(() => {
   const p = props.chapter.pages?.[pageIndex.value]
   if (!p) {
-    throw new Error('Page not found')
+    return null
+    // throw new Error('Page not found')
+  }
+  if (chapterDate.value && !Number.isNaN(chapterDate.value.getTime())) {
+    const now = Date.now()
+    const isLocked = now < chapterDate.value.getTime()
+    if (isLocked) {
+      return null
+      // throw new Error('Page is locked')
+    }
   }
   return p
 })
@@ -98,7 +107,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <main :key="pageIndex">
+  <main v-if="!page" :key="'no-page'" class="no-page">
+    <h1>page not found</h1>
+  </main>
+  <main v-else :key="pageIndex">
     <div class="page-gutter">
       <div class="narrow">
         <div class="intro">
@@ -131,6 +143,16 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+main.no-page {
+  margin-top: 3rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
 main {
   .narrow {
     max-width: 603px;

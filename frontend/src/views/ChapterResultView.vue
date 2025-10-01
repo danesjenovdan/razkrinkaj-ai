@@ -292,12 +292,12 @@ onMounted(() => {
       <div class="page-gutter">
         <div class="share-with-us">
           <div class="text">
-            Si v medijih zasledil_a kakšno zanimivo manipulacijo?
+            Če v medijih zaslediš kakšno zanimivo manipulacijo, nam piši!
           </div>
           <div class="buttons">
             <ButtonPrimary
               class="button"
-              button-text="POSREDUJ NAM JO!"
+              button-text="pošlji nam manipulacijo"
               href="mailto:vsi@danesjenovdan.si"
               target="_blank"
               icon="hand"
@@ -621,7 +621,7 @@ main {
     padding-block: 3rem;
 
     .share-with-us {
-      max-width: 600px;
+      max-width: 480px;
       margin-inline: auto;
       text-align: center;
 

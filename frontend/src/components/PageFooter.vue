@@ -113,7 +113,11 @@ async function onNewsletterSubmit() {
     <div class="page-gutter bg-white">
       <div class="page-footer-bottom">
         <div class="footer-col">
-          <a href="#">Politika zasebnosti in varstva osebnih podatkov</a>
+          <a
+            href="https://danesjenovdan.si/politika-zasebnosti-in-varstva-osebnih-podatkov/"
+            target="_blank"
+            >Politika zasebnosti in varstva osebnih podatkov</a
+          >
         </div>
         <div class="footer-col">
           <span>Projekt podpira</span>
