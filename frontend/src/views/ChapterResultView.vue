@@ -269,8 +269,8 @@ onMounted(() => {
         </div>
         <div v-if="!leaderboardData?.my_nickname" class="add-nickname">
           <div class="title">
-            Tvoj rezultat trenutno ni viden.<br />
-            Se želiš vpisati na lestvico?
+            Tvoj rezultat je trenutno anonimen.<br />
+            Se želiš vpisati na lestvico z vzdevkom?
           </div>
           <form class="nickname-form" @submit.prevent="onSubmitNickname">
             <label for="nickname">Vpiši svoj vzdevek</label>
@@ -298,7 +298,7 @@ onMounted(() => {
             <ButtonPrimary
               class="button"
               button-text="POSREDUJ NAM JO!"
-              href="mailto:tadej@danesjenovdan.si"
+              href="mailto:vsi@danesjenovdan.si"
               target="_blank"
               icon="hand"
               color="white"
