@@ -88,15 +88,15 @@ function displayAnonId(entry: { attempt_guid: string }) {
 //   `.trim()
 // })
 
-// async function copyTextToClipboard(text: string) {
-//   try {
-//     await navigator.clipboard.writeText(text)
-//     return true
-//   } catch (error) {
-//     console.error(error)
-//     return false
-//   }
-// }
+async function copyTextToClipboard(text: string) {
+  try {
+    await navigator.clipboard.writeText(text)
+    return true
+  } catch (error) {
+    console.error(error)
+    return false
+  }
+}
 
 // async function onShareResult() {
 //   if (await copyTextToClipboard(shareResultMessage.value)) {
@@ -109,6 +109,20 @@ function displayAnonId(entry: { attempt_guid: string }) {
 //     )
 //   }
 // }
+
+const websiteLinkValue = 'manipulacija.danesjenovdan.si'
+
+async function onCopyLink() {
+  if (await copyTextToClipboard(websiteLinkValue)) {
+    window.alert(
+      `Povezavo smo skopirali v odložišče. Pošlji jo svojim prijateljem!\n\n${websiteLinkValue}`,
+    )
+  } else {
+    window.alert(
+      'Ups, nekaj je šlo narobe pri kopiranju v odložišče. Povezava je spodaj, skopiraj in deli jo!',
+    )
+  }
+}
 
 onMounted(() => {
   // save score and answers
@@ -314,6 +328,35 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <div class="link-section bg-manipulacija-color-5">
+      <div class="page-gutter">
+        <div class="section-title">
+          <span class="emoji">📅</span>
+          <span class="text">Nova manipulacija te čaka jutri</span>
+          <span class="emoji">📅</span>
+        </div>
+        <div class="subtitle">
+          Do takrat pa k sodelovanju povabi še prijatelje!
+        </div>
+        <div class="link-group">
+          <input
+            type="text"
+            id="website-link"
+            :value="websiteLinkValue"
+            maxlength="20"
+            required
+            onfocus="this.select();"
+          />
+          <button
+            type="button"
+            class="submit-button"
+            @click.prevent="onCopyLink"
+          >
+            KOPIRAJ
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="share-section bg-manipulacija-color-7">
       <div class="page-gutter">
         <div class="share-with-us">
@@ -401,6 +444,7 @@ main {
     .text {
       margin-inline: 0.66rem;
       line-height: 1.1;
+      text-wrap: balance;
 
       @media (max-width: 768px) {
         width: min-content;
@@ -592,6 +636,50 @@ main {
     }
   }
 
+  .submit-button {
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: center;
+    padding: 0.4em 1.125em 0.3em;
+    background-color: transparent;
+    background-image: url.svg(vars.$button-link-bg-string);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    border: none;
+    font-family: var(--font-family-alt);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      scale 0.15s ease-in-out,
+      filter 0.15s ease-in-out;
+    will-change: scale, filter;
+
+    &:not(:disabled):hover {
+      scale: 1.05;
+      filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
+    }
+  }
+
+  .submit-button {
+    $button-link-bg-string-submit: string.replace(
+      vars.$button-link-bg-string,
+      '#FFF',
+      '#{vars.$manipulacija-color-6}'
+    );
+    background-image: url.svg($button-link-bg-string-submit);
+    margin-top: 0.5rem;
+    border: 0;
+
+    &:disabled {
+      cursor: wait;
+      filter: grayscale(1);
+    }
+  }
+
   .add-nickname {
     max-width: 340px;
     margin-inline: auto;
@@ -618,49 +706,60 @@ main {
         font-size: 1rem;
         line-height: 1rem;
       }
+    }
+  }
 
-      .submit-button {
-        display: inline-flex;
-        gap: 0.5em;
-        align-items: center;
-        padding: 0.4em 1.125em 0.3em;
-        background-color: transparent;
-        background-image: url.svg(vars.$button-link-bg-string);
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        border: none;
-        font-family: var(--font-family-alt);
-        font-size: 1.125rem;
-        font-weight: 600;
-        line-height: 1.3;
-        color: inherit;
-        text-decoration: none;
-        cursor: pointer;
-        transition:
-          scale 0.15s ease-in-out,
-          filter 0.15s ease-in-out;
-        will-change: scale, filter;
+  .link-section {
+    padding-block: 3rem;
 
-        &:not(:disabled):hover {
-          scale: 1.05;
-          filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
+    .section-title {
+      .text {
+        @media (max-width: 768px) {
+          width: auto;
         }
+
+        @media (max-width: 576px) {
+          max-width: 200px;
+        }
+      }
+    }
+
+    .subtitle {
+      margin-top: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 500;
+      text-align: center;
+
+      @media (max-width: 576px) {
+        font-size: 1rem;
+      }
+    }
+
+    .link-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      text-align: center;
+
+      @media (max-width: 576px) {
+        flex-direction: column;
+      }
+
+      input {
+        padding: 0.2em 0.5em;
+        background: var(--manipulacija-color-8);
+        border: 3px solid #000;
+        border-radius: 5px;
+        font-weight: 500;
+        font-size: 1rem;
+        line-height: 1rem;
+        text-align: center;
       }
 
       .submit-button {
-        $button-link-bg-string-submit: string.replace(
-          vars.$button-link-bg-string,
-          '#FFF',
-          '#{vars.$manipulacija-color-6}'
-        );
-        background-image: url.svg($button-link-bg-string-submit);
-        margin-top: 0.5rem;
-        border: 0;
-
-        &:disabled {
-          cursor: wait;
-          filter: grayscale(1);
-        }
+        margin-top: 0;
       }
     }
   }
