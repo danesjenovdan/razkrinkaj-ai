@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Chapter, LeaderboardData } from '@/types'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useStore } from '@/stores/store'
 import PageFooter from '@/components/PageFooter.vue'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
@@ -13,6 +13,21 @@ const leaderboardData = ref<LeaderboardData | null>(null)
 
 const leaderboardMeText = ref('Tvoj rezultat')
 const nickname = ref('')
+
+const chapterDate = computed(() => {
+  const dateParts = props.chapter.title.split('.').map(Number)
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
+})
+
+const isLocked = computed(() => {
+  const date = chapterDate.value
+  const now = Date.now()
+  return now < date.getTime()
+})
+
+if (isLocked.value) {
+  throw new Error('ChapterResultView cannot be shown for locked chapters')
+}
 
 async function onSubmitNickname() {
   if (nickname.value.trim().length === 0) {
