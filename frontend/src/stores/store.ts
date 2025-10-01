@@ -108,6 +108,7 @@ export const useStore = defineStore('store', () => {
   function clearLocalStorage() {
     const s = window.localStorage
     s.setItem('attemptGUID', attemptGUID.value)
+    s.removeItem('attemptStreak')
     s.removeItem('justUnlockedChapters')
     s.removeItem('unlockedChapters')
     s.removeItem('finishedChapters')
@@ -118,6 +119,7 @@ export const useStore = defineStore('store', () => {
     const s = window.localStorage
     s.setItem('userGUID', userGUID.value)
     s.setItem('attemptGUID', attemptGUID.value)
+    s.setItem('attemptStreak', attemptStreak.value.toString())
     s.setItem('justUnlockedChapters', smartToString(justUnlockedChapters))
     s.setItem('unlockedChapters', smartToString(unlockedChapters))
     s.setItem('finishedChapters', smartToString(finishedChapters))
@@ -142,6 +144,14 @@ export const useStore = defineStore('store', () => {
     } else {
       attemptGUID.value = generateGUID()
       s.setItem('attemptGUID', attemptGUID.value)
+    }
+
+    // load attempt streak
+    if ((item = s.getItem('attemptStreak'))) {
+      const value = Number.parseInt(item, 10)
+      if (!Number.isNaN(value) && value >= 0) {
+        attemptStreak.value = value
+      }
     }
 
     // load saved data
