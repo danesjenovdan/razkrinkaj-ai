@@ -392,6 +392,10 @@ main {
     .text {
       margin-inline: 0.66rem;
       line-height: 1.1;
+
+      @media (max-width: 768px) {
+        width: min-content;
+      }
     }
   }
 
@@ -407,9 +411,10 @@ main {
     background-size: 100% 100%;
 
     @media (max-width: 576px) {
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
+      display: grid;
+      justify-content: center;
+      grid-template-columns: auto auto auto;
+      gap: 0.75rem;
       padding: 1.5rem 1.75rem;
     }
 
@@ -418,11 +423,18 @@ main {
       align-items: center;
       gap: 0.5rem;
 
+      @media (max-width: 576px) {
+        grid-column: span 3;
+        // display: grid;
+        // grid-template-columns: subgrid;
+      }
+
       .icon {
         width: auto;
         height: 3.5rem;
 
         @media (max-width: 576px) {
+          width: 2.5rem;
           height: 2.5rem;
         }
 
@@ -437,6 +449,7 @@ main {
         font-size: 4.5rem;
         font-weight: 500;
         line-height: 1;
+        text-align: right;
 
         @media (max-width: 576px) {
           font-size: 2.5rem;
@@ -447,6 +460,7 @@ main {
         width: min-content;
         font-size: 1.3125rem;
         font-weight: 600;
+        line-height: 1.2;
 
         @media (max-width: 576px) {
           font-size: 1rem;
