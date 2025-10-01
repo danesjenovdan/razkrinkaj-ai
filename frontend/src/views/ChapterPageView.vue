@@ -2,6 +2,7 @@
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import QuizPage from '@/components/QuizPage.vue'
 import RichText from '@/components/RichText.vue'
+import { useStore } from '@/stores/store'
 import type { Chapter } from '@/types'
 import { preloadPageImages } from '@/utils/image'
 import { computed, ref, watch, onMounted } from 'vue'
@@ -9,6 +10,7 @@ import { useRoute } from 'vue-router'
 
 const props = defineProps<{ chapter: Chapter }>()
 
+const store = useStore()
 const route = useRoute()
 const pageIndex = computed(() => {
   const pageIndexParam = route.params.pageIndex as string
@@ -63,6 +65,19 @@ watch(pageIndex, () => {
 
 function onQuizDone() {
   showNextButton.value = true
+
+  if (!hasNextPage.value) {
+    // save score and answers
+    if (!store.finishedChapters.has(props.chapter.id)) {
+      store.finishedChapters.set(props.chapter.id, {
+        score: store.currentChapterScore,
+        answers: new Map(store.currentChapterAnswers),
+      })
+      store.inProgressChapters.delete(props.chapter.id)
+      store.sendFinishedChapterDataToApi(props.chapter.id)
+      store.saveLocalStorage()
+    }
+  }
 }
 
 const nextPage = computed(() => {
