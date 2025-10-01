@@ -8,7 +8,7 @@ resources:
 images:
   - name: manipulacija-backend
     newName: rg.fr-par.scw.cloud/djnd/manipulacija-backend
-    newTag: '3527e408b2b476ddc822a82a8fb42c23e9fffee8'
+    newTag: '844ef463404ca297dd78eefeda232314c0250c04'
   - name: manipulacija-frontend
     newName: rg.fr-par.scw.cloud/djnd/manipulacija-frontend
-    newTag: '3527e408b2b476ddc822a82a8fb42c23e9fffee8'
+    newTag: '844ef463404ca297dd78eefeda232314c0250c04'
