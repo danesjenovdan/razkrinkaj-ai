@@ -500,7 +500,7 @@ onBeforeUnmount(() => {
       flex-direction: column;
       width: 100%;
       max-width: min(700px, calc(100% - 2rem));
-      max-height: calc(100vh - 6rem);
+      max-height: calc(100dvh - 6rem);
       margin-inline: auto;
       padding: 0.5rem;
       background-image: url('/jagged-border.svg');

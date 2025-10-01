@@ -46,11 +46,8 @@ async function onSubmitNickname() {
   }
 }
 
-function displayNick(entry: { nickname?: string; attempt_guid: string }) {
-  if (entry.nickname) {
-    return entry.nickname
-  }
-  return `Anonimnež (${entry.attempt_guid.slice(-4).toUpperCase()})`
+function displayAnonId(entry: { attempt_guid: string }) {
+  return entry.attempt_guid.slice(-4).toUpperCase()
 }
 
 // const totalChapterScore = computed(() => {
@@ -251,11 +248,17 @@ onMounted(() => {
             <div class="place">{{ entry.rank }}.</div>
             <div class="content">
               <div class="name">
-                {{
-                  entry.attempt_guid === leaderboardData.attempt_guid
-                    ? leaderboardMeText
-                    : displayNick(entry)
-                }}
+                <template
+                  v-if="entry.attempt_guid === leaderboardData.attempt_guid"
+                >
+                  {{ leaderboardMeText }}
+                </template>
+                <template v-else-if="entry.nickname">
+                  {{ entry.nickname }}
+                </template>
+                <template v-else>
+                  Anonimna oseba <em>({{ displayAnonId(entry) }})</em>
+                </template>
               </div>
               <div class="score">{{ entry.total_score }}</div>
             </div>
@@ -273,11 +276,17 @@ onMounted(() => {
               <div class="place">{{ entry.rank }}.</div>
               <div class="content">
                 <div class="name">
-                  {{
-                    entry.attempt_guid === leaderboardData.attempt_guid
-                      ? leaderboardMeText
-                      : displayNick(entry)
-                  }}
+                  <template
+                    v-if="entry.attempt_guid === leaderboardData.attempt_guid"
+                  >
+                    {{ leaderboardMeText }}
+                  </template>
+                  <template v-else-if="entry.nickname">
+                    {{ entry.nickname }}
+                  </template>
+                  <template v-else>
+                    Anonimna oseba <em>({{ displayAnonId(entry) }})</em>
+                  </template>
                 </div>
                 <div class="score">{{ entry.total_score }}</div>
               </div>
@@ -392,6 +401,10 @@ main {
     .text {
       margin-inline: 0.66rem;
       line-height: 1.1;
+
+      @media (max-width: 768px) {
+        width: min-content;
+      }
     }
   }
 
@@ -407,9 +420,10 @@ main {
     background-size: 100% 100%;
 
     @media (max-width: 576px) {
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
+      display: grid;
+      justify-content: center;
+      grid-template-columns: auto auto auto;
+      gap: 0.75rem;
       padding: 1.5rem 1.75rem;
     }
 
@@ -418,11 +432,18 @@ main {
       align-items: center;
       gap: 0.5rem;
 
+      @media (max-width: 576px) {
+        grid-column: span 3;
+        // display: grid;
+        // grid-template-columns: subgrid;
+      }
+
       .icon {
         width: auto;
         height: 3.5rem;
 
         @media (max-width: 576px) {
+          width: 2.5rem;
           height: 2.5rem;
         }
 
@@ -437,6 +458,7 @@ main {
         font-size: 4.5rem;
         font-weight: 500;
         line-height: 1;
+        text-align: right;
 
         @media (max-width: 576px) {
           font-size: 2.5rem;
@@ -447,6 +469,7 @@ main {
         width: min-content;
         font-size: 1.3125rem;
         font-weight: 600;
+        line-height: 1.2;
 
         @media (max-width: 576px) {
           font-size: 1rem;
@@ -525,6 +548,14 @@ main {
 
           @media (max-width: 576px) {
             font-size: 1rem;
+          }
+
+          em {
+            margin-left: 0.25em;
+            font-family: monospace;
+            font-style: normal;
+            font-size: 0.875rem;
+            font-weight: 600;
           }
         }
 

@@ -111,7 +111,7 @@ async function onNewsletterSubmit() {
       </div>
     </div>
     <div class="page-gutter bg-white">
-      <div class="page-footer-bottom">
+      <div class="page-footer page-footer-bottom">
         <div class="footer-col">
           <a
             href="https://danesjenovdan.si/politika-zasebnosti-in-varstva-osebnih-podatkov/"
@@ -141,6 +141,10 @@ footer {
     padding-top: 3.25rem;
     padding-bottom: 2.375rem;
 
+    @media (max-width: 992px) {
+      gap: 2rem;
+    }
+
     @media (max-width: 576px) {
       flex-direction: column;
       gap: 1.25rem;
@@ -150,6 +154,7 @@ footer {
     .footer-col {
       flex: 1;
       max-width: 24rem;
+      width: min(100%, 24rem);
     }
 
     .footer-block {
@@ -285,17 +290,12 @@ footer {
   }
 
   .page-footer-bottom {
-    display: flex;
-    justify-content: space-between;
     padding-block: 0.875rem;
-    margin-inline: auto;
-    width: var(--page-width);
     font-size: 0.75rem;
 
     @media (max-width: 576px) {
       flex-direction: column;
       gap: 1rem;
-      align-items: center;
     }
 
     .footer-col {
