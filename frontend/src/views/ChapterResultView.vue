@@ -260,27 +260,29 @@ onMounted(() => {
               <div class="score">{{ entry.total_score }}</div>
             </div>
           </div>
-          <div class="ellipsis">...</div>
-          <div
-            v-for="entry in leaderboardData.ranked_near_me"
-            :class="{
-              'leaderboard-entry': true,
-              me: entry.attempt_guid === leaderboardData.attempt_guid,
-            }"
-            :key="entry.rank"
-          >
-            <div class="place">{{ entry.rank }}.</div>
-            <div class="content">
-              <div class="name">
-                {{
-                  entry.attempt_guid === leaderboardData.attempt_guid
-                    ? leaderboardMeText
-                    : displayNick(entry)
-                }}
+          <template v-if="leaderboardData.ranked_near_me.length">
+            <div class="ellipsis">...</div>
+            <div
+              v-for="entry in leaderboardData.ranked_near_me"
+              :class="{
+                'leaderboard-entry': true,
+                me: entry.attempt_guid === leaderboardData.attempt_guid,
+              }"
+              :key="entry.rank"
+            >
+              <div class="place">{{ entry.rank }}.</div>
+              <div class="content">
+                <div class="name">
+                  {{
+                    entry.attempt_guid === leaderboardData.attempt_guid
+                      ? leaderboardMeText
+                      : displayNick(entry)
+                  }}
+                </div>
+                <div class="score">{{ entry.total_score }}</div>
               </div>
-              <div class="score">{{ entry.total_score }}</div>
             </div>
-          </div>
+          </template>
         </div>
         <div v-if="!leaderboardData?.my_nickname" class="add-nickname">
           <div class="title">
