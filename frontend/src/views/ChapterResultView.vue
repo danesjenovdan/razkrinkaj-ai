@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Chapter, LeaderboardData } from '@/types'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useStore } from '@/stores/store'
 import PageFooter from '@/components/PageFooter.vue'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
@@ -13,6 +13,21 @@ const leaderboardData = ref<LeaderboardData | null>(null)
 
 const leaderboardMeText = ref('Tvoj rezultat')
 const nickname = ref('')
+
+const chapterDate = computed(() => {
+  const dateParts = props.chapter.title.split('.').map(Number)
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
+})
+
+const isLocked = computed(() => {
+  const date = chapterDate.value
+  const now = Date.now()
+  return now < date.getTime()
+})
+
+if (isLocked.value) {
+  throw new Error('ChapterResultView cannot be shown for locked chapters')
+}
 
 async function onSubmitNickname() {
   if (nickname.value.trim().length === 0) {
@@ -245,27 +260,29 @@ onMounted(() => {
               <div class="score">{{ entry.total_score }}</div>
             </div>
           </div>
-          <div class="ellipsis">...</div>
-          <div
-            v-for="entry in leaderboardData.ranked_near_me"
-            :class="{
-              'leaderboard-entry': true,
-              me: entry.attempt_guid === leaderboardData.attempt_guid,
-            }"
-            :key="entry.rank"
-          >
-            <div class="place">{{ entry.rank }}.</div>
-            <div class="content">
-              <div class="name">
-                {{
-                  entry.attempt_guid === leaderboardData.attempt_guid
-                    ? leaderboardMeText
-                    : displayNick(entry)
-                }}
+          <template v-if="leaderboardData.ranked_near_me.length">
+            <div class="ellipsis">...</div>
+            <div
+              v-for="entry in leaderboardData.ranked_near_me"
+              :class="{
+                'leaderboard-entry': true,
+                me: entry.attempt_guid === leaderboardData.attempt_guid,
+              }"
+              :key="entry.rank"
+            >
+              <div class="place">{{ entry.rank }}.</div>
+              <div class="content">
+                <div class="name">
+                  {{
+                    entry.attempt_guid === leaderboardData.attempt_guid
+                      ? leaderboardMeText
+                      : displayNick(entry)
+                  }}
+                </div>
+                <div class="score">{{ entry.total_score }}</div>
               </div>
-              <div class="score">{{ entry.total_score }}</div>
             </div>
-          </div>
+          </template>
         </div>
         <div v-if="!leaderboardData?.my_nickname" class="add-nickname">
           <div class="title">

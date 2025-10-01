@@ -302,12 +302,14 @@ class LeaderboardView(View):
             .first()
         )
 
+        limit_per_rank = 3
+
         top_scores = (
             FinishedChapterData.objects.values("attempt_guid")
             .annotate(total_score=Sum("score"))
             .order_by("-total_score")
             .values_list("total_score", flat=True)
-            .distinct()[:3]
+            .distinct()[:limit_per_rank]
         )
 
         guids_in_top_places = (
@@ -336,18 +338,35 @@ class LeaderboardView(View):
         limited_ranked_guids = []
         current_rank = None
         current_rank_count = 0
+        extra_entries_per_rank = {}
         for entry in ranked_guids:
             if entry["rank"] != current_rank:
+                if current_rank is not None:
+                    extra_entries_per_rank[current_rank] = max(
+                        current_rank_count - limit_per_rank, 0
+                    )
                 current_rank = entry["rank"]
-                current_rank_count = 1
                 limited_ranked_guids.append(entry)
+                current_rank_count = 1
             else:
-                if current_rank_count < 3:
-                    current_rank_count += 1
+                if entry["attempt_guid"] == attempt_guid:
+                    # insert my entry to the front of the rank
+                    current_inserted_rank_count = min(
+                        current_rank_count, limit_per_rank
+                    )
+                    limited_ranked_guids.insert(-current_inserted_rank_count, entry)
+                    if current_rank_count > limit_per_rank:
+                        limited_ranked_guids.pop()
+                elif current_rank_count < limit_per_rank:
                     limited_ranked_guids.append(entry)
+                current_rank_count += 1
+        if current_rank is not None:
+            extra_entries_per_rank[current_rank] = max(
+                current_rank_count - limit_per_rank, 0
+            )
 
         ranked_near_me = []
-        if my_rank > 1:
+        if my_rank > 3:
             score_above_me = (
                 FinishedChapterData.objects.values("attempt_guid")
                 .annotate(total_score=Sum("score"))
@@ -413,6 +432,7 @@ class LeaderboardView(View):
                 "my_score": my_score,
                 "my_rank": my_rank,
                 "my_nickname": my_nickname,
+                "extra_entries_per_rank": extra_entries_per_rank,
                 "top_leaderboard": list(limited_ranked_guids),
                 "ranked_near_me": ranked_near_me,
             }
