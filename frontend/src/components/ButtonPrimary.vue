@@ -8,6 +8,7 @@ const props = withDefaults(
     href?: string
     target?: string
     icon?: string
+    leftIcon?: string
     sideIcon?: string
     color?: string
   }>(),
@@ -35,6 +36,15 @@ const componentName = computed(() =>
       <template v-if="sideIcon === 'hand-down'">
         <img class="hand-down" src="/hand-down.svg" alt="" />
       </template>
+    </span>
+    <span v-if="leftIcon" class="icon left-icon">
+      <template v-if="leftIcon === 'hands'">
+        <img class="hands" src="/hands.svg" alt="" />
+      </template>
+      <template v-else-if="leftIcon === 'hand'">
+        <img class="hand" src="/hand.svg" alt="" />
+      </template>
+      <span v-else>{{ leftIcon }}</span>
     </span>
     <span>{{ text }}</span>
     <span v-if="icon" class="icon">
@@ -110,6 +120,10 @@ const componentName = computed(() =>
   .icon {
     flex-shrink: 0;
     display: flex;
+
+    &.left-icon {
+      scale: -1 1;
+    }
 
     .hand,
     .hands {
