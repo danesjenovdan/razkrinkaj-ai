@@ -46,7 +46,7 @@ const componentName = computed(() =>
       </template>
       <span v-else>{{ leftIcon }}</span>
     </span>
-    <span>{{ text }}</span>
+    <span class="text">{{ text }}</span>
     <span v-if="icon" class="icon">
       <template v-if="icon === 'hands'">
         <img class="hands" src="/hands.svg" alt="" />
@@ -83,6 +83,7 @@ const componentName = computed(() =>
   font-size: 2.5rem;
   line-height: 1.2;
   font-weight: 600;
+  text-align: center;
   color: var(--color-text);
   text-decoration: none;
   cursor: pointer;
@@ -92,7 +93,7 @@ const componentName = computed(() =>
   will-change: scale, filter;
 
   @media (max-width: 576px) {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   &.button-color-primary {
@@ -115,6 +116,10 @@ const componentName = computed(() =>
     font-size: 1.3125rem;
     justify-content: center;
     text-align: center;
+  }
+
+  .text {
+    flex: 1;
   }
 
   .icon {
