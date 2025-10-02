@@ -355,6 +355,15 @@ onMounted(() => {
             KOPIRAJ
           </button>
         </div>
+        <div class="buttons">
+          <ButtonPrimary
+            class="button"
+            button-text="nazaj na koledar"
+            :link="{ name: 'intro' }"
+            left-icon="hand"
+            color="white"
+          />
+        </div>
       </div>
     </div>
     <div class="share-section bg-manipulacija-color-7">
@@ -741,6 +750,7 @@ main {
       justify-content: center;
       gap: 0.5rem;
       margin-top: 2rem;
+      margin-bottom: 2rem;
       text-align: center;
 
       @media (max-width: 576px) {
@@ -781,14 +791,14 @@ main {
           font-size: 1.25rem;
         }
       }
+    }
+  }
 
-      .buttons {
-        .button-primary {
-          max-width: 380px;
-          margin-inline: auto;
-          font-size: 1.3125rem;
-        }
-      }
+  .buttons {
+    .button-primary {
+      max-width: 380px;
+      margin-inline: auto;
+      font-size: 1.3125rem;
     }
   }
 }

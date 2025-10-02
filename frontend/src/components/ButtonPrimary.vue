@@ -8,6 +8,7 @@ const props = withDefaults(
     href?: string
     target?: string
     icon?: string
+    leftIcon?: string
     sideIcon?: string
     color?: string
   }>(),
@@ -36,7 +37,16 @@ const componentName = computed(() =>
         <img class="hand-down" src="/hand-down.svg" alt="" />
       </template>
     </span>
-    <span>{{ text }}</span>
+    <span v-if="leftIcon" class="icon left-icon">
+      <template v-if="leftIcon === 'hands'">
+        <img class="hands" src="/hands.svg" alt="" />
+      </template>
+      <template v-else-if="leftIcon === 'hand'">
+        <img class="hand" src="/hand.svg" alt="" />
+      </template>
+      <span v-else>{{ leftIcon }}</span>
+    </span>
+    <span class="text">{{ text }}</span>
     <span v-if="icon" class="icon">
       <template v-if="icon === 'hands'">
         <img class="hands" src="/hands.svg" alt="" />
@@ -73,6 +83,7 @@ const componentName = computed(() =>
   font-size: 2.5rem;
   line-height: 1.2;
   font-weight: 600;
+  text-align: center;
   color: var(--color-text);
   text-decoration: none;
   cursor: pointer;
@@ -82,7 +93,7 @@ const componentName = computed(() =>
   will-change: scale, filter;
 
   @media (max-width: 576px) {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
   }
 
   &.button-color-primary {
@@ -107,9 +118,17 @@ const componentName = computed(() =>
     text-align: center;
   }
 
+  .text {
+    flex: 1;
+  }
+
   .icon {
     flex-shrink: 0;
     display: flex;
+
+    &.left-icon {
+      scale: -1 1;
+    }
 
     .hand,
     .hands {
