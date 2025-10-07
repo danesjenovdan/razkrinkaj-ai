@@ -101,10 +101,11 @@ function onAnswerClick(index: number) {
     .then(value => {
       percentPeopleCorrect.value = value
     })
-
-  // persist data to local storage
-  store.saveLocalStorage()
-  emit('done')
+    .finally(() => {
+      // persist data to local storage
+      store.saveLocalStorage()
+      emit('done')
+    })
 }
 
 onMounted(() => {

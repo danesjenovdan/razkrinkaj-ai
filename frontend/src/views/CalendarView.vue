@@ -7,6 +7,7 @@ import CalendarDay from '@/components/CalendarDay.vue'
 import PageFooter from '@/components/PageFooter.vue'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
 import ExplanationsSection from '@/components/ExplanationsSection.vue'
+import ConsentPrompt from '@/components/ConsentPrompt.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -54,6 +55,7 @@ onMounted(() => {
             Ugotovi, za katero vrsto manipulacije gre.
           </div>
         </div>
+        <ConsentPrompt />
         <div class="calendar">
           <CalendarDay
             v-for="[id, chapter] in store.chapters"
@@ -126,6 +128,16 @@ main {
       @media (max-width: 576px) {
         font-size: 1.125rem;
       }
+    }
+  }
+
+  .consent-prompt {
+    margin-top: -1rem;
+    margin-bottom: 3rem;
+
+    @media (max-width: 576px) {
+      margin-top: 0;
+      margin-bottom: 2rem;
     }
   }
 

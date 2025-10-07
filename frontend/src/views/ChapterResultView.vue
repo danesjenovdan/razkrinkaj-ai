@@ -1,18 +1,69 @@
 <script setup lang="ts">
 import type { Chapter, LeaderboardData } from '@/types'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 import { useStore } from '@/stores/store'
 import PageFooter from '@/components/PageFooter.vue'
 import ButtonPrimary from '@/components/ButtonPrimary.vue'
+import ConsentPrompt from '@/components/ConsentPrompt.vue'
 
 const props = defineProps<{ chapter: Chapter }>()
 
 const store = useStore()
 
-const leaderboardData = ref<LeaderboardData | null>(null)
+const realLeaderboardData = ref<LeaderboardData | null>(null)
 
 const leaderboardMeText = ref('Tvoj rezultat')
 const nickname = ref('')
+
+const leaderboardData = computed(() => {
+  if (store.hasConsented) {
+    return realLeaderboardData.value
+  }
+  return {
+    attempt_guid: store.attemptGUID,
+    my_nickname: null,
+    top_leaderboard: [
+      // fake data
+      {
+        attempt_guid: 'FAKE1',
+        rank: 1,
+        nickname: 'Random Ime',
+        total_score: 150,
+      },
+      {
+        attempt_guid: 'FAKE1',
+        rank: 1,
+        nickname: 'naključnik',
+        total_score: 150,
+      },
+      {
+        attempt_guid: 'FAKE2',
+        rank: 2,
+        nickname: 'NAKLJUČNICA',
+        total_score: 140,
+      },
+      {
+        attempt_guid: 'FAKE2',
+        rank: 2,
+        nickname: 'Fake ime 3',
+        total_score: 140,
+      },
+      {
+        attempt_guid: 'FAKE3',
+        rank: 3,
+        nickname: 'Hello',
+        total_score: 130,
+      },
+      {
+        attempt_guid: 'FAKE3',
+        rank: 3,
+        nickname: 'World',
+        total_score: 130,
+      },
+    ],
+    ranked_near_me: [],
+  }
+})
 
 const chapterDate = computed(() => {
   const dateParts = props.chapter.title.split('.').map(Number)
@@ -36,8 +87,8 @@ async function onSubmitNickname() {
   }
   const success = await store.submitLeaderboardNickname(nickname.value.trim())
   if (success) {
-    if (leaderboardData.value) {
-      leaderboardData.value.my_nickname = nickname.value.trim()
+    if (realLeaderboardData.value) {
+      realLeaderboardData.value.my_nickname = nickname.value.trim()
     }
     leaderboardMeText.value = nickname.value.trim()
     nickname.value = ''
@@ -124,6 +175,20 @@ async function onCopyLink() {
   }
 }
 
+watch(
+  () => store.hasConsented,
+  newVal => {
+    if (newVal && !realLeaderboardData.value) {
+      store.fetchLeaderboard().then(data => {
+        realLeaderboardData.value = data
+        if (data?.my_nickname) {
+          leaderboardMeText.value = data.my_nickname
+        }
+      })
+    }
+  },
+)
+
 onMounted(() => {
   // save score and answers
   if (!store.finishedChapters.has(props.chapter.id)) {
@@ -163,7 +228,7 @@ onMounted(() => {
 
   // fetch leaderboard data
   store.fetchLeaderboard().then(data => {
-    leaderboardData.value = data
+    realLeaderboardData.value = data
     if (data?.my_nickname) {
       leaderboardMeText.value = data.my_nickname
     }
@@ -243,13 +308,20 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class="leaderboard-section bg-manipulacija-color-3">
+    <div
+      :class="{
+        'leaderboard-section': true,
+        'bg-manipulacija-color-3': true,
+        'has-consented': store.hasConsented,
+      }"
+    >
       <div class="page-gutter">
         <div class="section-title">
           <span class="emoji">👑👑👑</span>
           <span class="text">TRENUTNA LESTVICA</span>
           <span class="emoji">👑👑👑</span>
         </div>
+        <ConsentPrompt />
         <div v-if="leaderboardData" class="leaderboard">
           <div
             v-for="entry in leaderboardData.top_leaderboard"
@@ -533,6 +605,22 @@ main {
 
   .leaderboard-section {
     padding-block: 3rem 4rem;
+
+    &:not(.has-consented) {
+      .leaderboard,
+      .add-nickname {
+        filter: blur(10px);
+        user-select: none;
+        pointer-events: none;
+      }
+    }
+  }
+
+  .consent-prompt {
+    position: relative;
+    z-index: 2;
+    margin-top: 2rem;
+    margin-bottom: -6.5rem;
   }
 
   .leaderboard {

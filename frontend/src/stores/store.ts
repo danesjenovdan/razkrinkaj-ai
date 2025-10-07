@@ -26,6 +26,11 @@ export const useStore = defineStore('store', () => {
   // attempt guid (does change after reset)
   const attemptGUID = ref('')
   const attemptStreak = ref(0)
+  const consentClickedButNotDone = ref(false)
+  const hasConsented = ref(false)
+
+  // temp array of requests before consent is given
+  const preConsentRequests = ref<Array<{ url: string; payload: object }>>([])
 
   // intro texts
   const introductionTitle = ref('')
@@ -88,6 +93,24 @@ export const useStore = defineStore('store', () => {
     setCurrentChapter(-1)
   }
 
+  async function giveConsent() {
+    if (hasConsented.value || consentClickedButNotDone.value) {
+      return
+    }
+
+    consentClickedButNotDone.value = true
+    // send all pre consent data to backend
+    for (const req of preConsentRequests.value) {
+      const res = await axios.post(req.url, req.payload)
+      console.log('Pre consent request sent', req.url, res.status)
+    }
+
+    preConsentRequests.value = []
+    consentClickedButNotDone.value = false
+    hasConsented.value = true
+    saveLocalStorage()
+  }
+
   function generateGUID() {
     const one = Math.random().toString(36).substring(2)
     const two = Math.random().toString(36).substring(2)
@@ -97,6 +120,8 @@ export const useStore = defineStore('store', () => {
   function clearAllProgress() {
     attemptGUID.value = generateGUID()
     attemptStreak.value = 0
+    hasConsented.value = false
+    preConsentRequests.value = []
     justUnlockedChapters.value = []
     unlockedChapters.value = []
     finishedChapters.clear()
@@ -109,6 +134,8 @@ export const useStore = defineStore('store', () => {
     const s = window.localStorage
     s.setItem('attemptGUID', attemptGUID.value)
     s.removeItem('attemptStreak')
+    s.removeItem('hasConsented')
+    s.removeItem('preConsentRequests')
     s.removeItem('justUnlockedChapters')
     s.removeItem('unlockedChapters')
     s.removeItem('finishedChapters')
@@ -120,6 +147,8 @@ export const useStore = defineStore('store', () => {
     s.setItem('userGUID', userGUID.value)
     s.setItem('attemptGUID', attemptGUID.value)
     s.setItem('attemptStreak', attemptStreak.value.toString())
+    s.setItem('hasConsented', hasConsented.value.toString())
+    s.setItem('preConsentRequests', smartToString(preConsentRequests))
     s.setItem('justUnlockedChapters', smartToString(justUnlockedChapters))
     s.setItem('unlockedChapters', smartToString(unlockedChapters))
     s.setItem('finishedChapters', smartToString(finishedChapters))
@@ -152,6 +181,17 @@ export const useStore = defineStore('store', () => {
       if (!Number.isNaN(value) && value >= 0) {
         attemptStreak.value = value
       }
+    }
+
+    // load consent
+    if ((item = s.getItem('hasConsented'))) {
+      hasConsented.value = item === 'true'
+    }
+
+    // load pre consent requests
+    if ((item = s.getItem('preConsentRequests'))) {
+      const value = smartParse(item) as Array<{ url: string; payload: object }>
+      preConsentRequests.value = value
     }
 
     // load saved data
@@ -250,13 +290,25 @@ export const useStore = defineStore('store', () => {
     }
   }
 
+  async function wrapAxiosPost(url: string, payload: object) {
+    if (!hasConsented.value) {
+      console.log('No consent, not sending data to API')
+      preConsentRequests.value.push({ url, payload })
+      return {
+        status: -1,
+        data: null,
+      }
+    }
+    return axios.post(url, payload)
+  }
+
   async function sendChapterDataToApi(
     data: FinishedChapterData | undefined,
     url: string,
   ) {
     if (data) {
       try {
-        const response = await axios.post(url, {
+        const response = await wrapAxiosPost(url, {
           userGUID: userGUID.value,
           attemptGUID: attemptGUID.value,
           data: smartToString(data),
@@ -303,6 +355,9 @@ export const useStore = defineStore('store', () => {
   }
 
   async function fetchLeaderboard(): Promise<LeaderboardData | null> {
+    if (!hasConsented.value) {
+      return null
+    }
     try {
       const response = await axios.get(
         `${apiUrl}/api/leaderboard/?attempt_guid=${attemptGUID.value}`,
@@ -317,6 +372,9 @@ export const useStore = defineStore('store', () => {
   }
 
   async function submitLeaderboardNickname(nickname: string): Promise<boolean> {
+    if (!hasConsented.value) {
+      return false
+    }
     try {
       const response = await axios.post(`${apiUrl}/api/leaderboard/nickname/`, {
         userGUID: userGUID.value,
@@ -355,6 +413,9 @@ export const useStore = defineStore('store', () => {
     currentChapterScore,
     currentChapterAnswers,
     attemptStreak,
+    hasConsented,
+    consentClickedButNotDone,
+    giveConsent,
     setCurrentChapter,
     clearCurrentChapter,
     clearAllProgress,
