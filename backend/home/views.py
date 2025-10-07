@@ -276,31 +276,34 @@ class PageStatsView(View):
 class LeaderboardView(View):
     def get(self, request):
         attempt_guid = request.GET.get("attempt_guid", None)
-        if not attempt_guid:
-            raise Http404("No guid provided")
+        # if not attempt_guid:
+        #     raise Http404("No guid provided")
 
-        my_score = (
-            FinishedChapterData.objects.filter(attempt_guid=attempt_guid)
-            .aggregate(total_score=Sum("score"))
-            .get("total_score", 0)
-        )
-
-        my_rank = (
-            FinishedChapterData.objects.values("attempt_guid")
-            .annotate(total_score=Sum("score"))
-            .filter(total_score__gt=my_score)
-            .values("total_score")
-            .distinct()
-            .count()
-            + 1
-        )
-
-        my_nickname = (
-            NicknameEntry.objects.filter(attempt_guid=attempt_guid)
-            .order_by("-created_at")
-            .values_list("nickname", flat=True)
-            .first()
-        )
+        if attempt_guid:
+            my_score = (
+                FinishedChapterData.objects.filter(attempt_guid=attempt_guid)
+                .aggregate(total_score=Sum("score"))
+                .get("total_score", 0)
+            )
+            my_rank = (
+                FinishedChapterData.objects.values("attempt_guid")
+                .annotate(total_score=Sum("score"))
+                .filter(total_score__gt=my_score)
+                .values("total_score")
+                .distinct()
+                .count()
+                + 1
+            )
+            my_nickname = (
+                NicknameEntry.objects.filter(attempt_guid=attempt_guid)
+                .order_by("-created_at")
+                .values_list("nickname", flat=True)
+                .first()
+            )
+        else:
+            my_score = -1
+            my_rank = -1
+            my_nickname = None
 
         limit_per_rank = 3
 
