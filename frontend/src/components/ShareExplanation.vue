@@ -54,6 +54,7 @@ const urlValue = computed(() => {
       font-weight: 500;
       font-size: 1rem;
       line-height: 1rem;
+      color: var(--color-text);
 
       @media (max-width: 576px) {
         width: 100%;
