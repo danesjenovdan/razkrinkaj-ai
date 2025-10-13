@@ -802,6 +802,7 @@ main {
         font-weight: 500;
         font-size: 1rem;
         line-height: 1rem;
+        color: var(--color-text);
       }
     }
   }
@@ -854,6 +855,7 @@ main {
         font-size: 1rem;
         line-height: 1rem;
         text-align: center;
+        color: var(--color-text);
       }
 
       .submit-button {

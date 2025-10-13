@@ -250,6 +250,7 @@ footer {
               font-weight: 500;
               font-size: 1rem;
               line-height: 1rem;
+              color: var(--color-text);
             }
           }
 
@@ -268,6 +269,7 @@ footer {
               height: 1.5rem;
               border: 3px solid #000;
               border-radius: 5px;
+              color: var(--color-text);
 
               &:checked {
                 &::before {

@@ -184,6 +184,7 @@ section.explanations-section {
           border: 3px solid #000;
           border-radius: 20px;
           text-align: left;
+          color: var(--color-text);
           // transform-origin: left center;
           transition:
             scale 0.15s ease-in-out,
