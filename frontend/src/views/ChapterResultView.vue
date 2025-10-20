@@ -398,10 +398,6 @@ onMounted(() => {
             </div>
           </form>
         </div>
-      </div>
-    </div>
-    <div class="link-section bg-manipulacija-color-5">
-      <div class="page-gutter">
         <div class="buttons">
           <ButtonPrimary
             class="button"
@@ -411,6 +407,10 @@ onMounted(() => {
             color="white"
           />
         </div>
+      </div>
+    </div>
+    <div class="link-section bg-manipulacija-color-5">
+      <div class="page-gutter">
         <div class="section-title">
           <span class="emoji">📅</span>
           <span class="text">Nova manipulacija te čaka jutri</span>
@@ -604,7 +604,7 @@ main {
   }
 
   .leaderboard-section {
-    padding-block: 3rem 4rem;
+    padding-block: 3rem;
 
     &:not(.has-consented) {
       .leaderboard,
@@ -811,8 +811,6 @@ main {
     padding-block: 3rem;
 
     .section-title {
-      margin-top: 2rem;
-
       .text {
         @media (max-width: 768px) {
           width: auto;
@@ -889,6 +887,7 @@ main {
     .button-primary {
       max-width: 380px;
       margin-inline: auto;
+      margin-top: 3rem;
       font-size: 1.3125rem;
     }
   }
