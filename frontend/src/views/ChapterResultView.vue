@@ -402,6 +402,15 @@ onMounted(() => {
     </div>
     <div class="link-section bg-manipulacija-color-5">
       <div class="page-gutter">
+        <div class="buttons">
+          <ButtonPrimary
+            class="button"
+            button-text="nazaj na koledar"
+            :link="{ name: 'intro' }"
+            left-icon="hand"
+            color="white"
+          />
+        </div>
         <div class="section-title">
           <span class="emoji">📅</span>
           <span class="text">Nova manipulacija te čaka jutri</span>
@@ -426,15 +435,6 @@ onMounted(() => {
           >
             KOPIRAJ
           </button>
-        </div>
-        <div class="buttons">
-          <ButtonPrimary
-            class="button"
-            button-text="nazaj na koledar"
-            :link="{ name: 'intro' }"
-            left-icon="hand"
-            color="white"
-          />
         </div>
       </div>
     </div>
@@ -811,6 +811,8 @@ main {
     padding-block: 3rem;
 
     .section-title {
+      margin-top: 2rem;
+
       .text {
         @media (max-width: 768px) {
           width: auto;
@@ -839,7 +841,6 @@ main {
       justify-content: center;
       gap: 0.5rem;
       margin-top: 2rem;
-      margin-bottom: 2rem;
       text-align: center;
 
       @media (max-width: 576px) {

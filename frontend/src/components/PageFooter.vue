@@ -51,7 +51,7 @@ async function onNewsletterSubmit() {
               >Danes je nov dan, Inštitut za druga vprašanja</a
             >
           </div>
-          <div class="footer-block">
+          <!-- <div class="footer-block">
             <span class="semi-bold">Podpri naše delo.</span>
             <a
               href="https://danesjenovdan.si/podpri-nas/"
@@ -61,6 +61,65 @@ async function onNewsletterSubmit() {
             >
               <span>DONIRAJ</span>
             </a>
+          </div> -->
+          <div class="footer-block">
+            <span class="medium-bold"
+              >Preveri tudi naš izobraževalni kviz
+            </span>
+            <a
+              href="https://razkrinkaj.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="about-link"
+              >Razkrinkaj.AI</a
+            >
+            <span class="medium-bold">
+              za prepoznavanje vsebin ustvarjenih z umetno inteligenco!</span
+            >
+          </div>
+        </div>
+        <div class="footer-col">
+          <div class="footer-block">
+            <div class="jagged-box">
+              <div class="text">
+                <div class="title">Podpri naše delo!</div>
+                <div class="desc">Izberi višino donacije.</div>
+              </div>
+              <div class="buttons">
+                <a
+                  href="https://moj.djnd.si/danes-je-nov-dan/doniraj/info?znesek=11"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button-link donate-link larger"
+                >
+                  <span>11&nbsp;€</span>
+                </a>
+                <a
+                  href="https://moj.djnd.si/danes-je-nov-dan/doniraj/info?znesek=24"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button-link donate-link larger"
+                >
+                  <span>24&nbsp;€</span>
+                </a>
+                <a
+                  href="https://moj.djnd.si/danes-je-nov-dan/doniraj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button-link donate-link"
+                >
+                  <span>Poljubno</span>
+                </a>
+                <a
+                  href="https://moj.djnd.si/danes-je-nov-dan/doniraj?mesecna=true"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="button-link donate-link"
+                >
+                  <span>Mesečno</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
         <div class="footer-col">
@@ -119,6 +178,7 @@ async function onNewsletterSubmit() {
             >Politika zasebnosti in varstva osebnih podatkov</a
           >
         </div>
+        <div class="footer-col"></div>
         <div class="footer-col">
           <span>Projekt podpira</span>
           <MkLogo />
@@ -137,12 +197,12 @@ footer {
   .page-footer {
     display: flex;
     justify-content: center;
-    gap: 10rem;
+    gap: 2rem;
     padding-top: 3.25rem;
     padding-bottom: 2.375rem;
 
     @media (max-width: 992px) {
-      gap: 2rem;
+      flex-wrap: wrap;
     }
 
     @media (max-width: 576px) {
@@ -153,7 +213,7 @@ footer {
 
     .footer-col {
       flex: 1;
-      max-width: 24rem;
+      max-width: 22rem;
       width: min(100%, 24rem);
     }
 
@@ -162,19 +222,68 @@ footer {
       font-size: 1rem;
 
       strong {
-        font-weight: 500;
+        font-weight: 600;
       }
 
       .semi-bold {
         font-weight: 600;
       }
 
-      .about-link {
+      .medium-bold {
         font-weight: 500;
+      }
+
+      .about-link {
+        font-weight: 600;
         color: inherit;
 
         &:hover {
           text-decoration: none;
+        }
+      }
+
+      .jagged-box {
+        padding: 1.75rem 2rem;
+        background-image: url('/jagged-border-question.svg');
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+
+        .text {
+          text-align: center;
+          text-wrap: pretty;
+
+          .title {
+            font-family: var(--font-family-alt);
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+          }
+
+          .desc {
+            font-size: 1rem;
+            font-weight: 500;
+          }
+        }
+
+        .buttons {
+          display: grid;
+          grid-template-columns: 5.375rem 5.375rem;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-top: 1rem;
+
+          .donate-link {
+            height: 36px;
+            margin-left: 0;
+            font-size: 0.875rem;
+            line-height: 1.5rem;
+            font-weight: 600;
+            justify-content: center;
+
+            &.larger {
+              font-size: 1.125rem;
+            }
+          }
         }
       }
 
@@ -307,6 +416,24 @@ footer {
 
       .mk-logo {
         height: 1.125rem;
+      }
+
+      &:nth-child(2) {
+        @media (max-width: 992px) {
+          flex: 0.1;
+        }
+      }
+
+      &:last-child {
+        justify-content: flex-end;
+
+        @media (max-width: 576px) {
+          justify-content: center;
+        }
+      }
+
+      @media (max-width: 576px) {
+        justify-content: center;
       }
     }
   }
