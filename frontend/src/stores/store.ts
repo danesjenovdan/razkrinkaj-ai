@@ -28,6 +28,7 @@ export const useStore = defineStore('store', () => {
   const attemptStreak = ref(0)
   const consentClickedButNotDone = ref(false)
   const hasConsented = ref(false)
+  const ensuredFinishedChaptersSent = ref(false)
 
   // temp array of requests before consent is given
   const preConsentRequests = ref<Array<{ url: string; payload: object }>>([])
@@ -121,6 +122,7 @@ export const useStore = defineStore('store', () => {
     attemptGUID.value = generateGUID()
     attemptStreak.value = 0
     hasConsented.value = false
+    ensuredFinishedChaptersSent.value = false
     preConsentRequests.value = []
     justUnlockedChapters.value = []
     unlockedChapters.value = []
@@ -135,6 +137,7 @@ export const useStore = defineStore('store', () => {
     s.setItem('attemptGUID', attemptGUID.value)
     s.removeItem('attemptStreak')
     s.removeItem('hasConsented')
+    s.removeItem('ensuredFinishedChaptersSent')
     s.removeItem('preConsentRequests')
     s.removeItem('justUnlockedChapters')
     s.removeItem('unlockedChapters')
@@ -148,6 +151,10 @@ export const useStore = defineStore('store', () => {
     s.setItem('attemptGUID', attemptGUID.value)
     s.setItem('attemptStreak', attemptStreak.value.toString())
     s.setItem('hasConsented', hasConsented.value.toString())
+    s.setItem(
+      'ensuredFinishedChaptersSent',
+      ensuredFinishedChaptersSent.value.toString(),
+    )
     s.setItem('preConsentRequests', smartToString(preConsentRequests))
     s.setItem('justUnlockedChapters', smartToString(justUnlockedChapters))
     s.setItem('unlockedChapters', smartToString(unlockedChapters))
@@ -186,6 +193,11 @@ export const useStore = defineStore('store', () => {
     // load consent
     if ((item = s.getItem('hasConsented'))) {
       hasConsented.value = item === 'true'
+    }
+
+    // load ensured finished chapters sent
+    if ((item = s.getItem('ensuredFinishedChaptersSent'))) {
+      ensuredFinishedChaptersSent.value = item === 'true'
     }
 
     // load pre consent requests
@@ -340,6 +352,47 @@ export const useStore = defineStore('store', () => {
     )
   }
 
+  async function ensureFinishedChaptersSent() {
+    if (!hasConsented.value) {
+      console.log('No consent, not sending data to API')
+      return
+    }
+    if (ensuredFinishedChaptersSent.value) {
+      console.log(
+        'ensureFinishedChaptersSent not called, this is a one time fix',
+      )
+      return
+    }
+    console.log('ensureFinishedChaptersSent called')
+    const dataToSend = []
+    for (const chapterId of finishedChapters.keys()) {
+      const chapterData = finishedChapters.get(chapterId)
+      if (chapterData && chapterData.score) {
+        console.log('Chapter data', chapterId, chapterData.score)
+        dataToSend.push({ id: chapterId, score: chapterData.score })
+      }
+    }
+    try {
+      if (dataToSend.length != 0) {
+        const response = await axios.post(
+          `${apiUrl}/api/ensure-finished-chapter-scores/`,
+          {
+            userGUID: userGUID.value,
+            attemptGUID: attemptGUID.value,
+            data: smartToString(dataToSend),
+          },
+        )
+        if (response.status == 200) {
+          console.log('ensureFinishedChaptersSent', response.data)
+          ensuredFinishedChaptersSent.value = true
+          saveLocalStorage()
+        }
+      }
+    } catch (error) {
+      console.error('ensureFinishedChaptersSent', error)
+    }
+  }
+
   async function fetchPageCorrectPercent(chapterId: number, pageId: number) {
     try {
       const response = await axios.get(
@@ -424,6 +477,7 @@ export const useStore = defineStore('store', () => {
     score,
     sendFinishedChapterDataToApi,
     sendProgressChapterDataToApi,
+    ensureFinishedChaptersSent,
     fetchPageCorrectPercent,
     fetchLeaderboard,
     submitLeaderboardNickname,

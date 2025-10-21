@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     ChapterView,
+    EnsureFinishedChapterScoresView,
     FinishedChapterView,
     HomeView,
     LeaderboardNicknameView,
@@ -38,5 +39,10 @@ urlpatterns = [
         "leaderboard/nickname/",
         LeaderboardNicknameView.as_view(),
         name="leaderboard_nickname",
+    ),
+    path(
+        "ensure-finished-chapter-scores/",
+        EnsureFinishedChapterScoresView.as_view(),
+        name="ensure_finished_chapter_scores",
     ),
 ]
