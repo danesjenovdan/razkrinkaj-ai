@@ -74,7 +74,7 @@ async function onNewsletterSubmit() {
               >Razkrinkaj.AI</a
             >
             <span class="medium-bold">
-              za prepoznavanje vsebin ustvarjenih z umetno inteligenco!</span
+              za prepoznavanje vsebin, ustvarjenih z umetno inteligenco!</span
             >
           </div>
         </div>
