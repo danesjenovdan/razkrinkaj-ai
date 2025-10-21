@@ -32,6 +32,7 @@ const scrollToMore = () => {
 
 onMounted(() => {
   store.clearCurrentChapter()
+  store.ensureFinishedChaptersSent()
 })
 </script>
 

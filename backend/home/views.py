@@ -248,6 +248,57 @@ class FinishedChapterView(View):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
+class EnsureFinishedChapterScoresView(View):
+    def post(self, request):
+        try:
+            json_body = json.loads(request.body)
+            json_data = json.loads(json_body["data"])
+        except Exception as e:
+            print("Error parsing JSON:", e)
+            return JsonResponse({"status": "json fail"}, status=400)
+
+        attempt_guid = json_body.get("attemptGUID", None)
+        user_guid = json_body.get("userGUID", None)
+        if not attempt_guid or not user_guid:
+            return JsonResponse({"status": "missing guids"}, status=400)
+
+        exists = FinishedChapterData.objects.filter(
+            attempt_guid=attempt_guid, user_guid=user_guid
+        ).exists()
+        if not exists:
+            return JsonResponse({"status": "not found"}, status=404)
+
+        for data in json_data:
+            chapter_data = FinishedChapterData.objects.filter(
+                attempt_guid=attempt_guid,
+                user_guid=user_guid,
+                chapter_id=data["id"],
+            ).order_by("-id")
+            if chapter_data.count() == 0:
+                FinishedChapterData.objects.create(
+                    attempt_guid=attempt_guid,
+                    user_guid=user_guid,
+                    chapter_id=data["id"],
+                    score=data["score"],
+                    is_finished=True,
+                )
+            elif chapter_data.count() == 1 and chapter_data[0].score != data["score"]:
+                chapter_data.update(score=data["score"], is_finished=True)
+            elif chapter_data.count() > 1:
+                # move all answers to the first entry and delete the rest
+                first_entry = chapter_data[0]
+                for duplicate_entry in chapter_data[1:]:
+                    for answer in duplicate_entry.answers.all():
+                        first_entry.answers.add(answer)
+                    duplicate_entry.delete()
+                first_entry.score = data["score"]
+                first_entry.is_finished = True
+                first_entry.save()
+
+        return JsonResponse({"status": "ok"})
+
+
+@method_decorator(csrf_exempt, name="dispatch")
 class PageStatsView(View):
     def get(self, request, chapter_id, page_id):
         chapter = get_object_or_404(ChapterPage, id=chapter_id)
