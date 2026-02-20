@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kvizle-dz-2026-bakcend
+  name: kvizle-dz-2026-backend
 spec:
   selector:
     app: kvizle-dz-2026
