@@ -25,7 +25,7 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     gettext \
     libicu-dev \
     pkg-config \
- && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 # Install the application server.
 RUN pip install "gunicorn==25.1.0"
@@ -45,6 +45,11 @@ COPY --chown=wagtail:wagtail . .
 
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
+
+# Set the IPython directory to a temporary folder to avoid permission issues and
+# create the default profile directory with the correct user.
+ENV IPYTHONDIR=/tmp/ipython
+RUN mkdir -p $IPYTHONDIR/profile_default
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:
