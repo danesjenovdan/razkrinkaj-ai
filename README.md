@@ -1,6 +1,6 @@
-# manipulacija ni informacija
+# Kvizle za volitve DZ 2026
 
 ### Development:
 
 If you're developing with VSCode:
-- Don't open the project folder directly. Instead open the provided [manipulacija.code-workspace](./manipulacija.code-workspace) file. This will setup the correct structure for formatting extensions and relative paths to work properly.
+- Don't open the project folder directly. Instead open the provided [kvizle.code-workspace](./kvizle.code-workspace) file. This will setup the correct structure for formatting extensions and relative paths to work properly.

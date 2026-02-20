@@ -4,14 +4,14 @@ volumes:
 
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data
     expose:
       - "5432"
     environment:
-      POSTGRES_DB: wagtail
-      POSTGRES_USER: wagtail
+      POSTGRES_DB: kvizle_dz_2026
+      POSTGRES_USER: kvizle_dz_2026
       POSTGRES_PASSWORD: changeme
 
   wagtail:
@@ -23,8 +23,8 @@ services:
       - "8000:8000"
     environment:
       DJANGO_DATABASE_HOST: db
-      DJANGO_DATABASE_NAME: wagtail
-      DJANGO_DATABASE_USER: wagtail
+      DJANGO_DATABASE_NAME: kvizle_dz_2026
+      DJANGO_DATABASE_USER: kvizle_dz_2026
       DJANGO_DATABASE_PASSWORD: changeme
     depends_on:
       - db
@@ -34,7 +34,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     ports:
-      - 5173:5173
+      - "3000:3000"
     environment:
       - VITE_API_URL_BASE=http://localhost:8000
     volumes:

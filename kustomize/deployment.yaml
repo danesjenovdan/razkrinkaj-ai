@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: manipulacija
+  name: kvizle-dz-2026
   labels:
-    app: manipulacija
+    app: kvizle-dz-2026
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: manipulacija
+      app: kvizle-dz-2026
   template:
     metadata:
       labels:
-        app: manipulacija
+        app: kvizle-dz-2026
     spec:
       securityContext:
         fsGroup: 1000
       volumes:
-        - name: manipulacija-storage
+        - name: kvizle-dz-2026-storage
           emptyDir: {}
       initContainers:
         - name: collectstatic
-          image: manipulacija-backend
+          image: kvizle-dz-2026-backend
           volumeMounts:
-            - name: manipulacija-storage
+            - name: kvizle-dz-2026-storage
               mountPath: /storage
           command:
             - python
@@ -32,10 +32,10 @@ spec:
             - --no-input
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: manipulacija.settings.k8s
+              value: kvizle.settings.k8s
           envFrom:
             - secretRef:
-                name: manipulacija-secrets
+                name: kvizle-dz-2026-secrets
           resources:
             requests:
               memory: 400Mi
@@ -44,9 +44,9 @@ spec:
               memory: 800Mi
               cpu: 400m
         - name: migrate
-          image: manipulacija-backend
+          image: kvizle-dz-2026-backend
           volumeMounts:
-            - name: manipulacija-storage
+            - name: kvizle-dz-2026-storage
               mountPath: /storage
           command:
             - python
@@ -55,10 +55,10 @@ spec:
             - --no-input
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: manipulacija.settings.k8s
+              value: kvizle.settings.k8s
           envFrom:
             - secretRef:
-                name: manipulacija-secrets
+                name: kvizle-dz-2026-secrets
           resources:
             requests:
               memory: 400Mi
@@ -67,14 +67,14 @@ spec:
               memory: 800Mi
               cpu: 400m
       containers:
-        - name: manipulacija-backend
-          image: manipulacija-backend
+        - name: kvizle-dz-2026-backend
+          image: kvizle-dz-2026-backend
           volumeMounts:
-            - name: manipulacija-storage
+            - name: kvizle-dz-2026-storage
               mountPath: /storage
           command:
             - gunicorn
-            - manipulacija.wsgi:application
+            - kvizle.wsgi:application
             - -b
             - 0.0.0.0:8000
             - --log-level
@@ -89,10 +89,10 @@ spec:
             - containerPort: 8000
           env:
             - name: DJANGO_SETTINGS_MODULE
-              value: manipulacija.settings.k8s
+              value: kvizle.settings.k8s
           envFrom:
             - secretRef:
-                name: manipulacija-secrets
+                name: kvizle-dz-2026-secrets
           resources:
             requests:
               memory: 400Mi
@@ -100,10 +100,10 @@ spec:
             limits:
               memory: 800Mi
               cpu: 400m
-        - name: manipulacija-frontend
-          image: manipulacija-frontend
+        - name: kvizle-dz-2026-frontend
+          image: kvizle-dz-2026-frontend
           volumeMounts:
-            - name: manipulacija-storage
+            - name: kvizle-dz-2026-storage
               mountPath: /usr/share/nginx/html/backend-storage
           ports:
             - containerPort: 80

@@ -161,7 +161,7 @@ async function copyTextToClipboard(text: string) {
 //   }
 // }
 
-const websiteLinkValue = 'manipulacija.danesjenovdan.si'
+const websiteLinkValue = 'kvizle.lb.djnd.si'
 
 async function onCopyLink() {
   if (await copyTextToClipboard(websiteLinkValue)) {

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: manipulacija
+  name: kvizle-dz-2026-backend
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/proxy-body-size: 10m
@@ -9,24 +9,24 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - api.manipulacija.lb.djnd.si
-      secretName: manipulacija-tls
+        - api.kvizle.lb.djnd.si
+      secretName: kvizle-dz-2026-backend-tls
   rules:
-    - host: api.manipulacija.lb.djnd.si
+    - host: api.kvizle.lb.djnd.si
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: manipulacija
+                name: kvizle-dz-2026-backend
                 port:
                   number: 8000
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: manipulacija-frontend
+  name: kvizle-dz-2026-frontend
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
     nginx.ingress.kubernetes.io/enable-cors: "true"
@@ -34,27 +34,16 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - manipulacija.danesjenovdan.si
-        - manipulacija.djnd.si
-      secretName: manipulacija-frontend-tls
+        - kvizle.lb.djnd.si
+      secretName: kvizle-dz-2026-frontend-tls
   rules:
-    - host: manipulacija.danesjenovdan.si
+    - host: kvizle.lb.djnd.si
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: manipulacija-frontend
-                port:
-                  number: 80
-    - host: manipulacija.djnd.si
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: manipulacija-frontend
+                name: kvizle-dz-2026-frontend
                 port:
                   number: 80

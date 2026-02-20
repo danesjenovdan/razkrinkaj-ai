@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # EDIT DATABASE NAME TO CHOOSE WHICH ONE YOU WANT
-DATABASE_NAME="manipulacija"
-K8S_NAMESPACE="manipulacija"
-SECRETS_NAME="manipulacija-secrets"
+DATABASE_NAME="kvizle_dz_2026"
+K8S_NAMESPACE="kvizle"
+SECRETS_NAME="kvizle-dz-2026-secrets"
 
 # DATABASE PASSWORD IS DYNAMICALLY RETRIEVED FROM THE CLUSTER
 DATABASE_USER=$(kubectl get secret $SECRETS_NAME -n $K8S_NAMESPACE -o jsonpath="{.data.DJANGO_DATABASE_USER}" | base64 --decode)
@@ -30,16 +30,16 @@ PGPASSWORD=$DATABASE_PASSWORD \
 
 # echo
 # echo "DROPPING THE DB VOLUME"
-# docker-compose down -v
-# docker-compose up -d
+# docker compose down -v
+# docker compose up -d
 
 # sleep 5
 
 # echo
 # echo "LOADING DB INTO CONTAINER"
-# docker container exec -i $(docker-compose ps -q db) psql -U wagtail wagtail < db.dump
+# docker container exec -i $(docker compose ps -q db) psql -U kvizle_dz_2026 kvizle_dz_2026 < db.dump
 
-# docker-compose down
+# docker compose down
 
 echo "STOPPING PORT FORWARDING"
 kill $KUBECTL_PID
@@ -47,4 +47,4 @@ kill $KUBECTL_PID
 echo
 echo "ALL DONE, DATABASE DUMP SAVED to db.dump"
 echo "DROPPING AND IMPORTING DB IS DISABLED, DO IT MANUALLY OR FIX THE SCRIPT :D"
-# echo "ALL DONE, YOU CAN RUN docker-compose up AND/OR DELETE db.dump"
+# echo "ALL DONE, YOU CAN RUN docker compose up AND/OR DELETE db.dump"

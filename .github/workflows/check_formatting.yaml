@@ -2,17 +2,17 @@ name: Check formatting
 on:
   push:
     branches:
-      - "manipulacija"
+      - "kvizle-dz-2026"
 jobs:
   check_python_formatting:
     name: Check Python formatting
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 

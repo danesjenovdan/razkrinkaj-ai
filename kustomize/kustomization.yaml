@@ -1,14 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: manipulacija
+namespace: kvizle
 resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
 images:
-  - name: manipulacija-backend
-    newName: rg.fr-par.scw.cloud/djnd/manipulacija-backend
+  - name: kvizle-dz-2026-backend
+    newName: rg.fr-par.scw.cloud/djnd/kvizle-dz-2026-backend
     newTag: "latest"
-  - name: manipulacija-frontend
-    newName: rg.fr-par.scw.cloud/djnd/manipulacija-frontend
+  - name: kvizle-dz-2026-frontend
+    newName: rg.fr-par.scw.cloud/djnd/kvizle-dz-2026-frontend
     newTag: "latest"
