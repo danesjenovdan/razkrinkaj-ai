@@ -15,10 +15,6 @@ media
 # in your Git repository. Update and uncomment the following line accordingly.
 staticfiles/
 
-# Built css bundle
-home/static/home/css/bundle.css
-home/static/home/css/bundle.css.map
-
 ### Django.Python Stack ###
 # Byte-compiled / optimized / DLL files
 *.py[cod]
@@ -94,9 +90,9 @@ target/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# IPython
-profile_default/
-ipython_config.py
+# # IPython
+# profile_default/
+# ipython_config.py
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is

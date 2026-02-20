@@ -19,9 +19,11 @@ services:
     command: ./manage.py runserver 0.0.0.0:8000
     volumes:
       - ./backend:/app:delegated,rw
+      - ./backend/ipython_config.py:/tmp/ipython/profile_default/ipython_config.py:delegated,rw
     ports:
       - "8000:8000"
     environment:
+      DJANGO_RUNSERVER_HIDE_WARNING: "true"
       DJANGO_DATABASE_HOST: db
       DJANGO_DATABASE_NAME: kvizle_dz_2026
       DJANGO_DATABASE_USER: kvizle_dz_2026
@@ -33,10 +35,6 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    ports:
-      - "3000:3000"
-    environment:
-      - VITE_API_URL_BASE=http://localhost:8000
     volumes:
       - ./frontend/public:/app/public:delegated,rw
       - ./frontend/src:/app/src:delegated,rw
@@ -48,5 +46,9 @@ services:
       - ./frontend/tsconfig.app.json:/app/tsconfig.app.json:delegated,rw
       - ./frontend/tsconfig.node.json:/app/tsconfig.node.json:delegated,rw
       - ./frontend/vite.config.ts:/app/vite.config.ts:delegated,rw
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL_BASE=http://localhost:8000
     depends_on:
       - wagtail
