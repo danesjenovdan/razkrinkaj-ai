@@ -48,7 +48,7 @@ const store = useStore()
   $percentile-bg-svg-string-consent: string.replace(
     vars.$percentile-bg-svg-string,
     '#FFF',
-    '#{vars.$manipulacija-color-5}'
+    'magenta'
   );
   background-image: url.svg($percentile-bg-svg-string-consent);
   background-repeat: no-repeat;
@@ -76,7 +76,7 @@ const store = useStore()
       $button-link-bg-string-consent: string.replace(
         vars.$button-link-bg-string,
         '#FFF',
-        '#{vars.$manipulacija-color-6}'
+        'magenta'
       );
       background-image: url.svg($button-link-bg-string-consent);
       background-repeat: no-repeat;

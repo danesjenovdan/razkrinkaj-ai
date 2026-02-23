@@ -2,8 +2,8 @@
 @use 'variables' as vars;
 
 :root {
-  @for $i from 1 through list.length(vars.$manipulacija-colors) {
-    --manipulacija-color-#{$i}: #{list.nth(vars.$manipulacija-colors, $i)};
+  @for $i from 1 through list.length(vars.$kvizle-colors) {
+    --kvizle-color-#{$i - 1}: #{list.nth(vars.$kvizle-colors, $i)};
   }
 
   --color-bg-white: #fff;
@@ -13,8 +13,8 @@
   --page-gutter: 1.5625rem;
   --page-width: min(1200px, 100%);
 
-  --font-family-base: 'wf-clash-grotesk-variable', sans-serif;
-  --font-family-alt: 'wf-dynapuff-variable', sans-serif;
+  --font-family-base: 'wf-schibsted-grotesk', sans-serif;
+  --font-family-alt: 'wf-super-chiby', sans-serif;
 }
 
 *,
@@ -29,7 +29,7 @@ html {
 
 body {
   margin: 0;
-  background: var(--manipulacija-color-9);
+  background: var(--kvizle-color-0);
   color: var(--color-text);
   font-family: var(--font-family-base);
 }
@@ -44,9 +44,9 @@ body {
   padding-right: var(--page-gutter);
 }
 
-@for $i from 1 through list.length(vars.$manipulacija-colors) {
-  .bg-manipulacija-color-#{$i} {
-    background-color: var(--manipulacija-color-#{$i});
+@for $i from 0 through list.length(vars.$kvizle-colors) - 1 {
+  .bg-kvizle-color-#{$i} {
+    background-color: var(--kvizle-color-#{$i});
   }
 }
 

@@ -38,7 +38,7 @@ async function onNewsletterSubmit() {
 
 <template>
   <footer>
-    <div class="page-gutter bg-manipulacija-color-9">
+    <div class="page-gutter bg-kvizle-color-3">
       <div class="page-footer">
         <div class="footer-col">
           <div class="footer-block">
@@ -318,7 +318,7 @@ footer {
         $button-link-bg-string-donate: string.replace(
           vars.$button-link-bg-string,
           '#FFF',
-          '#{vars.$manipulacija-color-2}'
+          'magenta'
         );
         background-image: url.svg($button-link-bg-string-donate);
         margin-left: 0.75rem;
@@ -328,7 +328,7 @@ footer {
         $button-link-bg-string-submit: string.replace(
           vars.$button-link-bg-string,
           '#FFF',
-          '#{vars.$manipulacija-color-6}'
+          'magenta'
         );
         background-image: url.svg($button-link-bg-string-submit);
         margin-top: 0.5rem;

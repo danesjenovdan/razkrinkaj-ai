@@ -92,12 +92,12 @@ onMounted(() => {
       success: didAnswerCorrectly === true,
       fail: didAnswerCorrectly === false,
     }"
-    :to="
+  >
+    <!-- :to="
       !isLocked
         ? { name: 'chapter-intro', params: { slug: chapterSlug } }
         : undefined
-    "
-  >
+    " -->
     <h2 class="title">{{ chapter.title }}</h2>
     <div v-if="isToday && didAnswerCorrectly === null" class="text">
       REŠI!
@@ -121,8 +121,9 @@ onMounted(() => {
   $day-bg-svg-string-normal: string.replace(
     $day-bg-svg-string,
     '#FFF',
-    '#{vars.$manipulacija-color-9}'
+    'magenta'
   );
+  display: block;
   aspect-ratio: 1;
   padding: 1.125rem;
   background-image: url.svg($day-bg-svg-string-normal);
@@ -210,7 +211,7 @@ onMounted(() => {
     $day-bg-svg-string-today: string.replace(
       $day-bg-svg-string,
       '#FFF',
-      '#{vars.$manipulacija-color-5}'
+      'magenta'
     );
     $day-bg-svg-string-today: string.replace(
       $day-bg-svg-string-today,

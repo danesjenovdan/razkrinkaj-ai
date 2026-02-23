@@ -10,14 +10,8 @@ defineProps<{
   <header class="score-header">
     <div class="page-gutter">
       <div class="header-content">
-        <RouterLink :to="{ name: 'intro' }">
-          <div class="title">
-            <img
-              src="/manipulacija-logo.svg"
-              alt="Manipulacija ni informacija"
-              class="title-logo"
-            />
-          </div>
+        <RouterLink :to="{ name: 'intro' }" class="title">
+          VOLILNI KVIZLE
         </RouterLink>
         <div class="score">
           <svg
@@ -36,7 +30,6 @@ defineProps<{
         </div>
       </div>
       <div v-if="description" class="description" v-html="description"></div>
-      <hr class="jagged-line" />
     </div>
   </header>
 </template>
@@ -46,89 +39,49 @@ defineProps<{
 
 .score-header {
   .header-content {
+    position: relative;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    max-width: 650px;
+    justify-content: center;
+    max-width: 65rem;
     margin-inline: auto;
-    padding-block: 3.5rem 3rem;
-
-    @media (max-width: 576px) {
-      padding-block: 2rem 1.5rem;
-    }
+    padding-top: 3.5rem;
 
     .title {
       display: flex;
-
-      .title-logo {
-        width: 450px;
-        height: auto;
-
-        @media (max-width: 576px) {
-          width: 200px;
-        }
-      }
+      font-family: var(--font-family-alt);
+      font-size: 4.5rem;
+      color: #0000f5;
+      letter-spacing: 3%;
+      text-decoration: none;
+      text-shadow:
+        8px 4px 0 #0000f5,
+        12px 7px 0 #ff7556;
+      text-align: center;
+      -webkit-text-fill-color: #f7f7f7;
+      -webkit-text-stroke: 2px;
     }
 
     .score {
-      $score-bg-svg-string: '<svg viewBox="0 0 132 60" preserveAspectRatio="none" fill="#263B94"><path d="M132 30c0 16.5685-.84 30-66 30C.8398 60 0 46.5685 0 30S2.75 0 66 0s66 13.4315 66 30Z"/></svg>';
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      padding: 0.5rem 1rem;
-      background-image: url.svg($score-bg-svg-string);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      line-height: 1;
-
-      svg {
-        width: 2.875rem;
-        height: auto;
-
-        @media (max-width: 576px) {
-          width: 1.5rem;
-        }
-      }
-
-      strong {
-        min-width: 2.75rem;
-        font-family: var(--font-family-alt);
-        font-size: 2rem;
-        font-weight: 500;
-        color: #fff;
-        text-align: center;
-
-        @media (max-width: 576px) {
-          font-size: 1.5rem;
-          min-width: 1.5rem;
-        }
-      }
+      position: absolute;
+      top: 2rem;
+      right: 0;
+      background-color: magenta; // TODO
     }
   }
 
   .description {
-    max-width: 800px;
+    max-width: 65rem;
     margin-inline: auto;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 500;
     text-align: center;
 
-    @media (max-width: 576px) {
-      margin-bottom: 1.5rem;
-      font-size: 1.25rem;
+    :deep(b) {
+      font-weight: 500;
+      color: var(--kvizle-color-2);
     }
-  }
-
-  hr.jagged-line {
-    margin: 0 auto;
-    border: none;
-    background-image: url('/jagged-line.svg');
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    width: min(603px, 100%);
-    height: 11px;
   }
 }
 </style>

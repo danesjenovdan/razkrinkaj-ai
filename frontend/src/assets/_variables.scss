@@ -1,29 +1,13 @@
-$manipulacija-color-1: #ff4800;
-$manipulacija-color-2: #bdfb7b;
-$manipulacija-color-3: #abbcff;
-$manipulacija-color-4: #4063f6;
-$manipulacija-color-5: #f0eb98;
-$manipulacija-color-6: #d9e1ff;
-$manipulacija-color-7: #7f98ff;
-$manipulacija-color-8: #fefdf5;
-$manipulacija-color-9: #e3e8fe;
-$manipulacija-color-10: #f8f5cc;
-$manipulacija-color-11: #ff6224;
-$manipulacija-color-12: #e5fdca;
+$kvizle-color-0: #fffeec; // page bg
+$kvizle-color-1: #f7f7f7; // text with stroke
+$kvizle-color-2: #0000f5;
+$kvizle-color-3: #ff7556;
 
-$manipulacija-colors: (
-  $manipulacija-color-1,
-  $manipulacija-color-2,
-  $manipulacija-color-3,
-  $manipulacija-color-4,
-  $manipulacija-color-5,
-  $manipulacija-color-6,
-  $manipulacija-color-7,
-  $manipulacija-color-8,
-  $manipulacija-color-9,
-  $manipulacija-color-10,
-  $manipulacija-color-11,
-  $manipulacija-color-12
+$kvizle-colors: (
+  $kvizle-color-0,
+  $kvizle-color-1,
+  $kvizle-color-2,
+  $kvizle-color-3
 );
 
 $button-bg-svg-string: '<svg viewBox="0 0 404 78" preserveAspectRatio="none" fill="#FFF"><path vector-effect="non-scaling-stroke" stroke="#000" stroke-width="3" d="M202 1.5c96.782 0 147.089 6.0657 173.162 13.9023 13.035 3.9179 19.825 8.2258 23.37 12.2676C402.011 31.636 402.5 35.499 402.5 39c0 3.6287-.17 7.4717-3.205 11.4023-3.082 3.9913-9.29 8.2836-21.952 12.1983C352.01 70.4323 301.714 76.5 202 76.5c-99.714 0-150.0096-6.0677-175.3428-13.8994-12.6627-3.9147-18.8705-8.207-21.9521-12.1983C1.6703 46.4717 1.5 42.6287 1.5 39c0-3.501.489-7.364 3.9678-11.3301 3.5453-4.0418 10.335-8.3497 23.3701-12.2676C54.9112 7.5657 105.218 1.5 202 1.5Z"/></svg>';
