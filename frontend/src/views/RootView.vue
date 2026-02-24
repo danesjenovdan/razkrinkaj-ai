@@ -1,55 +1,55 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useStore } from '@/stores/store'
-import { fixLocalUrl } from '@/utils/image'
-import TheLoader from '@/components/TheLoader.vue'
+import { onMounted, ref } from "vue";
+import { useStore } from "@/stores/store.ts";
+import { fixLocalUrl } from "@/utils/image.ts";
+import TheLoader from "@/components/TheLoader.vue";
 
-const store = useStore()
-store.loadLocalStorage()
-store.initHomeData()
+const store = useStore();
+store.loadLocalStorage();
+store.initHomeData();
 
-const is_iOS = ref(false)
+const is_iOS = ref(false);
 
 function check_iOS() {
   // detects most iOS devices and older iPads on iPadOS < 13
-  is_iOS.value = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  is_iOS.value = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   if (!is_iOS.value) {
     // newer iPads on iPadOS >= 13 pretend to be macs
-    if (navigator.platform === 'MacIntel') {
+    if (navigator.platform === "MacIntel") {
       // check if primary pointer is coarse (touch)
-      const pointerCoarse = window.matchMedia('(pointer: coarse)').matches
+      const pointerCoarse = window.matchMedia("(pointer: coarse)").matches;
       if (pointerCoarse) {
-        is_iOS.value = true
+        is_iOS.value = true;
       }
     }
   }
 }
 
 onMounted(() => {
-  check_iOS()
+  check_iOS();
 
   if (is_iOS.value) {
-    document.body.classList.add('is-ios')
+    document.body.classList.add("is-ios");
   }
 
   document.addEventListener(
-    'error',
-    event => {
+    "error",
+    (event) => {
       if (event.target instanceof HTMLImageElement) {
-        const img = event.target
-        const src = img.getAttribute('src')
+        const img = event.target;
+        const src = img.getAttribute("src");
         if (src) {
-          const url = fixLocalUrl(src)
+          const url = fixLocalUrl(src);
           if (url !== src) {
-            img.src = url
+            img.src = url;
           }
         }
       }
     },
     true,
-  )
-})
+  );
+});
 </script>
 
 <template>

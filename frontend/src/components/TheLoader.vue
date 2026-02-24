@@ -15,7 +15,7 @@
 
 .loader:before,
 .loader:after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;

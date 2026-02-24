@@ -1,39 +1,19 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useStore } from '@/stores/store'
-import ScoreHeader from '@/components/ScoreHeader.vue'
-import DaysToElection from '@/components/DaysToElection.vue'
-import ConsentPrompt from '@/components/ConsentPrompt.vue'
-import CalendarDay from '@/components/CalendarDay.vue'
-import CalendarElectionDay from '@/components/CalendarElectionDay.vue'
-import PageFooter from '@/components/PageFooter.vue'
+import { onMounted } from "vue";
+import { useStore } from "@/stores/store.ts";
+import ScoreHeader from "@/components/ScoreHeader.vue";
+import DaysToElection from "@/components/DaysToElection.vue";
+import ConsentPrompt from "@/components/ConsentPrompt.vue";
+import CalendarDay from "@/components/CalendarDay.vue";
+import CalendarElectionDay from "@/components/CalendarElectionDay.vue";
+import PageFooter from "@/components/PageFooter.vue";
 
-const router = useRouter()
-const route = useRoute()
-const store = useStore()
-
-function onResetClick() {
-  if (
-    window.confirm(
-      'Ali ste prepričani, da želite začeti znova? To bo izbrisalo vse odgovore.',
-    )
-  ) {
-    store.clearAllProgress()
-    router.push({ name: 'intro' })
-  }
-}
-
-const scrollToMore = () => {
-  document
-    .querySelector('a[name="more"]')
-    ?.scrollIntoView({ behavior: 'smooth' })
-}
+const store = useStore();
 
 onMounted(() => {
-  store.clearCurrentChapter()
-  store.ensureFinishedChaptersSent()
-})
+  store.clearCurrentChapter();
+  store.ensureFinishedChaptersSent();
+});
 </script>
 
 <template>

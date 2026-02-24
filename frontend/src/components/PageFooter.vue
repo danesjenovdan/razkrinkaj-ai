@@ -8,8 +8,8 @@ const newsletterLoading = ref(false);
 async function onNewsletterSubmit() {
   const email = newsletterEmail.value;
 
-  let campaign_slug = "danes-je-nov-dan";
-  let segment_id = 21;
+  const campaign_slug = "danes-je-nov-dan";
+  const segment_id = 21;
 
   let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`;
   url += `&email=${encodeURIComponent(email)}`;
@@ -91,20 +91,20 @@ async function onNewsletterSubmit() {
                 <label>
                   Vpiši svoj e-naslov
                   <input
-                    type="email"
                     id="newsletter-email"
-                    required
                     v-model="newsletterEmail"
+                    type="email"
+                    required
                   />
                 </label>
               </div>
               <div class="form-group">
                 <div class="checkbox">
                   <input
-                    type="checkbox"
                     id="newsletter-checkbox"
-                    required
                     v-model="newsletterConsent"
+                    type="checkbox"
+                    required
                   />
                   <label for="newsletter-checkbox">
                     <span>

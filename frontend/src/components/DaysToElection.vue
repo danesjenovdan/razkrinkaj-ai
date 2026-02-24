@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const today = new Date()
-const electionDay = new Date('2026-03-22')
+const today = new Date();
+const electionDay = new Date("2026-03-22");
 
-const timeDiff = electionDay.getTime() - today.getTime()
-const days = Math.ceil(timeDiff / (1000 * 3600 * 24))
+const timeDiff = electionDay.getTime() - today.getTime();
+const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
 </script>
 
 <template>

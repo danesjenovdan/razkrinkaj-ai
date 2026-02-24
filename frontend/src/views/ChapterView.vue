@@ -1,45 +1,45 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
-import { useStore } from '@/stores/store'
-import ScoreHeader from '@/components/ScoreHeader.vue'
-import TheLoader from '@/components/TheLoader.vue'
+import { computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "@/stores/store.ts";
+import ScoreHeader from "@/components/ScoreHeader.vue";
+import TheLoader from "@/components/TheLoader.vue";
 
-const route = useRoute()
-const store = useStore()
+const route = useRoute();
+const store = useStore();
 
-let chapterId = -1
+let chapterId = -1;
 if (route.params.id === undefined && route.params.slug !== undefined) {
-  const slug = route.params.slug as string
-  chapterId = store.getChapterIdBySlug(slug)
+  const slug = route.params.slug as string;
+  chapterId = store.getChapterIdBySlug(slug);
 } else if (route.params.id !== undefined) {
-  const idString = route.params.id as string
-  chapterId = parseInt(idString, 10)
+  const idString = route.params.id as string;
+  chapterId = parseInt(idString, 10);
 }
 
-const chapter = store.chapters.get(chapterId)
+const chapter = store.chapters.get(chapterId);
 
 if (Number.isNaN(chapterId) || chapterId < 0 || chapter === undefined) {
-  throw new Error('Invalid chapter id')
+  throw new Error("Invalid chapter id");
 }
 
 const showHeader = computed(() => {
-  return route.name !== 'chapter-result'
-})
+  return route.name !== "chapter-result";
+});
 
 const score = computed(() => {
   if (store.finishedChapters.has(chapterId)) {
-    return store.score
+    return store.score;
   }
-  return store.score + store.currentChapterScore
-})
+  return store.score + store.currentChapterScore;
+});
 
 onMounted(() => {
-  store.setCurrentChapter(chapterId)
-  store.initChapterData(chapterId)
+  store.setCurrentChapter(chapterId);
+  store.initChapterData(chapterId);
   // clear just unlocked chapters for next time list is shown
-  store.justUnlockedChapters = []
-})
+  store.justUnlockedChapters = [];
+});
 </script>
 
 <template>

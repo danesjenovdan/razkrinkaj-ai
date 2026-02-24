@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { useStore } from '@/stores/store'
-import ButtonPrimary from '@/components/ButtonPrimary.vue'
-import PageFooter from '@/components/PageFooter.vue'
-import ExplanationsSection from '@/components/ExplanationsSection.vue'
+import { useStore } from "@/stores/store.ts";
+import ButtonPrimary from "@/components/ButtonPrimary.vue";
+import PageFooter from "@/components/PageFooter.vue";
 
-const store = useStore()
+const store = useStore();
 
 const scrollToMore = () => {
   document
     .querySelector('a[name="more"]')
-    ?.scrollIntoView({ behavior: 'smooth' })
-}
+    ?.scrollIntoView({ behavior: "smooth" });
+};
 </script>
 
 <template>
@@ -25,16 +24,17 @@ const scrollToMore = () => {
           />
         </h1>
         <div class="narrow">
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <div class="description" v-html="store.introductionDescription"></div>
           <ButtonPrimary
             class="button"
-            :buttonText="store.introductionButtonText"
+            :button-text="store.introductionButtonText"
             :link="{ name: 'calendar' }"
             icon="hands"
           />
           <ButtonPrimary
             class="button"
-            :buttonText="store.introductionButtonTextSecondary"
+            :button-text="store.introductionButtonTextSecondary"
             href="#more"
             color="secondary"
             side-icon="hand-down"
@@ -46,7 +46,6 @@ const scrollToMore = () => {
     <div class="page-gutter bg-manipulacija-color-7">
       <div class="explanations">
         <a name="more"></a>
-        <ExplanationsSection :update-hash="false" />
       </div>
     </div>
   </main>

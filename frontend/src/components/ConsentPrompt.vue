@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useStore } from '@/stores/store'
+import { useStore } from "@/stores/store.ts";
 
-const store = useStore()
+const store = useStore();
 </script>
 
 <template>
@@ -13,8 +13,8 @@ const store = useStore()
     <div class="consent-button">
       <button
         type="button"
-        @click.prevent="store.giveConsent"
         :disabled="store.consentClickedButNotDone"
+        @click.prevent="store.giveConsent"
       >
         DOVOLIM
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 25">
@@ -33,9 +33,9 @@ const store = useStore()
 </template>
 
 <style lang="scss" scoped>
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 .consent-prompt {
   display: flex;
@@ -47,8 +47,8 @@ const store = useStore()
   padding: 1rem 1.5rem 1rem 1.75rem;
   $percentile-bg-svg-string-consent: string.replace(
     vars.$percentile-bg-svg-string,
-    '#FFF',
-    'magenta'
+    "#FFF",
+    "magenta"
   );
   background-image: url.svg($percentile-bg-svg-string-consent);
   background-repeat: no-repeat;
@@ -75,8 +75,8 @@ const store = useStore()
       background-color: transparent;
       $button-link-bg-string-consent: string.replace(
         vars.$button-link-bg-string,
-        '#FFF',
-        'magenta'
+        "#FFF",
+        "magenta"
       );
       background-image: url.svg($button-link-bg-string-consent);
       background-repeat: no-repeat;

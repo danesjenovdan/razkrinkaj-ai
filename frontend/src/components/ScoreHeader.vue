@@ -1,9 +1,9 @@
 <script setup lang="ts">
 defineProps<{
-  title: string
-  description?: string
-  score: number
-}>()
+  title: string;
+  description?: string;
+  score: number;
+}>();
 </script>
 
 <template>
@@ -29,13 +29,14 @@ defineProps<{
           <strong>{{ score }}</strong>
         </div>
       </div>
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <div v-if="description" class="description" v-html="description"></div>
     </div>
   </header>
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/url';
+@use "@sass-fairy/url";
 
 .score-header {
   .header-content {

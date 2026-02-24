@@ -1,96 +1,95 @@
 <script setup lang="ts">
-import type { QuizPage } from '@/types'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useStore } from '@/stores/store'
-import ButtonAnswer from './ButtonAnswer.vue'
-import RichText from './RichText.vue'
-import ShareExplanation from './ShareExplanation.vue'
-import { preloadPageImages } from '@/utils/image'
-import { slugify } from '@/utils/stringify'
+import type { QuizPage } from "@/types";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useStore } from "@/stores/store.ts";
+import ButtonAnswer from "./ButtonAnswer.vue";
+import RichText from "./RichText.vue";
+import { preloadPageImages } from "@/utils/image.ts";
+import { slugify } from "@/utils/stringify.ts";
 
-const props = defineProps<{ page: QuizPage }>()
-const emit = defineEmits<{ done: [] }>()
+const props = defineProps<{ page: QuizPage }>();
+const emit = defineEmits<{ done: [] }>();
 
-const store = useStore()
+const store = useStore();
 
-const selectedAnswer = ref<number | null>(null)
+const selectedAnswer = ref<number | null>(null);
 
-const modalOpen = ref(false)
-const modalExplanationId = ref<number | null>(null)
+const modalOpen = ref(false);
+const modalExplanationId = ref<number | null>(null);
 
-const percentPeopleCorrect = ref(-1)
+const percentPeopleCorrect = ref(-1);
 
 function getAnswerBySlug(slug: string) {
   for (const [id, explanation] of store.explanations) {
     if (slugify(explanation.name) === slug) {
-      return id
+      return id;
     }
   }
-  return -1
+  return -1;
 }
 
 function openModal(buttonText: string) {
-  const id = getAnswerBySlug(slugify(buttonText))
-  if (id === -1) return
+  const id = getAnswerBySlug(slugify(buttonText));
+  if (id === -1) return;
 
-  modalOpen.value = true
-  modalExplanationId.value = id
-  document.body.style.overflow = 'hidden'
+  modalOpen.value = true;
+  modalExplanationId.value = id;
+  document.body.style.overflow = "hidden";
 
-  window.history.pushState(window.history.state, '', `#modal`)
+  window.history.pushState(window.history.state, "", `#modal`);
 }
 
 function closeModal() {
-  modalOpen.value = false
-  modalExplanationId.value = null
-  document.body.style.overflow = ''
-  window.history.go(-1)
+  modalOpen.value = false;
+  modalExplanationId.value = null;
+  document.body.style.overflow = "";
+  window.history.go(-1);
 }
 
 function onPopState() {
-  modalOpen.value = false
-  modalExplanationId.value = null
-  document.body.style.overflow = ''
+  modalOpen.value = false;
+  modalExplanationId.value = null;
+  document.body.style.overflow = "";
 }
 
 const modalExplanation = computed(() => {
-  if (modalExplanationId.value == null) return null
-  return store.explanations.get(modalExplanationId.value) || null
-})
+  if (modalExplanationId.value == null) return null;
+  return store.explanations.get(modalExplanationId.value) || null;
+});
 
 const chapterDate = computed(() => {
-  const chapter = store.chapters.get(store.currentChapterId)
-  const dateParts = (chapter?.title || '').split('.').map(Number)
-  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
-})
+  const chapter = store.chapters.get(store.currentChapterId);
+  const dateParts = (chapter?.title || "").split(".").map(Number);
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+});
 
 function onAnswerClick(index: number) {
-  selectedAnswer.value = index
-  const correct = props.page.answers[index].correct
-  const points = correct ? props.page.points : -props.page.points
+  selectedAnswer.value = index;
+  const correct = props.page.answers[index].correct;
+  const points = correct ? props.page.points : -props.page.points;
   // add points
-  store.currentChapterScore += points
+  store.currentChapterScore += points;
   // store answer
   store.currentChapterAnswers.set(props.page.id, {
     answerIndex: index,
     correct,
     answerText: props.page.answers[index].text,
-  })
+  });
   // update in progress chapters
   store.inProgressChapters.set(store.currentChapterId, {
     score: store.currentChapterScore,
     answers: new Map(store.currentChapterAnswers),
-  })
+  });
   // add to streak if current date is the chapter date
-  const today = new Date()
+  const today = new Date();
   const isSameDay =
     today.getDate() === chapterDate.value.getDate() &&
     today.getMonth() === chapterDate.value.getMonth() &&
-    today.getFullYear() === chapterDate.value.getFullYear()
+    today.getFullYear() === chapterDate.value.getFullYear();
   if (isSameDay && correct) {
-    store.attemptStreak += 1
+    store.attemptStreak += 1;
   } else if (isSameDay && !correct) {
-    store.attemptStreak = 0
+    store.attemptStreak = 0;
   }
 
   store
@@ -98,49 +97,49 @@ function onAnswerClick(index: number) {
     .then(() =>
       store.fetchPageCorrectPercent(store.currentChapterId, props.page.id),
     )
-    .then(value => {
-      percentPeopleCorrect.value = value
+    .then((value) => {
+      percentPeopleCorrect.value = value;
     })
     .finally(() => {
       // persist data to local storage
-      store.saveLocalStorage()
-      emit('done')
-    })
+      store.saveLocalStorage();
+      emit("done");
+    });
 }
 
 onMounted(() => {
-  if (window.location.hash === '#modal') {
+  if (window.location.hash === "#modal") {
     window.history.replaceState(
       window.history.state,
-      '',
+      "",
       window.location.pathname + window.location.search,
-    )
+    );
   }
-  window.addEventListener('popstate', onPopState)
+  window.addEventListener("popstate", onPopState);
 
-  preloadPageImages(props.page)
+  preloadPageImages(props.page);
 
   if (
     store.finishedChapters.has(store.currentChapterId) ||
     store.inProgressChapters.has(store.currentChapterId)
   ) {
-    const index = store.currentChapterAnswers.get(props.page.id)?.answerIndex
+    const index = store.currentChapterAnswers.get(props.page.id)?.answerIndex;
     if (index != null) {
-      selectedAnswer.value = index
+      selectedAnswer.value = index;
       store
         .fetchPageCorrectPercent(store.currentChapterId, props.page.id)
-        .then(value => {
-          percentPeopleCorrect.value = value
-        })
-      emit('done')
+        .then((value) => {
+          percentPeopleCorrect.value = value;
+        });
+      emit("done");
     }
   }
-})
+});
 
 onBeforeUnmount(() => {
-  document.body.style.overflow = ''
-  window.removeEventListener('popstate', onPopState)
-})
+  document.body.style.overflow = "";
+  window.removeEventListener("popstate", onPopState);
+});
 </script>
 
 <template>
@@ -190,7 +189,7 @@ onBeforeUnmount(() => {
       <h2>Prepoznaš retorični trik?</h2>
       <div v-for="(answer, index) in page.answers" :key="index" class="answer">
         <ButtonAnswer
-          :buttonText="answer.text"
+          :button-text="answer.text"
           :correct="answer.correct"
           :revealed="selectedAnswer !== null"
           :selected="selectedAnswer === index"
@@ -237,8 +236,8 @@ onBeforeUnmount(() => {
         <button
           type="button"
           class="close-button"
-          @click="closeModal"
           aria-label="Zapri"
+          @click="closeModal"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -291,16 +290,15 @@ onBeforeUnmount(() => {
           </div>
           <RichText :content="modalExplanation.content" />
         </div>
-        <ShareExplanation :explanation="modalExplanation" />
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 .quiz-page {
   padding-block: 0.75rem 2.5rem;
@@ -313,7 +311,7 @@ onBeforeUnmount(() => {
     max-width: 603px;
     margin: 0 auto;
     padding: 2.5rem 5rem;
-    background-image: url('/jagged-border-question.svg');
+    background-image: url("/jagged-border-question.svg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     font-size: 2rem;
@@ -436,8 +434,8 @@ onBeforeUnmount(() => {
       padding: 1.125rem 1rem 1.25rem 1rem;
       $percentile-bg-svg-string-default: string.replace(
         vars.$percentile-bg-svg-string,
-        '#FFF',
-        '#{vars.$manipulacija-color-5}'
+        "#FFF",
+        "#{vars.$manipulacija-color-5}"
       );
       background-image: url.svg($percentile-bg-svg-string-default);
       background-repeat: no-repeat;
@@ -471,7 +469,7 @@ onBeforeUnmount(() => {
       margin-inline: auto;
       margin-top: 1rem;
       padding: 2rem 2.25rem;
-      background-image: url('/jagged-border.svg');
+      background-image: url("/jagged-border.svg");
       background-repeat: no-repeat;
       background-size: 100% 100%;
 
@@ -504,7 +502,7 @@ onBeforeUnmount(() => {
       max-height: calc(100dvh - 6rem);
       margin-inline: auto;
       padding: 0.5rem;
-      background-image: url('/jagged-border.svg');
+      background-image: url("/jagged-border.svg");
       background-repeat: no-repeat;
       background-size: 100% 100%;
 

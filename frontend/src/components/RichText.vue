@@ -1,37 +1,38 @@
 <script setup lang="ts">
-import { preloadImageUrl } from '@/utils/image'
-import { onMounted, useTemplateRef } from 'vue'
+import { preloadImageUrl } from "@/utils/image.ts";
+import { onMounted, useTemplateRef } from "vue";
 
 defineProps<{
-  title?: string
-  content: string
-}>()
+  title?: string;
+  content: string;
+}>();
 
-const richTextRef = useTemplateRef('rich-text')
+const richTextRef = useTemplateRef("rich-text");
 
 onMounted(() => {
   richTextRef.value
-    ?.querySelectorAll<HTMLImageElement>('img.is-thumbnail')
-    .forEach(img => {
-      const src = img.getAttribute('data-src')
+    ?.querySelectorAll<HTMLImageElement>("img.is-thumbnail")
+    .forEach((img) => {
+      const src = img.getAttribute("data-src");
       if (src) {
-        preloadImageUrl(src).then(preloadedImg => {
-          img.src = preloadedImg.src
-          img.classList.remove('is-thumbnail')
-        })
+        preloadImageUrl(src).then((preloadedImg) => {
+          img.src = preloadedImg.src;
+          img.classList.remove("is-thumbnail");
+        });
       }
-    })
+    });
 
-  richTextRef.value?.querySelectorAll<HTMLAnchorElement>('a').forEach(a => {
-    a.setAttribute('target', '_blank')
-    a.setAttribute('rel', 'noopener noreferrer')
-  })
-})
+  richTextRef.value?.querySelectorAll<HTMLAnchorElement>("a").forEach((a) => {
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener noreferrer");
+  });
+});
 </script>
 
 <template>
   <div ref="rich-text" class="rich-text">
     <h1 v-if="title">{{ title }}</h1>
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="rich-content" v-html="content"></div>
   </div>
 </template>
@@ -92,7 +93,7 @@ onMounted(() => {
         padding-inline-start: 0.95rem;
 
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           left: 0;
           top: 0;

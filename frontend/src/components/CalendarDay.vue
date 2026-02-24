@@ -1,97 +1,97 @@
 <script setup lang="ts">
-import type { Chapter } from '@/types'
-import { computed, onMounted } from 'vue'
-import { useStore } from '@/stores/store'
-import { preloadPageImages } from '@/utils/image'
-import LockIcon from './LockIcon.vue'
-import QuestionIcon from './QuestionIcon.vue'
-import { slugifyDot } from '@/utils/stringify'
+import type { Chapter } from "@/types";
+import { computed, onMounted } from "vue";
+import { useStore } from "@/stores/store.ts";
+import { preloadPageImages } from "@/utils/image.ts";
+import LockIcon from "./LockIcon.vue";
+import QuestionIcon from "./QuestionIcon.vue";
+// import { slugifyDot } from "@/utils/stringify.ts";
 
 const props = defineProps<{
-  chapter: Chapter
-}>()
+  chapter: Chapter;
+}>();
 
-const store = useStore()
+const store = useStore();
 
 const chapterDate = computed(() => {
-  const dateParts = props.chapter.title.split('.').map(Number)
-  let year = dateParts[2]
+  const dateParts = props.chapter.title.split(".").map(Number);
+  let year = dateParts[2];
   if (Number.isNaN(year) || year === 0) {
-    year = 2026
+    year = 2026;
   } else if (year < 100) {
-    year += 2000
+    year += 2000;
   }
-  return new Date(year, dateParts[1] - 1, dateParts[0])
-})
+  return new Date(year, dateParts[1] - 1, dateParts[0]);
+});
 
-const chapterSlug = computed(() => {
-  return slugifyDot(props.chapter.title)
-})
+// const chapterSlug = computed(() => {
+//   return slugifyDot(props.chapter.title);
+// });
 
-const isFinished = computed(() => store.finishedChapters.has(props.chapter.id))
+const isFinished = computed(() => store.finishedChapters.has(props.chapter.id));
 const isLocked = computed(() => {
-  const date = chapterDate.value
-  const now = Date.now()
-  return now < date.getTime()
-})
+  const date = chapterDate.value;
+  const now = Date.now();
+  return now < date.getTime();
+});
 const isToday = computed(() => {
-  const date = chapterDate.value
-  const today = new Date()
+  const date = chapterDate.value;
+  const today = new Date();
   return (
     date.getDate() === today.getDate() &&
     date.getMonth() === today.getMonth() &&
     date.getFullYear() === today.getFullYear()
-  )
-})
+  );
+});
 const isTomorrow = computed(() => {
-  const date = chapterDate.value
-  const tomorrow = new Date()
-  tomorrow.setDate(tomorrow.getDate() + 1)
+  const date = chapterDate.value;
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
   return (
     date.getDate() === tomorrow.getDate() &&
     date.getMonth() === tomorrow.getMonth() &&
     date.getFullYear() === tomorrow.getFullYear()
-  )
-})
+  );
+});
 
 const didAnswerCorrectly = computed<boolean | null>(() => {
   if (store.finishedChapters.has(props.chapter.id)) {
-    const chapterData = store.finishedChapters.get(props.chapter.id)!
-    const answers = Array.from(chapterData.answers.values())
-    return answers.every(answer => answer.correct)
+    const chapterData = store.finishedChapters.get(props.chapter.id)!;
+    const answers = Array.from(chapterData.answers.values());
+    return answers.every((answer) => answer.correct);
   } else if (store.inProgressChapters.has(props.chapter.id)) {
-    const chapterData = store.inProgressChapters.get(props.chapter.id)!
-    const answers = Array.from(chapterData.answers.values())
-    return answers.every(answer => answer.correct)
+    const chapterData = store.inProgressChapters.get(props.chapter.id)!;
+    const answers = Array.from(chapterData.answers.values());
+    return answers.every((answer) => answer.correct);
   }
-  return null
-})
+  return null;
+});
 
 const isHidden = computed(() => {
   if (props.chapter.is_feedback && (isLocked.value || isFinished.value)) {
-    return true
+    return true;
   }
-  return false
-})
+  return false;
+});
 
-const componentName = computed(() => (!isLocked.value ? 'RouterLink' : 'span'))
+const componentName = computed(() => (!isLocked.value ? "RouterLink" : "span"));
 
 onMounted(() => {
   if (!isLocked.value) {
     store.initChapterData(props.chapter.id).then(() => {
-      const firstPage = props.chapter.pages?.[0]
+      const firstPage = props.chapter.pages?.[0];
       if (firstPage) {
-        preloadPageImages(firstPage)
+        preloadPageImages(firstPage);
       }
-    })
+    });
   }
-})
+});
 </script>
 
 <template>
   <component
-    v-if="!isHidden"
     :is="componentName"
+    v-if="!isHidden"
     :class="{
       'calendar-day': true,
       today: isToday && didAnswerCorrectly === null,
@@ -131,9 +131,9 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 .calendar-day {
   display: flex;

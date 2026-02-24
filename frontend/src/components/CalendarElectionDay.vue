@@ -10,9 +10,9 @@
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 .calendar-election-day {
   grid-column: span 3;
@@ -46,20 +46,20 @@
       $calendar-button-link-bg-string: string.replace(
         string.replace(
           vars.$button-link-bg-string,
-          '#000',
-          '#{vars.$kvizle-color-2}'
+          "#000",
+          "#{vars.$kvizle-color-2}"
         ),
-        '#FFF',
-        '#{vars.$kvizle-color-4}'
+        "#FFF",
+        "#{vars.$kvizle-color-4}"
       );
       $calendar-hover-button-link-bg-string: string.replace(
         string.replace(
           vars.$button-link-bg-string,
-          '#000',
-          '#{vars.$kvizle-color-2}'
+          "#000",
+          "#{vars.$kvizle-color-2}"
         ),
-        '#FFF',
-        '#{vars.$kvizle-color-5}'
+        "#FFF",
+        "#{vars.$kvizle-color-5}"
       );
 
       display: block;

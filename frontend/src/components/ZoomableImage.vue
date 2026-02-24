@@ -1,82 +1,81 @@
 <script setup lang="ts">
-import type { ImageDescription } from '@/types'
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import PinchScrollZoom, {
-  type PinchScrollZoomExposed,
-} from '@coddicat/vue-pinch-scroll-zoom'
-import { preloadImageUrl } from '@/utils/image'
+// import type { PinchScrollZoomExposed } from "@coddicat/vue-pinch-scroll-zoom";
+import type { ImageDescription } from "@/types";
+import { onBeforeUnmount, onMounted, ref, watch } from "vue";
+// import PinchScrollZoom from "@coddicat/vue-pinch-scroll-zoom";
+import { preloadImageUrl } from "@/utils/image.ts";
 
-const props = defineProps<{ image: ImageDescription }>()
+const props = defineProps<{ image: ImageDescription }>();
 
-const zoomer = ref<PinchScrollZoomExposed>()
-const isZoomed = ref(false)
-const pageWidth = ref(0)
-const pageHeight = ref(0)
-const zoomedImgWidth = ref(0)
-const zoomedImgHeight = ref(0)
+// const zoomer = ref<PinchScrollZoomExposed>();
+const isZoomed = ref(false);
+const pageWidth = ref(0);
+const pageHeight = ref(0);
+const zoomedImgWidth = ref(0);
+const zoomedImgHeight = ref(0);
 
 function calculateSizes() {
-  pageWidth.value = window.innerWidth
-  pageHeight.value = window.innerHeight
-  zoomedImgWidth.value = pageWidth.value
+  pageWidth.value = window.innerWidth;
+  pageHeight.value = window.innerHeight;
+  zoomedImgWidth.value = pageWidth.value;
   zoomedImgHeight.value =
-    pageWidth.value * (props.image.height / props.image.width)
+    pageWidth.value * (props.image.height / props.image.width);
   if (pageHeight.value < zoomedImgHeight.value) {
-    zoomedImgHeight.value = pageHeight.value
+    zoomedImgHeight.value = pageHeight.value;
     zoomedImgWidth.value =
-      pageHeight.value * (props.image.width / props.image.height)
+      pageHeight.value * (props.image.width / props.image.height);
   }
 }
 
 function onZoomClick() {
   if (isZoomed.value) {
-    isZoomed.value = false
-    document.body.style.overflow = ''
-    window.history.go(-1)
+    isZoomed.value = false;
+    document.body.style.overflow = "";
+    window.history.go(-1);
   } else {
-    calculateSizes()
-    isZoomed.value = true
-    document.body.style.overflow = 'hidden'
-    window.history.pushState(window.history.state, '', '#zoomed')
+    calculateSizes();
+    isZoomed.value = true;
+    document.body.style.overflow = "hidden";
+    window.history.pushState(window.history.state, "", "#zoomed");
   }
 }
 
 function onPopState() {
-  isZoomed.value = false
-  document.body.style.overflow = ''
+  isZoomed.value = false;
+  document.body.style.overflow = "";
 }
 
 function onResize() {
   if (isZoomed.value) {
-    calculateSizes()
+    calculateSizes();
   }
 }
 
 watch(
   () => props.image,
   () => {
-    preloadImageUrl(props.image.original_url)
+    preloadImageUrl(props.image.original_url);
   },
-)
+);
 
 onMounted(() => {
-  if (window.location.hash === '#zoomed') {
+  if (window.location.hash === "#zoomed") {
     window.history.replaceState(
       window.history.state,
-      '',
+      "",
       window.location.pathname + window.location.search,
-    )
+    );
   }
-  window.addEventListener('resize', onResize)
-  window.addEventListener('popstate', onPopState)
-  preloadImageUrl(props.image.original_url)
-})
+  window.addEventListener("resize", onResize);
+  window.addEventListener("popstate", onPopState);
+  preloadImageUrl(props.image.original_url);
+});
 
 onBeforeUnmount(() => {
-  document.body.style.overflow = ''
-  window.removeEventListener('resize', onResize)
-  window.removeEventListener('popstate', onPopState)
-})
+  document.body.style.overflow = "";
+  window.removeEventListener("resize", onResize);
+  window.removeEventListener("popstate", onPopState);
+});
 </script>
 
 <template>

@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import type { Chapter, LeaderboardData } from '@/types'
-import { onMounted, ref, computed, watch } from 'vue'
-import { useStore } from '@/stores/store'
-import PageFooter from '@/components/PageFooter.vue'
-import ButtonPrimary from '@/components/ButtonPrimary.vue'
-import ConsentPrompt from '@/components/ConsentPrompt.vue'
+import type { Chapter, LeaderboardData } from "@/types";
+import { onMounted, ref, computed, watch } from "vue";
+import { useStore } from "@/stores/store.ts";
+import PageFooter from "@/components/PageFooter.vue";
+import ButtonPrimary from "@/components/ButtonPrimary.vue";
+import ConsentPrompt from "@/components/ConsentPrompt.vue";
 
-const props = defineProps<{ chapter: Chapter }>()
+const props = defineProps<{ chapter: Chapter }>();
 
-const store = useStore()
+const store = useStore();
 
-const realLeaderboardData = ref<LeaderboardData | null>(null)
+const realLeaderboardData = ref<LeaderboardData | null>(null);
 
-const leaderboardMeText = ref('Tvoj rezultat')
-const nickname = ref('')
+const leaderboardMeText = ref("Tvoj rezultat");
+const nickname = ref("");
 
 const leaderboardData = computed(() => {
   if (store.hasConsented) {
-    return realLeaderboardData.value
+    return realLeaderboardData.value;
   }
   return {
     attempt_guid: store.attemptGUID,
@@ -25,80 +25,82 @@ const leaderboardData = computed(() => {
     top_leaderboard: [
       // fake data
       {
-        attempt_guid: 'FAKE1',
+        attempt_guid: "FAKE1",
         rank: 1,
-        nickname: 'Random Ime',
+        nickname: "Random Ime",
         total_score: 150,
       },
       {
-        attempt_guid: 'FAKE1',
+        attempt_guid: "FAKE1",
         rank: 1,
-        nickname: 'naključnik',
+        nickname: "naključnik",
         total_score: 150,
       },
       {
-        attempt_guid: 'FAKE2',
+        attempt_guid: "FAKE2",
         rank: 2,
-        nickname: 'NAKLJUČNICA',
+        nickname: "NAKLJUČNICA",
         total_score: 140,
       },
       {
-        attempt_guid: 'FAKE2',
+        attempt_guid: "FAKE2",
         rank: 2,
-        nickname: 'Fake ime 3',
+        nickname: "Fake ime 3",
         total_score: 140,
       },
       {
-        attempt_guid: 'FAKE3',
+        attempt_guid: "FAKE3",
         rank: 3,
-        nickname: 'Hello',
+        nickname: "Hello",
         total_score: 130,
       },
       {
-        attempt_guid: 'FAKE3',
+        attempt_guid: "FAKE3",
         rank: 3,
-        nickname: 'World',
+        nickname: "World",
         total_score: 130,
       },
     ],
     ranked_near_me: [],
-  }
-})
+  };
+});
 
 const chapterDate = computed(() => {
-  const dateParts = props.chapter.title.split('.').map(Number)
-  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
-})
+  const dateParts = props.chapter.title.split(".").map(Number);
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+});
 
 const isLocked = computed(() => {
-  const date = chapterDate.value
-  const now = Date.now()
-  return now < date.getTime()
-})
+  const date = chapterDate.value;
+  const now = Date.now();
+  return now < date.getTime();
+});
 
 if (isLocked.value) {
-  throw new Error('ChapterResultView cannot be shown for locked chapters')
+  throw new Error("ChapterResultView cannot be shown for locked chapters");
 }
 
 async function onSubmitNickname() {
   if (nickname.value.trim().length === 0) {
-    window.alert('Vzdevek ne sme biti prazen!')
-    return
+    // eslint-disable-next-line no-alert
+    window.alert("Vzdevek ne sme biti prazen!");
+    return;
   }
-  const success = await store.submitLeaderboardNickname(nickname.value.trim())
+  const success = await store.submitLeaderboardNickname(nickname.value.trim());
   if (success) {
     if (realLeaderboardData.value) {
-      realLeaderboardData.value.my_nickname = nickname.value.trim()
+      realLeaderboardData.value.my_nickname = nickname.value.trim();
     }
-    leaderboardMeText.value = nickname.value.trim()
-    nickname.value = ''
+    leaderboardMeText.value = nickname.value.trim();
+    nickname.value = "";
   } else {
-    window.alert('Prišlo je do napake :(')
+    // eslint-disable-next-line no-alert
+    window.alert("Prišlo je do napake :(");
   }
 }
 
 function displayAnonId(entry: { attempt_guid: string }) {
-  return entry.attempt_guid.slice(-4).toUpperCase()
+  return entry.attempt_guid.slice(-4).toUpperCase();
 }
 
 // const totalChapterScore = computed(() => {
@@ -141,11 +143,12 @@ function displayAnonId(entry: { attempt_guid: string }) {
 
 async function copyTextToClipboard(text: string) {
   try {
-    await navigator.clipboard.writeText(text)
-    return true
+    await navigator.clipboard.writeText(text);
+    return true;
   } catch (error) {
-    console.error(error)
-    return false
+    // eslint-disable-next-line no-console
+    console.error(error);
+    return false;
   }
 }
 
@@ -161,33 +164,35 @@ async function copyTextToClipboard(text: string) {
 //   }
 // }
 
-const websiteLinkValue = 'kvizle.lb.djnd.si'
+const websiteLinkValue = "kvizle.lb.djnd.si";
 
 async function onCopyLink() {
   if (await copyTextToClipboard(websiteLinkValue)) {
+    // eslint-disable-next-line no-alert
     window.alert(
       `Povezavo smo skopirali v odložišče. Pošlji jo svojim prijateljem!\n\n${websiteLinkValue}`,
-    )
+    );
   } else {
+    // eslint-disable-next-line no-alert
     window.alert(
-      'Ups, nekaj je šlo narobe pri kopiranju v odložišče. Povezava je spodaj, skopiraj in deli jo!',
-    )
+      "Ups, nekaj je šlo narobe pri kopiranju v odložišče. Povezava je spodaj, skopiraj in deli jo!",
+    );
   }
 }
 
 watch(
   () => store.hasConsented,
-  newVal => {
+  (newVal) => {
     if (newVal && !realLeaderboardData.value) {
-      store.fetchLeaderboard().then(data => {
-        realLeaderboardData.value = data
+      store.fetchLeaderboard().then((data) => {
+        realLeaderboardData.value = data;
         if (data?.my_nickname) {
-          leaderboardMeText.value = data.my_nickname
+          leaderboardMeText.value = data.my_nickname;
         }
-      })
+      });
     }
   },
-)
+);
 
 onMounted(() => {
   // save score and answers
@@ -195,9 +200,9 @@ onMounted(() => {
     store.finishedChapters.set(props.chapter.id, {
       score: store.currentChapterScore,
       answers: new Map(store.currentChapterAnswers),
-    })
-    store.inProgressChapters.delete(props.chapter.id)
-    store.sendFinishedChapterDataToApi(props.chapter.id)
+    });
+    store.inProgressChapters.delete(props.chapter.id);
+    store.sendFinishedChapterDataToApi(props.chapter.id);
   }
 
   // unlock all feedback chapters that are not finished yet
@@ -207,7 +212,7 @@ onMounted(() => {
       !store.finishedChapters.has(chapter.id) &&
       !store.unlockedChapters.includes(chapter.id)
     ) {
-      store.unlockedChapters.push(chapter.id)
+      store.unlockedChapters.push(chapter.id);
     }
   }
 
@@ -227,16 +232,16 @@ onMounted(() => {
   // }
 
   // fetch leaderboard data
-  store.fetchLeaderboard().then(data => {
-    realLeaderboardData.value = data
+  store.fetchLeaderboard().then((data) => {
+    realLeaderboardData.value = data;
     if (data?.my_nickname) {
-      leaderboardMeText.value = data.my_nickname
+      leaderboardMeText.value = data.my_nickname;
     }
-  })
+  });
 
   // persist data to local storage
-  store.saveLocalStorage()
-})
+  store.saveLocalStorage();
+});
 </script>
 
 <template>
@@ -325,11 +330,11 @@ onMounted(() => {
         <div v-if="leaderboardData" class="leaderboard">
           <div
             v-for="entry in leaderboardData.top_leaderboard"
+            :key="entry.rank"
             :class="{
               'leaderboard-entry': true,
               me: entry.attempt_guid === leaderboardData.attempt_guid,
             }"
-            :key="entry.rank"
           >
             <div class="place">{{ entry.rank }}.</div>
             <div class="content">
@@ -353,11 +358,11 @@ onMounted(() => {
             <div class="ellipsis">...</div>
             <div
               v-for="entry in leaderboardData.ranked_near_me"
+              :key="entry.rank"
               :class="{
                 'leaderboard-entry': true,
                 me: entry.attempt_guid === leaderboardData.attempt_guid,
               }"
-              :key="entry.rank"
             >
               <div class="place">{{ entry.rank }}.</div>
               <div class="content">
@@ -387,9 +392,9 @@ onMounted(() => {
           <form class="nickname-form" @submit.prevent="onSubmitNickname">
             <label for="nickname">Vpiši svoj vzdevek</label>
             <input
-              type="text"
               id="nickname"
               v-model="nickname"
+              type="text"
               maxlength="20"
               required
             />
@@ -421,12 +426,12 @@ onMounted(() => {
         </div>
         <div class="link-group">
           <input
-            type="text"
             id="website-link"
+            type="text"
             :value="websiteLinkValue"
             maxlength="20"
             required
-            onfocus="this.select();"
+            onfocus="this.select()"
           />
           <button
             type="button"
@@ -462,9 +467,9 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 main {
   .header-section {
@@ -540,7 +545,7 @@ main {
     margin-inline: auto;
     margin-top: 1.5rem;
     padding: 2.75rem 3.75rem;
-    background-image: url('/jagged-border-streak.svg');
+    background-image: url("/jagged-border-streak.svg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
 
@@ -764,8 +769,8 @@ main {
   .submit-button {
     $button-link-bg-string-submit: string.replace(
       vars.$button-link-bg-string,
-      '#FFF',
-      '#{vars.$manipulacija-color-6}'
+      "#FFF",
+      "#{vars.$manipulacija-color-6}"
     );
     background-image: url.svg($button-link-bg-string-submit);
     margin-top: 0.5rem;

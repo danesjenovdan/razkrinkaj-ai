@@ -1,35 +1,35 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useStore } from '@/stores/store'
-import { slugify } from '@/utils/stringify'
+import { computed } from "vue";
+import { useStore } from "@/stores/store.ts";
+import { slugify } from "@/utils/stringify.ts";
 
 const props = defineProps<{
-  buttonText: string
-  correct: boolean
-  revealed: boolean
-  selected: boolean
-  points: number
-}>()
+  buttonText: string;
+  correct: boolean;
+  revealed: boolean;
+  selected: boolean;
+  points: number;
+}>();
 
-const store = useStore()
+const store = useStore();
 
-const chapter = store.chapters.get(store.currentChapterId)
-if (!chapter) throw new Error('Chapter not found')
+const chapter = store.chapters.get(store.currentChapterId);
+if (!chapter) throw new Error("Chapter not found");
 
 function getAnswerBySlug(slug: string) {
   for (const [id, explanation] of store.explanations) {
     if (slugify(explanation.name) === slug) {
-      return id
+      return id;
     }
   }
-  return -1
+  return -1;
 }
 
 const explanation = computed(() => {
-  const explanationId = getAnswerBySlug(slugify(props.buttonText))
-  if (explanationId == null) return null
-  return store.explanations.get(explanationId) || null
-})
+  const explanationId = getAnswerBySlug(slugify(props.buttonText));
+  if (explanationId == null) return null;
+  return store.explanations.get(explanationId) || null;
+});
 </script>
 
 <template>
@@ -52,7 +52,7 @@ const explanation = computed(() => {
     </span>
     <div class="answer-right">
       <span v-if="selected && points > 0" class="score">
-        <strong>{{ correct ? '+' : '-' }} {{ points }}</strong>
+        <strong>{{ correct ? "+" : "-" }} {{ points }}</strong>
         točk
       </span>
       <span v-if="revealed" class="icon">
@@ -92,9 +92,9 @@ const explanation = computed(() => {
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 @keyframes bounceIn {
   from,
@@ -251,8 +251,8 @@ const explanation = computed(() => {
     &.is-feedback {
       $button-answer-bg-svg-string-correct: string.replace(
         vars.$button-answer-bg-svg-string,
-        '#FFF',
-        '#E5FDCA'
+        "#FFF",
+        "#E5FDCA"
       );
       background-image: url.svg($button-answer-bg-svg-string-correct);
       filter: drop-shadow(1.5px 1.5px 0 #bdfb7b)
@@ -265,20 +265,21 @@ const explanation = computed(() => {
     &.selected.incorrect {
       $button-answer-bg-svg-string-incorrect: string.replace(
         vars.$button-answer-bg-svg-string,
-        '#FFF',
-        '#FEE2D6'
+        "#FFF",
+        "#FEE2D6"
       );
       $button-answer-bg-svg-string-incorrect: string.replace(
         $button-answer-bg-svg-string-incorrect,
-        '<path ',
+        "<path ",
         '<defs><filter id="shadow"><feFlood flood-color="#FF4B04" /><feComposite operator="out" in2="SourceGraphic" /><feMorphology operator="dilate" radius="2" /><feGaussianBlur stdDeviation="6" /><feComposite operator="atop" in2="SourceGraphic" /></filter></defs><path filter="url(#shadow)" '
       );
       $button-answer-bg-svg-string-incorrect-border: string.replace(
         vars.$button-answer-bg-svg-string,
-        '#FFF',
-        'none'
+        "#FFF",
+        "none"
       );
-      background-image: url.svg($button-answer-bg-svg-string-incorrect-border),
+      background-image:
+        url.svg($button-answer-bg-svg-string-incorrect-border),
         url.svg($button-answer-bg-svg-string-incorrect);
       font-weight: 600;
     }
@@ -287,20 +288,21 @@ const explanation = computed(() => {
   &:not(.revealed):hover {
     $button-answer-bg-svg-string-hover: string.replace(
       vars.$button-answer-bg-svg-string,
-      '#FFF',
-      '#C6D0FC'
+      "#FFF",
+      "#C6D0FC"
     );
     $button-answer-bg-svg-string-hover: string.replace(
       $button-answer-bg-svg-string-hover,
-      '<path ',
+      "<path ",
       '<defs><filter id="shadow"><feFlood flood-color="#4063F6" /><feComposite operator="out" in2="SourceGraphic" /><feMorphology operator="dilate" radius="2" /><feGaussianBlur stdDeviation="6" /><feComposite operator="atop" in2="SourceGraphic" /></filter></defs><path filter="url(#shadow)" '
     );
     $button-answer-bg-svg-string-hover-border: string.replace(
       vars.$button-answer-bg-svg-string,
-      '#FFF',
-      'none'
+      "#FFF",
+      "none"
     );
-    background-image: url.svg($button-answer-bg-svg-string-hover-border),
+    background-image:
+      url.svg($button-answer-bg-svg-string-hover-border),
       url.svg($button-answer-bg-svg-string-hover);
     filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
   }
