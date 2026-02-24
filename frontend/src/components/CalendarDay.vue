@@ -3,9 +3,9 @@ import type { Chapter } from "@/types";
 import { computed, onMounted } from "vue";
 import { useStore } from "@/stores/store.ts";
 import { preloadPageImages } from "@/utils/image.ts";
+import { slugifyDot } from "@/utils/stringify.ts";
 import LockIcon from "./LockIcon.vue";
 import QuestionIcon from "./QuestionIcon.vue";
-// import { slugifyDot } from "@/utils/stringify.ts";
 
 const props = defineProps<{
   chapter: Chapter;
@@ -24,9 +24,9 @@ const chapterDate = computed(() => {
   return new Date(year, dateParts[1] - 1, dateParts[0]);
 });
 
-// const chapterSlug = computed(() => {
-//   return slugifyDot(props.chapter.title);
-// });
+const chapterSlug = computed(() => {
+  return slugifyDot(props.chapter.title);
+});
 
 const isFinished = computed(() => store.finishedChapters.has(props.chapter.id));
 const isLocked = computed(() => {
@@ -102,12 +102,12 @@ onMounted(() => {
       fail: didAnswerCorrectly === false,
       'did-answer': didAnswerCorrectly !== null && !isLocked,
     }"
-  >
-    <!-- :to="
+    :to="
       !isLocked
         ? { name: 'chapter-intro', params: { slug: chapterSlug } }
         : undefined
-    " -->
+    "
+  >
     <template v-if="isLocked">
       <h2 class="title">{{ chapter.title }}</h2>
       <div class="icon icon--lock">

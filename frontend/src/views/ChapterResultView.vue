@@ -770,7 +770,7 @@ main {
     $button-link-bg-string-submit: string.replace(
       vars.$button-link-bg-string,
       "#FFF",
-      "#{vars.$manipulacija-color-6}"
+      "magenta"
     );
     background-image: url.svg($button-link-bg-string-submit);
     margin-top: 0.5rem;

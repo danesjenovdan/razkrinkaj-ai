@@ -435,7 +435,7 @@ onBeforeUnmount(() => {
       $percentile-bg-svg-string-default: string.replace(
         vars.$percentile-bg-svg-string,
         "#FFF",
-        "#{vars.$manipulacija-color-5}"
+        "magenta"
       );
       background-image: url.svg($percentile-bg-svg-string-default);
       background-repeat: no-repeat;

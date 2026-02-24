@@ -107,7 +107,7 @@ const componentName = computed(() =>
     $button-bg-svg-string-primary: string.replace(
       vars.$button-bg-svg-string,
       "#FFF",
-      "#{vars.$manipulacija-color-2}"
+      "magenta"
     );
     background-image: url.svg($button-bg-svg-string-primary);
   }
@@ -116,7 +116,7 @@ const componentName = computed(() =>
     $button-bg-svg-string-secondary: string.replace(
       vars.$button-bg-svg-string,
       "#FFF",
-      "#{vars.$manipulacija-color-6}"
+      "magenta"
     );
     background-image: url.svg($button-bg-svg-string-secondary);
     padding-inline: 1.3125rem;
