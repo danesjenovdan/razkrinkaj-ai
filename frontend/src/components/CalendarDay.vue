@@ -43,6 +43,16 @@ const isToday = computed(() => {
     date.getFullYear() === today.getFullYear()
   )
 })
+const isTomorrow = computed(() => {
+  const date = chapterDate.value
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return (
+    date.getDate() === tomorrow.getDate() &&
+    date.getMonth() === tomorrow.getMonth() &&
+    date.getFullYear() === tomorrow.getFullYear()
+  )
+})
 
 const didAnswerCorrectly = computed<boolean | null>(() => {
   if (store.finishedChapters.has(props.chapter.id)) {
@@ -85,6 +95,7 @@ onMounted(() => {
     :class="{
       'calendar-day': true,
       today: isToday && didAnswerCorrectly === null,
+      tomorrow: isTomorrow,
       disabled: isLocked,
       completed: isFinished,
       success: didAnswerCorrectly === true,
