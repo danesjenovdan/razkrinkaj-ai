@@ -51,14 +51,14 @@ defineProps<{
       display: flex;
       font-family: var(--font-family-alt);
       font-size: 4.5rem;
-      color: #0000f5;
+      color: var(--kvizle-color-2);
       letter-spacing: 3%;
       text-decoration: none;
       text-shadow:
-        8px 4px 0 #0000f5,
-        12px 7px 0 #ff7556;
+        8px 4px 0 var(--kvizle-color-2),
+        12px 7px 0 var(--kvizle-color-3);
       text-align: center;
-      -webkit-text-fill-color: #f7f7f7;
+      -webkit-text-fill-color: var(--kvizle-color-1);
       -webkit-text-stroke: 2px;
     }
 

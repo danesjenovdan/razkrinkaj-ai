@@ -188,11 +188,17 @@ footer {
       }
 
       a {
+        display: inline-block;
         font-weight: 500;
         color: inherit;
 
         &:hover {
           text-decoration: none;
+        }
+
+        &:focus-visible {
+          outline: 2px solid var(--kvizle-color-2);
+          outline-offset: 2px;
         }
       }
 

@@ -6,6 +6,7 @@ import ScoreHeader from '@/components/ScoreHeader.vue'
 import DaysToElection from '@/components/DaysToElection.vue'
 import ConsentPrompt from '@/components/ConsentPrompt.vue'
 import CalendarDay from '@/components/CalendarDay.vue'
+import CalendarElectionDay from '@/components/CalendarElectionDay.vue'
 import PageFooter from '@/components/PageFooter.vue'
 
 const router = useRouter()
@@ -52,6 +53,7 @@ onMounted(() => {
             :key="id"
             :chapter="chapter"
           />
+          <CalendarElectionDay />
         </div>
       </div>
     </main>
@@ -65,7 +67,7 @@ main {
     display: grid;
     align-content: start;
     justify-content: center;
-    grid-template-columns: repeat(auto-fit, 8.5625rem);
+    grid-template-columns: repeat(auto-fit, 9.5rem);
     gap: 1.25rem;
     width: 100%;
     margin-top: 2rem;

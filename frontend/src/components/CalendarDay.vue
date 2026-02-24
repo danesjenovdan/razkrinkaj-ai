@@ -3,8 +3,8 @@ import type { Chapter } from '@/types'
 import { computed, onMounted } from 'vue'
 import { useStore } from '@/stores/store'
 import { preloadPageImages } from '@/utils/image'
-import StarIcon from './StarIcon.vue'
 import LockIcon from './LockIcon.vue'
+import QuestionIcon from './QuestionIcon.vue'
 import { slugifyDot } from '@/utils/stringify'
 
 const props = defineProps<{
@@ -15,7 +15,13 @@ const store = useStore()
 
 const chapterDate = computed(() => {
   const dateParts = props.chapter.title.split('.').map(Number)
-  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
+  let year = dateParts[2]
+  if (Number.isNaN(year) || year === 0) {
+    year = 2026
+  } else if (year < 100) {
+    year += 2000
+  }
+  return new Date(year, dateParts[1] - 1, dateParts[0])
 })
 
 const chapterSlug = computed(() => {
@@ -50,14 +56,6 @@ const didAnswerCorrectly = computed<boolean | null>(() => {
   }
   return null
 })
-const starVariant = computed(() => {
-  if (didAnswerCorrectly.value === true) {
-    return 'success'
-  } else if (didAnswerCorrectly.value === false) {
-    return 'fail'
-  }
-  return 'regular'
-})
 
 const isHidden = computed(() => {
   if (props.chapter.is_feedback && (isLocked.value || isFinished.value)) {
@@ -91,6 +89,7 @@ onMounted(() => {
       completed: isFinished,
       success: didAnswerCorrectly === true,
       fail: didAnswerCorrectly === false,
+      'did-answer': didAnswerCorrectly !== null && !isLocked,
     }"
   >
     <!-- :to="
@@ -98,16 +97,25 @@ onMounted(() => {
         ? { name: 'chapter-intro', params: { slug: chapterSlug } }
         : undefined
     " -->
-    <h2 class="title">{{ chapter.title }}</h2>
-    <div v-if="isToday && didAnswerCorrectly === null" class="text">
-      REŠI!
-    </div>
-    <div v-else-if="!isLocked" class="icon icon--star">
-      <StarIcon :variant="starVariant" />
-    </div>
-    <div v-else-if="isLocked" class="icon icon--lock">
-      <LockIcon />
-    </div>
+    <template v-if="isLocked">
+      <h2 class="title">{{ chapter.title }}</h2>
+      <div class="icon icon--lock">
+        <LockIcon />
+      </div>
+    </template>
+    <template v-else>
+      <div class="text-content">
+        <h2 class="title">{{ chapter.title }}</h2>
+        <div v-if="isToday && didAnswerCorrectly === null" class="text">
+          REŠI!
+        </div>
+      </div>
+      <div class="answer-icons">
+        <div class="answer-icon"><QuestionIcon /></div>
+        <div class="answer-icon"><QuestionIcon /></div>
+        <div class="answer-icon"><QuestionIcon /></div>
+      </div>
+    </template>
   </component>
 </template>
 
@@ -117,133 +125,123 @@ onMounted(() => {
 @use '@/assets/variables' as vars;
 
 .calendar-day {
-  $day-bg-svg-string: '<svg viewBox="0 0 137 137" preserveAspectRatio="none" fill="#FFF"><path vector-effect="non-scaling-stroke" stroke="#000" stroke-width="3" d="M68.5 1.5c17.1615 0 29.9054.0027 39.436 1.0615 9.541 1.0602 15.531 3.152 19.441 7.0615 3.909 3.9096 6.001 9.9002 7.061 19.4415 1.059 9.5301 1.062 22.274 1.062 39.4355 0 17.1615-.003 29.9054-1.062 39.436-1.06 9.541-3.152 15.531-7.061 19.441-3.91 3.909-9.9 6.001-19.441 7.061-9.5306 1.059-22.2745 1.062-39.436 1.062s-29.9054-.003-39.4355-1.062c-9.5413-1.06-15.5319-3.152-19.4414-7.061-3.9096-3.91-6.0014-9.9-7.0616-19.441C1.5026 98.4054 1.5 85.6615 1.5 68.5s.0027-29.9054 1.0615-39.4355c1.0602-9.5413 3.152-15.5319 7.0615-19.4414 3.9096-3.9096 9.9002-6.0014 19.4415-7.0616C38.5946 1.5026 51.3385 1.5 68.5 1.5Z"/></svg>';
-  $day-bg-svg-string-normal: string.replace(
-    $day-bg-svg-string,
-    '#FFF',
-    'magenta'
-  );
-  display: block;
+  display: flex;
+  flex-direction: column;
   aspect-ratio: 1;
-  padding: 1.125rem;
-  background-image: url.svg($day-bg-svg-string-normal);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+  background: var(--kvizle-color-4);
+  border: 2px solid var(--kvizle-color-2);
   overflow: hidden;
   text-decoration: none;
   transition:
     scale 0.15s ease-in-out,
     rotate 0.15s ease-in-out,
-    filter 0.15s ease-in-out;
-  will-change: scale, rotate, filter;
-
-  @media (max-width: 576px) {
-    padding: 0.8125rem 0.5rem;
-  }
+    box-shadow 0.15s ease-in-out;
+  will-change: scale, rotate, box-shadow;
 
   .title {
-    margin-bottom: 0.625rem;
-    font-size: 1rem;
-    font-weight: 600;
+    margin-bottom: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
     text-align: center;
 
     @media (max-width: 576px) {
-      margin-bottom: 0.25rem;
       font-size: 0.875rem;
     }
   }
 
-  .icon {
-    width: 5rem;
-    height: 4.8125rem;
-    margin-inline: auto;
+  .text-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
 
-    @media (max-width: 576px) {
-      width: 4rem;
-      height: 3.85rem;
-    }
-
-    &.icon--lock {
-      width: 2.875rem;
+    .text {
+      font-family: var(--font-family-alt);
+      font-size: 2.25rem;
+      line-height: 1;
+      color: var(--kvizle-color-2);
+      letter-spacing: 3%;
+      text-decoration: none;
+      text-shadow: 2px 2px 0 var(--kvizle-color-3);
+      text-align: center;
+      -webkit-text-fill-color: var(--kvizle-color-1);
+      -webkit-text-stroke: 2px;
 
       @media (max-width: 576px) {
-        width: 2.25rem;
+        font-size: 1.75rem;
       }
     }
+  }
 
-    svg {
-      width: 100%;
-      height: 100%;
+  .answer-icons {
+    display: flex;
+    background: var(--kvizle-color-0);
+    border-top: 2px solid var(--kvizle-color-2);
+
+    .answer-icon {
+      flex: 1 0 0%;
+      display: grid;
+      aspect-ratio: 1;
+
+      &:not(:last-child) {
+        border-right: 2px solid var(--kvizle-color-2);
+      }
+
+      svg {
+        height: 2rem;
+        margin: auto;
+      }
     }
-  }
-
-  .text {
-    font-family: var(--font-family-alt);
-    font-size: 2.25rem;
-    font-weight: 600;
-    line-height: 2;
-    text-align: center;
-
-    @media (max-width: 576px) {
-      font-size: 1.75rem;
-    }
-  }
-
-  &.success {
-    $day-bg-svg-string-success: string.replace(
-      $day-bg-svg-string,
-      '#FFF',
-      '#D8FFAF'
-    );
-    background-image: url.svg($day-bg-svg-string-success);
-  }
-
-  &.fail {
-    $day-bg-svg-string-fail: string.replace(
-      $day-bg-svg-string,
-      '#FFF',
-      '#FFBA9E'
-    );
-    background-image: url.svg($day-bg-svg-string-fail);
   }
 
   &.today {
-    $day-bg-svg-string-today: string.replace(
-      $day-bg-svg-string,
-      '#FFF',
-      'magenta'
-    );
-    $day-bg-svg-string-today: string.replace(
-      $day-bg-svg-string-today,
-      '<path ',
-      '<defs><filter id="shadow"><feFlood flood-color="#FF9E01" /><feComposite operator="out" in2="SourceGraphic" /><feMorphology operator="dilate" radius="2" /><feGaussianBlur stdDeviation="6" /><feComposite operator="atop" in2="SourceGraphic" /></filter></defs><path filter="url(#shadow)" '
-    );
-    $day-bg-svg-string-today-border: string.replace(
-      $day-bg-svg-string,
-      '#FFF',
-      'none'
-    );
-    background-image: url.svg($day-bg-svg-string-today-border),
-      url.svg($day-bg-svg-string-today);
+    background: var(--kvizle-color-5);
+  }
 
-    .title {
-      font-weight: 700;
-    }
+  &.did-answer {
+    background: var(--kvizle-color-7);
   }
 
   &.disabled {
-    $day-bg-svg-string-disabled: string.replace(
-      $day-bg-svg-string,
-      '#FFF',
-      '#FFF'
-    );
-    background-image: url.svg($day-bg-svg-string-disabled);
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    background: var(--kvizle-color-0);
+    cursor: default;
+
+    .title {
+      color: var(--kvizle-color-2);
+    }
+
+    .icon {
+      width: 2.25rem;
+      margin-inline: auto;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
   }
 
-  &:not(.disabled):hover {
-    rotate: 3deg;
-    scale: 1.05;
-    filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
+  &:not(.disabled) {
+    &:hover {
+      rotate: 3deg;
+      scale: 1.05;
+      box-shadow: 0 0 8px 2px var(--kvizle-color-6);
+
+      &:not(.did-answer) {
+        background: var(--kvizle-color-5);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--kvizle-color-2);
+      outline-offset: 2px;
+    }
   }
 }
 </style>
