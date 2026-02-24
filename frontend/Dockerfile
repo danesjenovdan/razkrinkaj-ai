@@ -1,25 +1,30 @@
-# build stage
-FROM node:20-alpine AS build
+# ---
+# build stage image
+# ---
+FROM node:24-alpine AS build
 
 # set current directory
 WORKDIR /app
 
 # install dependencies
-COPY package.json yarn.lock ./
-RUN yarn
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # copy source code
-COPY public ./public
-COPY src ./src
-COPY env.d.ts eslint.config.js .prettierrc.json index.html tsconfig.json tsconfig.app.json tsconfig.node.json vite.config.ts ./
+COPY public public/
+COPY src src/
+COPY env.d.ts .prettierrc.json eslint.config.js index.html tsconfig.json vite.config.ts ./
 
-# set environment variables
+# set env for production build
+ENV NODE_ENV=production
 ARG VITE_API_URL_BASE
 
-# build the app
-RUN yarn build
+# run the build
+RUN npm run build
 
-# production stage
+# ---
+# actual image
+# ---
 FROM nginx:alpine
 
 # copy built files

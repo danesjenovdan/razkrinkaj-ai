@@ -1,37 +1,19 @@
 <script setup lang="ts">
-import axios from 'axios'
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const newsletterEmail = ref('')
-const newsletterConsent = ref(false)
-const newsletterLoading = ref(false)
+const newsletterEmail = ref("");
+const newsletterConsent = ref(false);
+const newsletterLoading = ref(false);
 
 async function onNewsletterSubmit() {
-  newsletterLoading.value = true
-  try {
-    const response = await axios.post(
-      'https://podpri.lb.djnd.si/api/subscribe/',
-      {
-        email: newsletterEmail.value,
-        segment_id: 21,
-      },
-    )
-    if (response.data.msg === 'mail sent') {
-      newsletterEmail.value = ''
-      newsletterConsent.value = false
-      newsletterLoading.value = false
-      alert(
-        'Hvala! Poslali smo ti sporočilo s povezavo, na kateri lahko potrdiš prijavo!',
-      )
-    } else {
-      newsletterLoading.value = false
-      alert('Prišlo je do napake :(')
-    }
-  } catch (error) {
-    console.error(error)
-    newsletterLoading.value = false
-    alert('Prišlo je do napake :(')
-  }
+  const email = newsletterEmail.value;
+
+  let campaign_slug = "danes-je-nov-dan";
+  let segment_id = 21;
+
+  let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`;
+  url += `&email=${encodeURIComponent(email)}`;
+  window.open(`${url}`, `_blank`);
 }
 </script>
 
@@ -151,9 +133,9 @@ async function onNewsletterSubmit() {
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 footer {
   .page-footer {
@@ -206,20 +188,20 @@ footer {
         $footer-button-link-bg-string: string.replace(
           string.replace(
             vars.$button-link-bg-string,
-            '#000',
-            '#{vars.$kvizle-color-2}'
+            "#000",
+            "#{vars.$kvizle-color-2}"
           ),
-          '#FFF',
-          '#{vars.$kvizle-color-4}'
+          "#FFF",
+          "#{vars.$kvizle-color-4}"
         );
         $footer-hover-button-link-bg-string: string.replace(
           string.replace(
             vars.$button-link-bg-string,
-            '#000',
-            '#{vars.$kvizle-color-2}'
+            "#000",
+            "#{vars.$kvizle-color-2}"
           ),
-          '#FFF',
-          '#{vars.$kvizle-color-5}'
+          "#FFF",
+          "#{vars.$kvizle-color-5}"
         );
 
         display: inline-flex;
@@ -349,7 +331,7 @@ footer {
               display: flex;
               gap: 0.5em;
 
-              input[type='checkbox'] {
+              input[type="checkbox"] {
                 appearance: none;
                 display: grid;
                 place-items: center;
@@ -363,7 +345,7 @@ footer {
 
                 &:checked {
                   &::before {
-                    content: '';
+                    content: "";
                     display: block;
                     width: 0.4em;
                     height: 0.8em;

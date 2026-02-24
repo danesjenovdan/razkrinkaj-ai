@@ -39,12 +39,10 @@ services:
       - ./frontend/public:/app/public:delegated,rw
       - ./frontend/src:/app/src:delegated,rw
       - ./frontend/env.d.ts:/app/env.d.ts:delegated,rw
-      - ./frontend/eslint.config.js:/app/eslint.config.js:delegated,rw
       - ./frontend/.prettierrc.json:/app/.prettierrc.json:delegated,rw
+      - ./frontend/eslint.config.js:/app/eslint.config.js:delegated,rw
       - ./frontend/index.html:/app/index.html:delegated,rw
       - ./frontend/tsconfig.json:/app/tsconfig.json:delegated,rw
-      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json:delegated,rw
-      - ./frontend/tsconfig.node.json:/app/tsconfig.node.json:delegated,rw
       - ./frontend/vite.config.ts:/app/vite.config.ts:delegated,rw
     ports:
       - "3000:3000"

@@ -1,5 +1,4 @@
 import type { Chapter, Explanation, LeaderboardData } from '@/types'
-import axios from 'axios'
 import { defineStore } from 'pinia'
 import { computed, reactive, ref } from 'vue'
 import { smartParse, smartToString, slugifyDot } from '@/utils/stringify'
@@ -15,6 +14,46 @@ type AnswerData = {
 type FinishedChapterData = {
   score: number
   answers: Map<number, AnswerData>
+}
+
+// TODO
+const axios = {
+  post: async (url: string, payload: object) => {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+      return {
+        status: response.status,
+        data: await response.json(),
+      }
+    } catch (error) {
+      console.error('Axios POST error', error)
+      return {
+        status: -1,
+        data: null,
+      }
+    }
+  },
+  get: async (url: string) => {
+    try {
+      const response = await fetch(url)
+      return {
+        status: response.status,
+        data: await response.json(),
+      }
+    } catch (error) {
+      console.error('Axios GET error', error)
+      return {
+        status: -1,
+        data: null,
+      }
+    }
+  },
 }
 
 export const useStore = defineStore('store', () => {

@@ -1,31 +1,28 @@
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from "url";
+import { defineConfig } from "vite";
+import eslint from "vite-plugin-eslint2";
+import vue from "@vitejs/plugin-vue";
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import checker from 'vite-plugin-checker'
-
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
+  base: "/",
   server: {
-    port: 3000,
     host: true,
+    port: 3000,
   },
   plugins: [
-    vue(),
-    checker({
-      typescript: true,
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag.includes("-"),
+        },
+      },
     }),
+    eslint(),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler',
-      },
-    },
-  },
-})
+});
