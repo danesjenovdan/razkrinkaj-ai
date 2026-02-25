@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 import { useStore } from "@/stores/store.ts";
 import ScoreHeader from "@/components/ScoreHeader.vue";
 import TheLoader from "@/components/TheLoader.vue";
+import PageFooter from "@/components/PageFooter.vue";
 
 const route = useRoute();
 const store = useStore();
@@ -23,8 +24,8 @@ if (Number.isNaN(chapterId) || chapterId < 0 || chapter === undefined) {
   throw new Error("Invalid chapter id");
 }
 
-const showHeader = computed(() => {
-  return route.name !== "chapter-result";
+const hideHeaderScore = computed(() => {
+  return route.name === "chapter-result";
 });
 
 const score = computed(() => {
@@ -43,18 +44,25 @@ onMounted(() => {
 </script>
 
 <template>
-  <ScoreHeader
-    v-if="showHeader"
-    :title="store.introductionTitle"
-    :score="score"
-  />
-  <RouterView
-    v-if="store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)"
-    :chapter="chapter"
-  />
-  <div v-else class="loader-container">
-    <TheLoader />
+  <div class="bg-kvizle-color-8">
+    <ScoreHeader
+      :title="store.introductionTitle"
+      :score="score"
+      :hide-score="hideHeaderScore"
+    />
   </div>
+  <div class="bg-kvizle-color-0">
+    <RouterView
+      v-if="
+        store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)
+      "
+      :chapter="chapter"
+    />
+    <div v-else class="loader-container">
+      <TheLoader />
+    </div>
+  </div>
+  <PageFooter />
 </template>
 
 <style scoped lang="scss">

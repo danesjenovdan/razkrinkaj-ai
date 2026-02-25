@@ -1,69 +1,12 @@
 <script setup lang="ts">
-import type { Chapter, LeaderboardData } from "@/types";
-import { onMounted, ref, computed, watch } from "vue";
+import type { Chapter } from "@/types";
+import { onMounted, computed } from "vue";
 import { useStore } from "@/stores/store.ts";
-import PageFooter from "@/components/PageFooter.vue";
-import ButtonPrimary from "@/components/ButtonPrimary.vue";
-import ConsentPrompt from "@/components/ConsentPrompt.vue";
+import CalendarIcon from "@/components/CalendarIcon.vue";
 
 const props = defineProps<{ chapter: Chapter }>();
 
 const store = useStore();
-
-const realLeaderboardData = ref<LeaderboardData | null>(null);
-
-const leaderboardMeText = ref("Tvoj rezultat");
-const nickname = ref("");
-
-const leaderboardData = computed(() => {
-  if (store.hasConsented) {
-    return realLeaderboardData.value;
-  }
-  return {
-    attempt_guid: store.attemptGUID,
-    my_nickname: null,
-    top_leaderboard: [
-      // fake data
-      {
-        attempt_guid: "FAKE1",
-        rank: 1,
-        nickname: "Random Ime",
-        total_score: 150,
-      },
-      {
-        attempt_guid: "FAKE1",
-        rank: 1,
-        nickname: "naključnik",
-        total_score: 150,
-      },
-      {
-        attempt_guid: "FAKE2",
-        rank: 2,
-        nickname: "NAKLJUČNICA",
-        total_score: 140,
-      },
-      {
-        attempt_guid: "FAKE2",
-        rank: 2,
-        nickname: "Fake ime 3",
-        total_score: 140,
-      },
-      {
-        attempt_guid: "FAKE3",
-        rank: 3,
-        nickname: "Hello",
-        total_score: 130,
-      },
-      {
-        attempt_guid: "FAKE3",
-        rank: 3,
-        nickname: "World",
-        total_score: 130,
-      },
-    ],
-    ranked_near_me: [],
-  };
-});
 
 const chapterDate = computed(() => {
   const dateParts = props.chapter.title.split(".").map(Number);
@@ -80,66 +23,31 @@ if (isLocked.value) {
   throw new Error("ChapterResultView cannot be shown for locked chapters");
 }
 
-async function onSubmitNickname() {
-  if (nickname.value.trim().length === 0) {
-    // eslint-disable-next-line no-alert
-    window.alert("Vzdevek ne sme biti prazen!");
-    return;
-  }
-  const success = await store.submitLeaderboardNickname(nickname.value.trim());
-  if (success) {
-    if (realLeaderboardData.value) {
-      realLeaderboardData.value.my_nickname = nickname.value.trim();
-    }
-    leaderboardMeText.value = nickname.value.trim();
-    nickname.value = "";
-  } else {
-    // eslint-disable-next-line no-alert
-    window.alert("Prišlo je do napake :(");
-  }
-}
+const totalAnswers = computed(() => {
+  const answers = [...store.currentChapterAnswers.values()];
+  return answers.length;
+});
 
-function displayAnonId(entry: { attempt_guid: string }) {
-  return entry.attempt_guid.slice(-4).toUpperCase();
-}
+const correctAnswers = computed(() => {
+  const answers = [...store.currentChapterAnswers.values()].filter(
+    (answer) => answer.correct,
+  );
+  return answers.length;
+});
 
-// const totalChapterScore = computed(() => {
-//   if (props.chapter.pages) {
-//     return props.chapter.pages.reduce((prev, curr) => {
-//       if (curr.type === 'quiz') {
-//         return prev + curr.points
-//       }
-//       return prev
-//     }, 0)
-//   }
-//   return 0
-// })
+const shareResultMessage = computed(() => {
+  return `
 
-// const totalAnswers = computed(() => {
-//   const answers = [...store.currentChapterAnswers.values()]
-//   return answers.length
-// })
+Moj rezultat na kvizle.lb.djnd.si
 
-// const correctAnswers = computed(() => {
-//   const answers = [...store.currentChapterAnswers.values()].filter(
-//     answer => answer.correct,
-//   )
-//   return answers.length
-// })
+${props.chapter.title}
 
-// const shareResultMessage = computed(() => {
-//   return `
+💪 Zbranih točk: ${store.currentChapterScore}
+🎓 Pravilni odgovori: ${correctAnswers.value}/${totalAnswers.value}
+🚀 Skupaj točk: ${store.score}
 
-// Moj rezultat na razkrinkaj.ai
-
-// Poglavje: ${props.chapter.title}
-
-// 💪 Zbranih točk: ${store.currentChapterScore}
-// 🎓 Pravilni odgovori: ${correctAnswers.value}/${totalAnswers.value}
-// 🚀 Skupaj točk: ${store.score}
-
-//   `.trim()
-// })
+  `.trim();
+});
 
 async function copyTextToClipboard(text: string) {
   try {
@@ -152,17 +60,19 @@ async function copyTextToClipboard(text: string) {
   }
 }
 
-// async function onShareResult() {
-//   if (await copyTextToClipboard(shareResultMessage.value)) {
-//     window.alert(
-//       `Tvoj rezultat smo skopirali v odložišče. Objavi ga na svojem najljubšem kanalu!\n\n${shareResultMessage.value}`,
-//     )
-//   } else {
-//     window.alert(
-//       'Ups, nekaj je šlo narobe pri kopiranju v odložišče. Rezultat imaš spodaj, skopiraj in deli ga!',
-//     )
-//   }
-// }
+async function onShareResult() {
+  if (await copyTextToClipboard(shareResultMessage.value)) {
+    // eslint-disable-next-line no-alert
+    window.alert(
+      `Tvoj rezultat smo skopirali v odložišče. Objavi ga na svojem najljubšem kanalu!\n\n${shareResultMessage.value}`,
+    );
+  } else {
+    // eslint-disable-next-line no-alert
+    window.alert(
+      "Ups, nekaj je šlo narobe pri kopiranju v odložišče. Rezultat imaš spodaj, skopiraj in deli ga!",
+    );
+  }
+}
 
 const websiteLinkValue = "kvizle.lb.djnd.si";
 
@@ -180,20 +90,6 @@ async function onCopyLink() {
   }
 }
 
-watch(
-  () => store.hasConsented,
-  (newVal) => {
-    if (newVal && !realLeaderboardData.value) {
-      store.fetchLeaderboard().then((data) => {
-        realLeaderboardData.value = data;
-        if (data?.my_nickname) {
-          leaderboardMeText.value = data.my_nickname;
-        }
-      });
-    }
-  },
-);
-
 onMounted(() => {
   // save score and answers
   if (!store.finishedChapters.has(props.chapter.id)) {
@@ -205,40 +101,6 @@ onMounted(() => {
     store.sendFinishedChapterDataToApi(props.chapter.id);
   }
 
-  // unlock all feedback chapters that are not finished yet
-  for (const chapter of store.chapters.values()) {
-    if (
-      chapter.is_feedback &&
-      !store.finishedChapters.has(chapter.id) &&
-      !store.unlockedChapters.includes(chapter.id)
-    ) {
-      store.unlockedChapters.push(chapter.id);
-    }
-  }
-
-  // // unlock next chapter
-  // const chapterIds = [...store.chapters.keys()]
-  // const currentChapterIndex = chapterIds.findIndex(
-  //   cid => cid === props.chapter.id,
-  // )
-  // const nextChapterId = chapterIds[currentChapterIndex + 1]
-  // if (nextChapterId) {
-  //   if (!store.justUnlockedChapters.includes(nextChapterId)) {
-  //     store.justUnlockedChapters.push(nextChapterId)
-  //   }
-  //   if (!store.unlockedChapters.includes(nextChapterId)) {
-  //     store.unlockedChapters.push(nextChapterId)
-  //   }
-  // }
-
-  // fetch leaderboard data
-  store.fetchLeaderboard().then((data) => {
-    realLeaderboardData.value = data;
-    if (data?.my_nickname) {
-      leaderboardMeText.value = data.my_nickname;
-    }
-  });
-
   // persist data to local storage
   store.saveLocalStorage();
 });
@@ -246,180 +108,179 @@ onMounted(() => {
 
 <template>
   <main>
-    <div class="header-section bg-manipulacija-color-7">
+    <div class="result-section bg-kvizle-color-0">
       <div class="page-gutter">
-        <div class="header-content">
-          <RouterLink :to="{ name: 'intro' }">
-            <div class="title">
-              <img
-                src="/manipulacija-logo.svg"
-                alt="Manipulacija ni informacija"
-                class="title-logo"
-              />
-            </div>
-          </RouterLink>
-        </div>
-        <h2 class="section-title">
-          <span class="emoji">🏆🏆🏆</span>
-          <span class="text">TVOJ REZULTAT</span>
-          <span class="emoji">🏆🏆🏆</span>
-        </h2>
-        <div class="streak-container">
-          <div class="stat">
-            <div class="icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 42 62"
-              >
-                <path
-                  fill="#FF6224"
-                  stroke="#000"
-                  stroke-linecap="round"
-                  stroke-width="3"
-                  d="M37.8546 51.02c-2.5589 5.5115-7.6763 8.0552-11.8123 8.7318-2.5543.4178-6.4065.0986-7.6805-.2548-1.4753-.1532-2.6929-.5567-3.915-.9616-1.2221-.405-9.0311-2.8519-11.5899-10.9071-1.6508-5.1969-.4965-11.8788.0006-13.0603.511-1.2149 1.0472-2.4694 1.8323-3.6401.8148-1.2149 1.7199-2.7168 2.7982-3.9435 1.068-1.2149 2.3181-2.5914 3.6114-3.6387 1.6371-1.3256 4.0724-3.1112 5.6025-4.7109 3.0407-3.1791 4.0125-4.2907 4.7709-5.6559.8147-1.4667 1.6974-5.2787.6561-7.532-.5615-1.215-2.0244-4.0534-1.4205-3.3308.2548.3049 1.3041.9649 2.5968 1.8216 1.2221.81 3.2125 2.6717 4.6275 4.2483 1.2755 1.4212 2.6487 3.1533 3.3047 4.6018.711 1.5698 2.3525 4.9287 2.3525 7.7071 0 5.9355-.8548 8.6615-1.2795 10.1751-.5111 1.8215-1.6107 5.3971-1.073 5.0875 1.4724-.848 3.8822-2.2034 4.9113-4.8296.5569-1.4212 1.2794-4.4975 1.7059-4.4975.4265 0 2.3201 11.8526 2.1324 14.8385-.4265 6.7834-1.2795 7.9139-2.1324 9.7511Z"
-                />
-                <path
-                  fill="#FFD427"
-                  stroke="#000"
-                  stroke-linecap="round"
-                  stroke-width="3"
-                  d="M11.2614 41.118c1.2664 3.1002 3.2587 4.8548 3.5776 4.9571-.1603-2.262-.1603-4.3071-.133-5.4087.0801-1.255.133-1.7244.1602-2.2636.1875-.6972.2451-1.3289.4544-1.9358.2139-.6205.3422-1.2761.6682-1.8592.3469-.6205.6258-1.2588.9615-1.8592.347-.6205 2.0984-2.6734 2.6676-3.1986.1875 1.1062.8283 3.9706 1.1785 4.624.4014.7491.6158 1.4386 1.0953 1.9877.8637.9893 5.9284 5.1731 6.5868 5.8096 1.7721 1.7133 2.3772 3.4556 2.5467 4.1324.2139.8545.9976 4.0058-.3315 7.4323-.8861 2.2844-2.2846 3.7389-2.9577 4.3689-.8813.825-1.4744 1.3175-2.1898 1.6508-.7748.361-3.4555.4789-5.2891.3339-.9887-.0783-1.7532-.3492-2.4575-.6988-1.0408-.5167-1.7272-.8677-2.322-1.3425-.9142-.7297-2.1303-1.7205-2.5632-2.3247-.4824-.6732-1.1353-1.49-1.6025-2.2984-.3734-.6461-.7203-1.3613-.988-2.3775-.2924-1.1101-.4127-1.8286-.5865-2.9778-.3091-2.0437-.0487-4.1797.2949-4.8958.3229-.6732.9798-2.4664 1.2291-1.8561Z"
-                />
-              </svg>
-            </div>
-            <div class="value">{{ store.attemptStreak }}</div>
-            <div class="desc">zaporednih zmag</div>
-          </div>
-          <div class="stat">
-            <div class="icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 64 60"
-              >
-                <path
-                  fill="#FFD427"
-                  stroke="#000"
-                  stroke-linecap="round"
-                  stroke-width="3"
-                  d="M31.7372 2.8942c.4295-.3143 1.0396-.5419 1.7417-.344.6742.19 1.0783.6866 1.2876.999.4341.6476.7227 1.5678.93 2.3695.2211.855.4032 1.8025.5554 2.633.1584.8647.2765 1.5587.3804 2.0181.1477.6532.3235 1.1585.6085 2.1926.2697.9784.5846 2.261.9385 4.2108.4546 2.505 1.1644 4.7832 1.5633 6.1628.0044.0006.0089.0024.0134.003.4698.067 1.1669.0794 2.0238.0503.8398-.0285 1.7545-.0934 2.6352-.1598.8621-.0649 1.7165-.1331 2.374-.1576 1.3411-.0498 3.2787-.1103 5.1301-.0695 1.7835.0394 3.9181.1687 8.3207.8919.289.0475.6726.1439 1.0208.3837.4084.2815.7514.7592.7764 1.3855.021.5236-.1943.9234-.3284 1.1302-.1476.2277-.3231.413-.467.5485-3.1774 2.9915-7.3914 6.4544-8.9983 7.443-.5644.3472-1.106.7389-1.7351 1.1978-.6185.4511-1.3105.9581-2.1162 1.4779-.6914.4461-1.316.7489-1.7874.9733-.2459.1171-.4199.1983-.5682.276a2.568 2.568 0 0 0-.1581.0893c-.0024.0015-.0052.0024-.0075.0038-.0075.0586-.0144.1771.0085.3936.0295.278.0839.5556.1525.9652.0622.3705.1313.8308.1374 1.3067.033 2.5536-.0673 6.3598-.0985 8.0714-.0116.6372-.0619 1.208-.108 1.7254-.047.5276-.0889.9934-.1024 1.497-.0137.509-.1115 1.3791-.5198 2.1085-.2154.3847-.5873.8539-1.2009 1.1102-.6476.2705-1.3162.2018-1.8966-.0356-2.4641-1.0076-4.5884-2.7536-6.1841-4.3083-.8063-.7856-1.4975-1.5417-2.0453-2.1602-.5824-.6576-.9267-1.0696-1.1512-1.3-.2053-.2108-.4074-.4852-.5724-.7157-.1588-.2219-.4037-.576-.6022-.8557-.2968-.4182-.6396-.8804-1.0315-1.3587-2.0847 2.673-4.5585 5.6479-5.9396 7.234-1.5159 1.7408-3.2289 3.5735-4.6041 4.6168a2.3784 2.3784 0 0 0-.1258.1041c-.0441.0385-.1375.1219-.2231.1909-.0845.0682-.2402.189-.4416.2876-.2073.1016-.5618.2285-1.0015.1707-.8165-.1077-1.2206-.736-1.3295-.9135-.1612-.2632-.2636-.542-.3258-.7321-.1094-.3344-.1087-.7-.1074-.8732.0018-.2434.0191-.5326.0452-.8507.0526-.6408.1506-1.4888.285-2.5014.2695-2.0304.6938-4.7989 1.2201-8.0586.3063-1.8976.6017-3.2638.8349-4.2417.1156-.4847.2164-.8761.2896-1.1667.0103-.0406.0188-.079.0275-.1144-.1194-.0688-.282-.1535-.4992-.2548a28.3238 28.3238 0 0 0-.6507-.2911c-.2326-.1013-.4887-.2116-.7419-.3278-.4972-.2283-1.0647-.5121-1.5622-.8713a1.1022 1.1022 0 0 0-.0505-.0315 5.1287 5.1287 0 0 0-.1699-.0964c-.1492-.0815-.3403-.1807-.5859-.3077-.4841-.2504-1.1362-.5857-1.9172-1.017-1.5663-.8651-3.6507-2.1169-6.0768-3.9153-1.3578-1.0066-2.3733-1.9459-3.1301-2.6862-.3093-.3026-.754-.7509-.928-.9218-.2636-.2589-.391-.3681-.448-.408-.1869-.1309-.6383-.4911-.7407-1.1487-.1165-.7488.2983-1.2614.53-1.4756.2306-.2133.4853-.3391.6471-.41.1822-.0798.3752-.1444.5581-.1975.7064-.205 1.7195-.3687 2.7323-.5006 2.0605-.2683 4.5339-.4558 5.5085-.5437 1.781-.1606 7.3419-.7099 10.015-.9258.7889-3.8165 2.6034-8.2793 4.9015-12.3948 1.5577-2.7895 2.5291-3.8057 3.6455-5.0384.2294-.2534.4263-.4886.6308-.7268.1786-.208.4089-.4744.6368-.6755l.1725-.1384Z"
-                />
-              </svg>
-            </div>
-            <div class="value">{{ store.score }}</div>
-            <div class="desc">točk</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      :class="{
-        'leaderboard-section': true,
-        'bg-manipulacija-color-3': true,
-        'has-consented': store.hasConsented,
-      }"
-    >
-      <div class="page-gutter">
-        <div class="section-title">
-          <span class="emoji">👑👑👑</span>
-          <span class="text">TRENUTNA LESTVICA</span>
-          <span class="emoji">👑👑👑</span>
-        </div>
-        <ConsentPrompt />
-        <div v-if="leaderboardData" class="leaderboard">
-          <div
-            v-for="entry in leaderboardData.top_leaderboard"
-            :key="entry.rank"
-            :class="{
-              'leaderboard-entry': true,
-              me: entry.attempt_guid === leaderboardData.attempt_guid,
-            }"
-          >
-            <div class="place">{{ entry.rank }}.</div>
-            <div class="content">
-              <div class="name">
-                <template
-                  v-if="entry.attempt_guid === leaderboardData.attempt_guid"
-                >
-                  {{ leaderboardMeText }}
-                </template>
-                <template v-else-if="entry.nickname">
-                  {{ entry.nickname }}
-                </template>
-                <template v-else>
-                  Anonimna oseba <em>({{ displayAnonId(entry) }})</em>
-                </template>
-              </div>
-              <div class="score">{{ entry.total_score }}</div>
-            </div>
-          </div>
-          <template v-if="leaderboardData.ranked_near_me.length">
-            <div class="ellipsis">...</div>
-            <div
-              v-for="entry in leaderboardData.ranked_near_me"
-              :key="entry.rank"
-              :class="{
-                'leaderboard-entry': true,
-                me: entry.attempt_guid === leaderboardData.attempt_guid,
-              }"
+        <h2 class="section-title result-title">Tvoj rezultat</h2>
+        <div class="chapter-scores">
+          <div class="score-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 33 32"
             >
-              <div class="place">{{ entry.rank }}.</div>
-              <div class="content">
-                <div class="name">
-                  <template
-                    v-if="entry.attempt_guid === leaderboardData.attempt_guid"
-                  >
-                    {{ leaderboardMeText }}
-                  </template>
-                  <template v-else-if="entry.nickname">
-                    {{ entry.nickname }}
-                  </template>
-                  <template v-else>
-                    Anonimna oseba <em>({{ displayAnonId(entry) }})</em>
-                  </template>
-                </div>
-                <div class="score">{{ entry.total_score }}</div>
-              </div>
-            </div>
-          </template>
-        </div>
-        <div v-if="!leaderboardData?.my_nickname" class="add-nickname">
-          <div class="title">
-            Tvoj rezultat je trenutno anonimen.<br />
-            Se želiš vpisati na lestvico z vzdevkom?
+              <path
+                fill="#ff7556"
+                stroke="#ff6224"
+                stroke-linecap="round"
+                d="M15.867 6.886c-1.192 2.135-2.086 4.433-2.368 6.262-.7.03-4.285.386-5.337.481-.966.087-4.634.352-4.074.744.33.231.942 1.022 2.173 1.934 2.262 1.677 3.88 2.33 4.206 2.565.72.52 2.079.759 1.99 1.322-.048.308-.312 1.076-.6 2.854-.502 3.12-.806 5.27-.716 5.544.046.143.114.288.204.3.09.011.19-.115.33-.221.592-.45 1.37-1.275 2.096-2.11a93 93 0 0 0 2.995-3.659c.172-.221.38-.43.62-.167.7.762 1.12 1.508 1.342 1.736.491.504 2.138 2.692 4.249 3.555.58.238.731-.479.742-.878.014-.535.09-.983.1-1.537.015-.832.063-2.634.048-3.842-.009-.677-.386-1.437.102-1.83.233-.188.71-.328 1.29-.702.732-.472 1.261-.923 1.857-1.29.704-.432 2.677-2.047 4.193-3.474.185-.174.264-.359-.104-.42-2.08-.341-3.067-.4-3.883-.417-.864-.02-1.774.01-2.414.033-1.19.044-3.873.406-4.016-.135-.144-.54-.582-1.859-.84-3.279-.33-1.825-.584-2.373-.734-3.036-.216-.957-.549-3.848-1.25-3.228-.132.115-.314.353-.55.615-.52.573-.944 1.013-1.651 2.28Z"
+              />
+              <path
+                fill="#0000f5"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M14.867 5.886c-1.192 2.135-2.086 4.433-2.368 6.262-.7.03-4.285.386-5.337.481-.966.087-4.634.352-4.074.744.33.231.942 1.022 2.173 1.934 2.262 1.677 3.88 2.33 4.206 2.565.72.52 2.079.759 1.99 1.322-.048.308-.312 1.076-.6 2.854-.502 3.12-.806 5.27-.716 5.544.046.143.114.288.204.3.09.011.19-.115.33-.221.592-.45 1.37-1.275 2.096-2.11a93 93 0 0 0 2.995-3.659c.172-.221.38-.43.62-.167.7.762 1.12 1.508 1.342 1.736.491.504 2.138 2.692 4.249 3.555.58.238.731-.479.742-.878.014-.535.09-.983.1-1.537.015-.832.063-2.634.048-3.842-.009-.677-.386-1.437.102-1.83.233-.188.71-.328 1.29-.702.732-.472 1.261-.923 1.857-1.29.704-.432 2.677-2.047 4.193-3.474.185-.174.264-.359-.104-.42-2.08-.341-3.067-.4-3.883-.417-.864-.02-1.774.01-2.414.033-1.19.044-3.873.406-4.016-.135-.144-.54-.582-1.859-.84-3.279-.33-1.825-.584-2.373-.734-3.036-.216-.957-.549-3.848-1.25-3.228-.132.115-.314.353-.55.615-.52.573-.944 1.013-1.651 2.28Z"
+              />
+              <path
+                fill="#f7f7f7"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M13.867 4.886c-1.192 2.135-2.086 4.433-2.368 6.262-.7.03-4.285.386-5.337.481-.966.087-4.634.352-4.074.744.33.231.942 1.022 2.173 1.934 2.262 1.677 3.88 2.33 4.206 2.565.72.52 2.079.759 1.99 1.322-.048.308-.312 1.076-.6 2.854-.503 3.12-.806 5.27-.716 5.544.046.143.114.288.204.3.09.011.19-.115.33-.221.592-.45 1.37-1.275 2.096-2.11a93 93 0 0 0 2.995-3.659c.172-.221.38-.43.62-.167.7.762 1.12 1.508 1.342 1.736.491.504 2.138 2.692 4.249 3.555.58.238.731-.479.742-.878.014-.535.09-.983.1-1.537.015-.832.063-2.634.048-3.842-.009-.677-.386-1.437.102-1.83.233-.188.71-.328 1.29-.702.732-.472 1.261-.923 1.857-1.29.704-.432 2.677-2.047 4.193-3.474.185-.174.264-.359-.104-.42-2.08-.341-3.067-.4-3.883-.417-.864-.02-1.774.01-2.414.033-1.19.044-3.873.406-4.016-.135-.144-.54-.582-1.859-.84-3.279-.33-1.825-.584-2.373-.734-3.036-.216-.957-.549-3.848-1.25-3.228-.132.115-.314.353-.55.615-.52.573-.944 1.013-1.651 2.28Z"
+              />
+            </svg>
+            <div>Zbranih točk:</div>
+            <span class="score">{{ store.currentChapterScore }}</span>
           </div>
-          <form class="nickname-form" @submit.prevent="onSubmitNickname">
-            <label for="nickname">Vpiši svoj vzdevek</label>
-            <input
-              id="nickname"
-              v-model="nickname"
-              type="text"
-              maxlength="20"
-              required
-            />
-            <div>
-              <button type="submit" class="submit-button">VPIŠI ME!</button>
-            </div>
-          </form>
-        </div>
-        <div class="buttons">
-          <ButtonPrimary
-            class="button"
-            button-text="nazaj na koledar"
-            :link="{ name: 'intro' }"
-            left-icon="hand"
-            color="white"
-          />
+          <div class="score-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 34 24"
+            >
+              <path
+                fill="#ff6464"
+                stroke="#ff6464"
+                d="M2.5 18.5c0-1.87 3.843-2.922 6.015-3.478V6.339C8.515 3.668 9.915 3 11 3c2.727 0 9.72-.5 12-.5s3.431 1.5 3.431 3.84v8.682c2.308.668 6.515 1.978 6.515 4.007 0 3.004-9.931 4.471-16.446 4.471s-14-2.662-14-5Z"
+              />
+              <path
+                fill="#0000f5"
+                stroke="#0000f5"
+                d="M1.5 17.5c0-1.87 3.843-2.922 6.015-3.478V5.339C7.515 2.668 8.915 2 10 2c2.727 0 9.72-.5 12-.5s3.431 1.5 3.431 3.84v8.682c2.308.668 6.515 1.978 6.515 4.007 0 3.004-9.931 4.471-16.446 4.471s-14-2.662-14-5Z"
+              />
+              <path
+                fill="#ff6464"
+                stroke="#0000f5"
+                d="M7.519 12.593v3.042C8.877 16.522 12.089 18 16 18s8.087-1.478 9.445-2.365v-3.042C23.815 13.48 19.259 15 16 15s-6.852-1.52-8.481-2.407Z"
+              />
+              <path
+                fill="#fff"
+                stroke="#0000f5"
+                d="M.5 16.5c0-1.87 3.843-2.922 6.015-3.478V4.339C6.515 1.668 7.915 1 9 1c2.727 0 9.72-.5 12-.5s3.431 1.5 3.431 3.84v8.682c2.308.668 6.515 1.978 6.515 4.007 0 3.004-9.931 4.471-16.446 4.471s-14-2.662-14-5Z"
+              />
+              <path
+                fill="#ff6464"
+                stroke="#0000f5"
+                d="M6.519 11.593v3.042C7.877 15.522 11.089 17 15 17s8.087-1.478 9.445-2.365v-3.042C22.815 12.48 18.259 14 15 14s-6.852-1.52-8.481-2.407Z"
+              />
+            </svg>
+            <div>Pravilni odgovori:</div>
+            <span class="score">{{ correctAnswers }}/{{ totalAnswers }}</span>
+          </div>
+          <div class="score-box">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 46 39"
+            >
+              <path
+                fill="#ff7556"
+                stroke="#ff6224"
+                stroke-linecap="round"
+                d="M22.652 4.895c-.847 1.517-1.483 3.15-1.684 4.45-.497.022-3.045.275-3.793.343-.686.062-3.294.25-2.896.528.235.165.67.727 1.545 1.375 1.608 1.192 2.758 1.656 2.99 1.823.512.37 1.477.54 1.415.94-.035.219-.223.765-.427 2.03-.357 2.216-.573 3.744-.51 3.94.034.101.082.204.145.212.064.009.135-.081.235-.157.421-.32.973-.905 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.157.269-.305.44-.119.497.542.796 1.073.953 1.234.35.359 1.52 1.914 3.02 2.528.413.168.52-.341.528-.625.01-.38.064-.698.072-1.092.01-.592.044-1.873.033-2.731-.006-.482-.274-1.021.073-1.301.166-.134.505-.233.917-.499.52-.336.897-.656 1.32-.917.5-.307 1.903-1.455 2.98-2.47.132-.123.188-.254-.073-.297-1.478-.243-2.18-.285-2.76-.297a30 30 0 0 0-1.717.023c-.845.031-2.752.289-2.854-.096-.102-.384-.414-1.321-.597-2.33-.235-1.298-.415-1.687-.522-2.159-.154-.68-.39-2.735-.889-2.294-.093.082-.223.251-.391.437-.369.407-.67.72-1.173 1.62Z"
+              />
+              <path
+                fill="#0000f5"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M21.94 4.184c-.846 1.517-1.482 3.15-1.682 4.45-.498.022-3.046.275-3.794.343-.686.062-3.294.25-2.896.529.235.164.67.726 1.545 1.375 1.608 1.191 2.758 1.655 2.99 1.822.511.37 1.477.54 1.415.94-.035.22-.223.765-.427 2.03-.358 2.216-.573 3.745-.51 3.94.034.102.082.204.146.213.063.008.134-.082.234-.157.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.158.269-.306.44-.12.497.542.796 1.073.953 1.234.35.359 1.52 1.914 3.02 2.528.413.168.52-.341.528-.625.01-.38.065-.698.072-1.092.01-.591.044-1.873.033-2.731-.006-.481-.273-1.021.073-1.3.166-.135.505-.234.918-.5.52-.335.896-.656 1.32-.916.5-.308 1.902-1.456 2.98-2.47.13-.124.187-.255-.074-.298-1.479-.243-2.18-.284-2.76-.297a30 30 0 0 0-1.716.023c-.846.032-2.753.29-2.855-.095s-.414-1.322-.597-2.331c-.235-1.297-.415-1.687-.522-2.158-.154-.68-.39-2.736-.889-2.295-.093.082-.223.251-.39.437-.37.407-.671.72-1.174 1.621Z"
+              />
+              <path
+                fill="#f7f7f7"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M21.23 3.473c-.847 1.517-1.483 3.15-1.683 4.45-.498.022-3.046.276-3.794.343-.686.062-3.294.25-2.896.529.235.164.67.726 1.545 1.375 1.608 1.192 2.758 1.655 2.99 1.823.512.37 1.477.54 1.415.94-.034.218-.222.764-.427 2.028-.357 2.217-.573 3.746-.51 3.941.034.102.082.204.146.213.063.008.135-.082.234-.157.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.158.269-.306.44-.12.497.542.796 1.073.954 1.234.35.36 1.52 1.914 3.02 2.528.412.169.52-.34.527-.625.01-.38.065-.698.072-1.092.01-.591.045-1.873.034-2.731-.007-.481-.275-1.021.072-1.3.166-.134.505-.234.918-.5.52-.335.896-.656 1.32-.916.5-.308 1.902-1.455 2.98-2.47.13-.124.187-.255-.074-.298-1.478-.243-2.18-.284-2.76-.297a30 30 0 0 0-1.716.023c-.846.032-2.753.29-2.855-.095s-.414-1.322-.597-2.331c-.235-1.297-.415-1.687-.522-2.158-.154-.68-.39-2.736-.889-2.295-.093.082-.223.251-.39.437-.37.408-.671.72-1.174 1.621Z"
+              />
+              <path
+                fill="#ff7556"
+                stroke="#ff6224"
+                stroke-linecap="round"
+                d="M11.279 20.533c-.848 1.517-1.483 3.15-1.684 4.45-.497.022-3.045.275-3.793.343-.686.061-3.294.25-2.896.528.235.165.67.727 1.545 1.375 1.608 1.192 2.758 1.656 2.99 1.823.511.37 1.477.54 1.414.94-.034.219-.222.765-.426 2.03-.358 2.216-.574 3.744-.51 3.94.034.101.082.204.145.212.064.009.135-.081.235-.157.421-.32.973-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.12-.157.269-.305.44-.119.497.542.796 1.073.953 1.234.35.359 1.52 1.914 3.02 2.528.413.168.52-.341.528-.625.01-.38.064-.699.072-1.092.01-.592.044-1.873.033-2.732-.006-.48-.274-1.02.073-1.3.166-.134.505-.233.917-.5.52-.335.897-.655 1.32-.916.5-.307 1.903-1.455 2.98-2.47.132-.123.188-.255-.073-.297-1.479-.243-2.18-.285-2.76-.297a30 30 0 0 0-1.716.023c-.846.031-2.753.289-2.855-.096-.103-.384-.414-1.321-.597-2.33-.235-1.298-.415-1.687-.522-2.159-.154-.68-.39-2.735-.89-2.294-.092.082-.222.25-.39.437-.369.407-.67.72-1.173 1.62Z"
+              />
+              <path
+                fill="#0000f5"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M10.568 19.822c-.847 1.517-1.483 3.15-1.683 4.45-.498.022-3.046.275-3.794.343-.686.062-3.294.25-2.896.529.235.164.67.726 1.545 1.375 1.608 1.191 2.758 1.655 2.99 1.823.511.369 1.477.54 1.415.94-.035.218-.223.764-.427 2.028-.358 2.217-.573 3.746-.51 3.94.034.103.082.205.145.213.064.009.135-.081.235-.156.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.158.269-.306.44-.12.497.542.796 1.073.953 1.234.35.359 1.52 1.914 3.02 2.528.413.168.52-.341.528-.625.01-.38.064-.698.072-1.092.01-.591.044-1.873.033-2.731-.006-.481-.274-1.021.073-1.3.166-.135.505-.234.917-.5.52-.335.897-.656 1.32-.916.5-.308 1.903-1.456 2.98-2.47.132-.124.188-.255-.073-.298-1.479-.243-2.18-.285-2.76-.297a30 30 0 0 0-1.716.023c-.846.032-2.753.289-2.855-.096-.102-.384-.414-1.321-.597-2.33-.235-1.297-.415-1.687-.522-2.158-.154-.68-.39-2.736-.889-2.295-.093.082-.223.251-.391.437-.369.407-.67.72-1.173 1.62Z"
+              />
+              <path
+                fill="#f7f7f7"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M9.857 19.111c-.847 1.517-1.483 3.15-1.683 4.45-.498.022-3.046.276-3.794.343-.686.062-3.294.25-2.896.529.235.164.67.726 1.545 1.375C4.637 27 5.787 27.463 6.019 27.63c.512.369 1.477.54 1.415.94-.035.218-.222.764-.427 2.028-.357 2.217-.573 3.746-.51 3.941.034.102.082.204.146.213.063.008.134-.082.234-.157.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.158.269-.306.44-.12.497.542.796 1.073.954 1.234.35.36 1.52 1.914 3.02 2.528.412.169.52-.34.527-.625.01-.38.065-.698.072-1.092.01-.591.045-1.873.033-2.731-.006-.481-.273-1.021.073-1.3.166-.134.505-.234.918-.5.52-.335.896-.656 1.32-.916.5-.308 1.902-1.456 2.98-2.47.13-.124.187-.255-.074-.298-1.478-.243-2.18-.284-2.76-.297a30 30 0 0 0-1.716.023c-.846.032-2.753.29-2.855-.095s-.414-1.322-.597-2.331c-.235-1.297-.415-1.687-.522-2.158-.154-.68-.39-2.736-.889-2.295-.093.082-.223.251-.39.437-.37.408-.671.72-1.174 1.621Z"
+              />
+              <path
+                fill="#ff7556"
+                stroke="#ff6224"
+                stroke-linecap="round"
+                d="M34.025 20.533c-.847 1.517-1.483 3.15-1.683 4.45-.498.022-3.046.275-3.794.343-.686.061-3.294.25-2.896.528.235.165.67.727 1.545 1.375 1.608 1.192 2.758 1.656 2.99 1.823.511.37 1.477.54 1.415.94-.035.219-.223.765-.427 2.03-.358 2.216-.573 3.744-.51 3.94.034.101.082.204.146.212s.134-.081.234-.157c.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.157.269-.305.44-.119.497.542.796 1.073.954 1.234.35.359 1.52 1.914 3.02 2.528.412.168.52-.341.527-.625.01-.38.064-.699.072-1.092.01-.592.044-1.873.033-2.732-.006-.48-.274-1.02.073-1.3.166-.134.505-.233.918-.5.52-.335.896-.655 1.32-.916.5-.307 1.902-1.455 2.98-2.47.13-.123.187-.255-.074-.297-1.478-.243-2.18-.285-2.76-.297a30 30 0 0 0-1.716.023c-.846.031-2.753.289-2.855-.096-.102-.384-.414-1.321-.597-2.33-.235-1.298-.415-1.687-.522-2.159-.154-.68-.39-2.735-.889-2.294-.093.082-.223.25-.391.437-.369.407-.67.72-1.173 1.62Z"
+              />
+              <path
+                fill="#0000f5"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M33.314 19.822c-.847 1.517-1.483 3.15-1.683 4.45-.498.022-3.046.275-3.794.343-.686.062-3.294.25-2.896.529.235.164.67.726 1.545 1.375 1.608 1.191 2.758 1.655 2.99 1.823.512.369 1.477.54 1.415.94-.035.218-.222.764-.427 2.028-.357 2.217-.573 3.746-.51 3.94.034.103.082.205.145.213.064.009.136-.081.235-.156.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.158.269-.306.44-.12.497.542.796 1.073.953 1.234.35.359 1.52 1.914 3.02 2.528.413.168.52-.341.528-.625.01-.38.065-.698.072-1.092.01-.591.045-1.873.034-2.731-.007-.481-.274-1.021.072-1.3.166-.135.505-.234.917-.5.52-.335.897-.656 1.32-.916.5-.308 1.903-1.456 2.98-2.47.132-.124.188-.255-.073-.298-1.478-.243-2.18-.285-2.76-.297a30 30 0 0 0-1.716.023c-.846.032-2.753.289-2.855-.096-.102-.384-.414-1.321-.597-2.33-.235-1.297-.415-1.687-.522-2.158-.154-.68-.39-2.736-.889-2.295-.093.082-.223.251-.39.437-.37.407-.671.72-1.174 1.62Z"
+              />
+              <path
+                fill="#f7f7f7"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                d="M32.603 19.111c-.847 1.517-1.483 3.15-1.683 4.45-.498.022-3.046.276-3.794.343-.686.062-3.294.25-2.896.529.235.164.67.726 1.545 1.375 1.608 1.192 2.758 1.655 2.99 1.823.512.369 1.477.54 1.415.94-.035.218-.222.764-.427 2.028-.357 2.217-.573 3.746-.51 3.941.034.102.082.204.146.213.063.008.135-.082.234-.157.421-.32.974-.906 1.49-1.5a66 66 0 0 0 2.13-2.6c.121-.158.269-.306.44-.12.498.542.796 1.073.954 1.234.35.36 1.52 1.914 3.02 2.528.412.169.52-.34.527-.625.01-.38.065-.698.072-1.092.01-.591.045-1.873.033-2.731-.006-.481-.273-1.021.073-1.3.166-.134.505-.234.918-.5.52-.335.896-.656 1.32-.916.5-.308 1.902-1.456 2.98-2.47.131-.124.188-.255-.074-.298-1.478-.243-2.18-.284-2.76-.297a30 30 0 0 0-1.716.023c-.846.032-2.753.29-2.855-.095s-.414-1.322-.597-2.331c-.235-1.297-.415-1.687-.522-2.158-.154-.68-.39-2.736-.889-2.295-.093.082-.223.251-.39.437-.37.408-.671.72-1.174 1.621Z"
+              />
+            </svg>
+            <div>Skupaj točk:</div>
+            <span class="score">{{ store.score }}</span>
+          </div>
+          <button type="button" @click.prevent="onShareResult">
+            <span>Deli rezultat</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 36 23"
+            >
+              <path
+                fill="#ff6464"
+                stroke="#ff6464"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3.167 18.268c-.382.785-.762 2.3-.793 2.697.213-.175.364-.28 1.07-.682a44 44 0 0 1 3.444-1.77c1.511-.69 3.255-1.372 4.554-1.775s2.128-.524 3.046-.556 1.9-.008 2.747.122c1.555.24 2.447.293 2.543.451.09.149.105 1.087.525 2.413.326 1.028.402 2.412 1.168 2.394.273-.006 1.235-.566 3.768-2.463 1.986-1.486 5.754-4.32 7.682-5.771 1.928-1.452 2.012-1.52 2.063-1.604.05-.085.067-.184-.07-.36-.138-.176-.42-.421-2.634-1.713a366 366 0 0 0-8.572-4.82c-2.335-1.26-2.961-1.5-3.34-1.628-.38-.129-.507-.146-.61.569-.104.714-.18 2.117-.243 3.128s.004 1.742-.323 1.916c-.58.31-1.918.376-3.766.743-.93.185-1.829.426-2.56.675-.73.248-1.275.496-2.042.933-.767.436-2.359 1.525-2.591 1.702-.299.228-2.406 2.113-2.681 2.357-.218.193-1.59 1.405-2.385 3.042"
+              />
+              <path
+                fill="#0000f5"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M2.23 17.208c-.383.786-.763 2.301-.793 2.697.212-.174.363-.28 1.07-.681a44 44 0 0 1 3.443-1.77c1.512-.69 3.256-1.372 4.555-1.775s2.127-.524 3.045-.556 1.9-.009 2.747.122c1.555.24 2.448.293 2.543.45.09.15.105 1.088.526 2.413.326 1.028.402 2.413 1.168 2.395.273-.007 1.234-.567 3.768-2.463 1.986-1.486 5.754-4.32 7.682-5.772 1.927-1.451 2.011-1.519 2.062-1.604s.067-.184-.07-.36c-.137-.175-.42-.42-2.634-1.713a366 366 0 0 0-8.572-4.82c-2.334-1.259-2.96-1.499-3.34-1.628s-.506-.145-.61.57c-.103.714-.18 2.117-.243 3.128-.062 1.011.004 1.742-.323 1.916-.58.31-1.917.376-3.766.743-.929.184-1.828.426-2.56.674-.73.249-1.275.497-2.042.933s-2.359 1.525-2.59 1.703c-.3.228-2.407 2.113-2.682 2.356-.218.193-1.589 1.406-2.385 3.042"
+              />
+              <path
+                fill="#fff"
+                stroke="#0000f5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M1.293 16.149c-.382.785-.762 2.3-.793 2.697.213-.174.364-.28 1.07-.682a44 44 0 0 1 3.444-1.77c1.511-.69 3.255-1.372 4.554-1.775s2.128-.523 3.046-.556c.918-.032 1.9-.008 2.747.122 1.555.24 2.447.294 2.543.451.09.15.105 1.088.525 2.413.326 1.028.402 2.413 1.168 2.395.273-.007 1.234-.567 3.768-2.463 1.986-1.487 5.754-4.32 7.682-5.772 1.927-1.452 2.012-1.52 2.063-1.604.05-.085.067-.184-.07-.36-.138-.176-.42-.421-2.634-1.713a366 366 0 0 0-8.572-4.82c-2.335-1.259-2.961-1.5-3.34-1.628-.38-.129-.507-.145-.61.569-.104.714-.18 2.117-.243 3.129-.063 1.011.004 1.742-.323 1.916-.58.309-1.918.376-3.766.743a21 21 0 0 0-2.56.674c-.73.249-1.275.497-2.042.933s-2.36 1.525-2.591 1.702c-.299.229-2.406 2.114-2.681 2.357-.218.193-1.59 1.406-2.385 3.042"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
-    <div class="link-section bg-manipulacija-color-5">
+    <div class="link-section bg-kvizle-color-8">
       <div class="page-gutter">
         <div class="section-title">
-          <span class="emoji">📅</span>
-          <span class="text">Nova manipulacija te čaka jutri</span>
-          <span class="emoji">📅</span>
+          <CalendarIcon />
+          <div>
+            Nova vprašanja<br />
+            te čakajo jutri!
+          </div>
+          <CalendarIcon />
         </div>
         <div class="subtitle">
           Do takrat pa k sodelovanju povabi še prijatelje!
@@ -433,403 +294,144 @@ onMounted(() => {
             required
             onfocus="this.select()"
           />
-          <button
-            type="button"
-            class="submit-button"
-            @click.prevent="onCopyLink"
-          >
-            KOPIRAJ
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="share-section bg-manipulacija-color-7">
-      <div class="page-gutter">
-        <div class="share-with-us">
-          <div class="text">
-            Če v medijih zaslediš kakšno zanimivo manipulacijo, nam piši!
-          </div>
-          <div class="buttons">
-            <ButtonPrimary
-              class="button"
-              button-text="pošlji nam manipulacijo"
-              href="mailto:vsi@danesjenovdan.si"
-              target="_blank"
-              icon="hand"
-              color="white"
-            />
-          </div>
+          <button type="button" @click.prevent="onCopyLink">Kopiraj</button>
         </div>
       </div>
     </div>
   </main>
-  <PageFooter />
 </template>
 
 <style scoped lang="scss">
 @use "@sass-fairy/string";
 @use "@sass-fairy/url";
 @use "@/assets/variables" as vars;
+@use "@/assets/mixins";
 
 main {
-  .header-section {
-    padding-bottom: 4.125rem;
-
-    @media (max-width: 576px) {
-      padding-bottom: 2rem;
-    }
-  }
-
-  .header-content {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    max-width: 650px;
-    margin-inline: auto;
-    padding-block: 3.5rem 3rem;
-
-    @media (max-width: 576px) {
-      padding-block: 2rem 1.5rem;
-    }
-
-    .title {
-      display: flex;
-
-      .title-logo {
-        width: 450px;
-        height: auto;
-
-        @media (max-width: 576px) {
-          width: 200px;
-        }
-      }
-    }
-  }
-
   .section-title {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
     margin: 0;
-    font-size: 2.25rem;
+    font-size: 1.75rem;
     font-weight: 700;
     text-align: center;
+    text-wrap: balance;
 
     @media (max-width: 576px) {
       font-size: 1.375rem;
     }
 
-    .emoji {
-      white-space: nowrap;
+    &.result-title {
+      font-family: var(--font-family-alt);
+      font-size: 2.25rem;
 
       @media (max-width: 576px) {
-        font-size: 1.125rem;
+        font-size: 1.75rem;
       }
     }
 
-    .text {
-      margin-inline: 0.66rem;
-      line-height: 1.1;
-      text-wrap: balance;
+    br {
+      display: none;
 
-      @media (max-width: 768px) {
-        width: min-content;
+      @media (max-width: 576px) {
+        display: block;
       }
+    }
+
+    svg {
+      width: 2.125rem;
+      height: 2.125rem;
     }
   }
 
-  .streak-container {
-    display: flex;
-    justify-content: space-between;
-    max-width: 600px;
-    margin-inline: auto;
-    margin-top: 1.5rem;
-    padding: 2.75rem 3.75rem;
-    background-image: url("/jagged-border-streak.svg");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
+  .result-section {
+    padding-block: 2.5rem 4rem;
 
     @media (max-width: 576px) {
-      display: grid;
-      justify-content: center;
-      grid-template-columns: auto auto auto;
-      gap: 0.75rem;
-      padding: 1.5rem 1.75rem;
+      padding-block: 1.75rem;
     }
 
-    .stat {
+    .chapter-scores {
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 21rem;
+      margin-inline: auto;
+      margin-top: 2rem;
 
       @media (max-width: 576px) {
-        grid-column: span 3;
-        // display: grid;
-        // grid-template-columns: subgrid;
+        max-width: 18rem;
+        margin-top: 1.25rem;
       }
 
-      .icon {
-        width: auto;
-        height: 3.5rem;
+      .score-box {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background: var(--kvizle-color-5);
+        font-size: 1.125rem;
+        font-weight: 500;
 
         @media (max-width: 576px) {
-          width: 2.5rem;
-          height: 2.5rem;
+          gap: 0.75rem;
+          padding: 0.375rem 0.75rem;
+          font-size: 1rem;
         }
 
         svg {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
-      .value {
-        font-family: var(--font-family-alt);
-        font-size: 4.5rem;
-        font-weight: 500;
-        line-height: 1;
-        text-align: right;
-
-        @media (max-width: 576px) {
-          font-size: 2.5rem;
-        }
-      }
-
-      .desc {
-        width: min-content;
-        font-size: 1.3125rem;
-        font-weight: 600;
-        line-height: 1.2;
-
-        @media (max-width: 576px) {
-          font-size: 1rem;
-        }
-      }
-    }
-  }
-
-  .leaderboard-section {
-    padding-block: 3rem;
-
-    &:not(.has-consented) {
-      .leaderboard,
-      .add-nickname {
-        filter: blur(10px);
-        user-select: none;
-        pointer-events: none;
-      }
-    }
-  }
-
-  .consent-prompt {
-    position: relative;
-    z-index: 2;
-    margin-top: 2rem;
-    margin-bottom: -6.5rem;
-  }
-
-  .leaderboard {
-    max-width: 400px;
-    margin-inline: auto;
-    padding-block: 1.5rem;
-
-    @media (max-width: 576px) {
-      width: 100%;
-    }
-
-    .leaderboard-entry {
-      display: flex;
-      align-items: center;
-
-      &:not(:last-child) {
-        margin-bottom: 0.5rem;
-      }
-
-      .place {
-        flex-shrink: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 60px;
-        height: 60px;
-        background-color: var(--manipulacija-color-5);
-        border: 3px solid black;
-        border-radius: 50%;
-        font-family: var(--font-family-alt);
-        font-weight: 600;
-        font-size: 2rem;
-        z-index: 1;
-
-        @media (max-width: 576px) {
-          width: 48px;
-          height: 48px;
-          font-size: 1.5rem;
-        }
-      }
-
-      .content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 0.5rem;
-        width: 100%;
-        margin-left: -2rem;
-        padding: 0.5rem 1rem 0.5rem 2.5rem;
-        background-color: #fff;
-        border: 3px solid black;
-        border-radius: 1rem;
-
-        @media (max-width: 576px) {
-          margin-left: -1.5rem;
-          padding: 0.25rem 0.75rem 0.25rem 2rem;
-        }
-
-        .name {
-          flex: 1;
-          font-size: 1.25rem;
-          font-weight: 600;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-
-          @media (max-width: 576px) {
-            font-size: 1rem;
-          }
-
-          em {
-            margin-left: 0.25em;
-            font-family: monospace;
-            font-style: normal;
-            font-size: 0.875rem;
-            font-weight: 600;
-          }
+          width: 2rem;
+          height: 2rem;
         }
 
         .score {
+          margin-bottom: -0.25rem;
           font-family: var(--font-family-alt);
-          font-size: 1.5rem;
-          font-weight: 600;
+          font-size: 3rem;
+          line-height: 1;
+          color: var(--kvizle-color-2);
 
           @media (max-width: 576px) {
-            font-size: 1.25rem;
+            font-size: 2.25rem;
           }
         }
       }
 
-      &.me {
-        .content {
-          background-color: var(--manipulacija-color-12);
-
-          .name {
-            font-weight: 700;
-          }
-        }
-      }
-    }
-
-    .ellipsis {
-      margin-top: -0.2em;
-      margin-bottom: 0.4em;
-      font-family: var(--font-family-alt);
-      font-size: 2.25rem;
-      line-height: 1;
-      font-weight: 700;
-      text-align: center;
-    }
-  }
-
-  .submit-button {
-    display: inline-flex;
-    gap: 0.5em;
-    align-items: center;
-    padding: 0.4em 1.125em 0.3em;
-    background-color: transparent;
-    background-image: url.svg(vars.$button-link-bg-string);
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    border: none;
-    font-family: var(--font-family-alt);
-    font-size: 1.125rem;
-    font-weight: 600;
-    line-height: 1.3;
-    color: inherit;
-    text-decoration: none;
-    cursor: pointer;
-    transition:
-      scale 0.15s ease-in-out,
-      filter 0.15s ease-in-out;
-    will-change: scale, filter;
-
-    &:not(:disabled):hover {
-      scale: 1.05;
-      filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
-    }
-  }
-
-  .submit-button {
-    $button-link-bg-string-submit: string.replace(
-      vars.$button-link-bg-string,
-      "#FFF",
-      "magenta"
-    );
-    background-image: url.svg($button-link-bg-string-submit);
-    margin-top: 0.5rem;
-    border: 0;
-
-    &:disabled {
-      cursor: wait;
-      filter: grayscale(1);
-    }
-  }
-
-  .add-nickname {
-    max-width: 340px;
-    margin-inline: auto;
-    margin-top: 1rem;
-
-    .title {
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .nickname-form {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      margin-top: 1.5rem;
-      font-size: 0.875rem;
-
-      input {
-        padding: 0.2em 0.5em;
-        background: var(--manipulacija-color-8);
-        border: 3px solid #000;
-        border-radius: 5px;
+      button {
+        @include mixins.button-link;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 2rem;
+        padding: 0.45em 2.5em;
+        font-size: 1.5rem;
         font-weight: 500;
-        font-size: 1rem;
-        line-height: 1rem;
-        color: var(--color-text);
+
+        @media (max-width: 576px) {
+          margin-top: 0.75rem;
+          font-size: 1.25rem;
+        }
+
+        svg {
+          flex-shrink: 0;
+          width: 2.25rem;
+        }
       }
     }
   }
 
   .link-section {
-    padding-block: 3rem;
+    padding-block: 2.5rem;
 
-    .section-title {
-      .text {
-        @media (max-width: 768px) {
-          width: auto;
-        }
-
-        @media (max-width: 576px) {
-          max-width: 200px;
-        }
-      }
+    @media (max-width: 576px) {
+      padding-block: 1.75rem;
     }
 
     .subtitle {
-      margin-top: 0.5rem;
-      font-size: 1.5rem;
+      font-size: 1.3125rem;
       font-weight: 500;
       text-align: center;
 
@@ -842,58 +444,44 @@ main {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       margin-top: 2rem;
       text-align: center;
 
       @media (max-width: 576px) {
         flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1.25rem;
       }
 
       input {
-        padding: 0.2em 0.5em;
-        background: var(--manipulacija-color-8);
-        border: 3px solid #000;
-        border-radius: 5px;
+        width: 16ch;
+        padding: 0.5em 0.5em;
+        background: var(--color-bg-white);
+        border: 1px solid var(--color-text);
+        font-size: 1.3125rem;
+        line-height: 1;
         font-weight: 500;
-        font-size: 1rem;
-        line-height: 1rem;
         text-align: center;
         color: var(--color-text);
-      }
-
-      .submit-button {
-        margin-top: 0;
-      }
-    }
-  }
-
-  .share-section {
-    padding-block: 3rem;
-
-    .share-with-us {
-      max-width: 480px;
-      margin-inline: auto;
-      text-align: center;
-
-      .text {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 1.25rem;
 
         @media (max-width: 576px) {
-          font-size: 1.25rem;
+          font-size: 1rem;
+        }
+
+        @include mixins.focus-visible;
+      }
+
+      button {
+        @include mixins.button-link;
+        padding: 0.55em 2em;
+        font-size: 1.25rem;
+        font-weight: 500;
+
+        @media (max-width: 576px) {
+          font-size: 1rem;
         }
       }
-    }
-  }
-
-  .buttons {
-    .button-primary {
-      max-width: 380px;
-      margin-inline: auto;
-      margin-top: 3rem;
-      font-size: 1.3125rem;
     }
   }
 }

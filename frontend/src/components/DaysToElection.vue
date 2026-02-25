@@ -22,10 +22,18 @@ const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
   letter-spacing: 3%;
   text-align: center;
 
+  @media (max-width: 576px) {
+    font-size: 1.75rem;
+  }
+
   em {
     font-size: 3.75rem;
     font-style: normal;
     color: var(--kvizle-color-2);
+
+    @media (max-width: 576px) {
+      font-size: 2.5rem;
+    }
   }
 }
 </style>

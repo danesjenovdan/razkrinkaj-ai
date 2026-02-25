@@ -134,6 +134,7 @@ onMounted(() => {
 @use "@sass-fairy/string";
 @use "@sass-fairy/url";
 @use "@/assets/variables" as vars;
+@use "@/assets/mixins";
 
 .calendar-day {
   display: flex;
@@ -249,10 +250,7 @@ onMounted(() => {
       }
     }
 
-    &:focus-visible {
-      outline: 2px solid var(--kvizle-color-2);
-      outline-offset: 2px;
-    }
+    @include mixins.focus-visible;
   }
 }
 </style>

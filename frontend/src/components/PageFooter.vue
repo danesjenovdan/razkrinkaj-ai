@@ -136,6 +136,7 @@ async function onNewsletterSubmit() {
 @use "@sass-fairy/string";
 @use "@sass-fairy/url";
 @use "@/assets/variables" as vars;
+@use "@/assets/mixins";
 
 footer {
   .page-footer {
@@ -165,6 +166,11 @@ footer {
       padding-block: 1rem;
       font-size: 1.125rem;
 
+      @media (max-width: 576px) {
+        padding-block: 0.75rem;
+        font-size: 1rem;
+      }
+
       strong {
         font-weight: 500;
       }
@@ -178,64 +184,14 @@ footer {
           text-decoration: none;
         }
 
-        &:focus-visible {
-          outline: 2px solid var(--kvizle-color-2);
-          outline-offset: 2px;
-        }
+        @include mixins.focus-visible;
       }
 
       .button-link {
-        $footer-button-link-bg-string: string.replace(
-          string.replace(
-            vars.$button-link-bg-string,
-            "#000",
-            "#{vars.$kvizle-color-2}"
-          ),
-          "#FFF",
-          "#{vars.$kvizle-color-4}"
-        );
-        $footer-hover-button-link-bg-string: string.replace(
-          string.replace(
-            vars.$button-link-bg-string,
-            "#000",
-            "#{vars.$kvizle-color-2}"
-          ),
-          "#FFF",
-          "#{vars.$kvizle-color-5}"
-        );
-
-        display: inline-flex;
-        gap: 0.5em;
-        align-items: center;
-        justify-content: center;
+        @include mixins.button-link;
         padding: 0.45em 1.125em 0.4em;
-        background-color: transparent;
-        background-image: url.svg($footer-button-link-bg-string);
-        background-repeat: no-repeat;
-        background-size: 100% 100%;
-        border: none;
         font-size: 0.875rem;
         font-weight: 600;
-        line-height: 1.3;
-        color: var(--kvizle-color-2);
-        text-align: center;
-        text-decoration: none;
-        cursor: pointer;
-        transition:
-          scale 0.15s ease-in-out,
-          filter 0.15s ease-in-out;
-        will-change: scale, filter;
-
-        &:not(:disabled):hover {
-          scale: 1.05;
-          background-image: url.svg($footer-hover-button-link-bg-string);
-          filter: drop-shadow(0 0 2px var(--kvizle-color-2));
-        }
-
-        &:focus-visible {
-          outline: 2px solid var(--kvizle-color-2);
-          outline-offset: 2px;
-        }
       }
     }
 
@@ -268,10 +224,18 @@ footer {
           .title {
             font-size: 1.125rem;
             font-weight: 600;
+
+            @media (max-width: 576px) {
+              font-size: 1rem;
+            }
           }
 
           .desc {
             font-size: 1rem;
+
+            @media (max-width: 576px) {
+              font-size: 0.875rem;
+            }
           }
         }
 
@@ -279,6 +243,7 @@ footer {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 0.5rem;
+          max-width: 16rem;
           margin-top: 1rem;
 
           .donate-link {
@@ -320,10 +285,7 @@ footer {
                 line-height: 1rem;
                 color: var(--color-text);
 
-                &:focus-visible {
-                  outline: 2px solid var(--kvizle-color-2);
-                  outline-offset: 2px;
-                }
+                @include mixins.focus-visible;
               }
             }
 
@@ -357,10 +319,7 @@ footer {
                   }
                 }
 
-                &:focus-visible {
-                  outline: 2px solid var(--kvizle-color-2);
-                  outline-offset: 2px;
-                }
+                @include mixins.focus-visible;
               }
             }
 

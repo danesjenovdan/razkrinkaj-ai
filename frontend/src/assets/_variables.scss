@@ -6,6 +6,7 @@ $kvizle-color-4: #ffe796;
 $kvizle-color-5: #fec400;
 $kvizle-color-6: #7fb2ff;
 $kvizle-color-7: #5895f9;
+$kvizle-color-8: #ffecaa;
 
 $kvizle-colors: (
   $kvizle-color-0,
@@ -15,7 +16,8 @@ $kvizle-colors: (
   $kvizle-color-4,
   $kvizle-color-5,
   $kvizle-color-6,
-  $kvizle-color-7
+  $kvizle-color-7,
+  $kvizle-color-8
 );
 
 $button-link-bg-string: '<svg viewBox="0 0 124 30" preserveAspectRatio="none" fill="#FFF"><path vector-effect="non-scaling-stroke" stroke="#000" stroke-width="2" d="M62 1c29.723 0 45.066 1.686 52.963 4.34 3.926 1.321 5.868 2.836 6.867 4.368C122.831 11.243 123 12.961 123 15c0 2.093-.067 3.807-.947 5.34-.864 1.505-2.622 3.006-6.426 4.321C107.961 27.312 92.627 29 62 29c-30.626 0-45.96-1.687-53.627-4.339-3.804-1.315-5.562-2.817-6.426-4.32C1.067 18.807 1 17.093 1 15c0-2.04.169-3.757 1.17-5.292.999-1.532 2.94-3.047 6.867-4.367C16.934 2.686 32.277 1 62 1Z"/></svg>';

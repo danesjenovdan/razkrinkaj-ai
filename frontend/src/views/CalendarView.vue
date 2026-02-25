@@ -3,7 +3,6 @@ import { onMounted } from "vue";
 import { useStore } from "@/stores/store.ts";
 import ScoreHeader from "@/components/ScoreHeader.vue";
 import DaysToElection from "@/components/DaysToElection.vue";
-import ConsentPrompt from "@/components/ConsentPrompt.vue";
 import CalendarDay from "@/components/CalendarDay.vue";
 import CalendarElectionDay from "@/components/CalendarElectionDay.vue";
 import PageFooter from "@/components/PageFooter.vue";
@@ -23,10 +22,11 @@ onMounted(() => {
       :description="store.introductionDescription"
       :score="store.score"
     />
+  </div>
+  <div class="bg-kvizle-color-0">
     <main>
       <div class="page-gutter">
         <DaysToElection />
-        <ConsentPrompt />
         <div class="calendar">
           <CalendarDay
             v-for="[id, chapter] in store.chapters"

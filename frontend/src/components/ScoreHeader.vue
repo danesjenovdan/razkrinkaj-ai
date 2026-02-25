@@ -3,6 +3,7 @@ defineProps<{
   title: string;
   description?: string;
   score: number;
+  hideScore?: boolean;
 }>();
 </script>
 
@@ -13,7 +14,7 @@ defineProps<{
         <RouterLink :to="{ name: 'intro' }" class="title">
           VOLILNI KVIZLE
         </RouterLink>
-        <div class="score">
+        <div v-if="!hideScore" class="score">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -37,6 +38,7 @@ defineProps<{
 
 <style scoped lang="scss">
 @use "@sass-fairy/url";
+@use "@/assets/mixins";
 
 .score-header {
   .header-content {
@@ -46,12 +48,17 @@ defineProps<{
     justify-content: center;
     max-width: 65rem;
     margin-inline: auto;
-    padding-top: 3.5rem;
+    padding-block: 3.5rem;
+
+    @media (max-width: 576px) {
+      padding-block: 2rem;
+    }
 
     .title {
       display: flex;
       font-family: var(--font-family-alt);
       font-size: 4.5rem;
+      line-height: 1;
       color: var(--kvizle-color-2);
       letter-spacing: 3%;
       text-decoration: none;
@@ -61,6 +68,12 @@ defineProps<{
       text-align: center;
       -webkit-text-fill-color: var(--kvizle-color-1);
       -webkit-text-stroke: 2px;
+
+      @media (max-width: 576px) {
+        font-size: 2.75rem;
+      }
+
+      @include mixins.focus-visible;
     }
 
     .score {
@@ -74,10 +87,13 @@ defineProps<{
   .description {
     max-width: 65rem;
     margin-inline: auto;
-    margin-bottom: 3.5rem;
     font-size: 1.5rem;
     font-weight: 500;
     text-align: center;
+
+    @media (max-width: 576px) {
+      font-size: 1.25rem;
+    }
 
     :deep(b) {
       font-weight: 500;

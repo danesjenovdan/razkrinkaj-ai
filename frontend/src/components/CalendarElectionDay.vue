@@ -13,6 +13,7 @@
 @use "@sass-fairy/string";
 @use "@sass-fairy/url";
 @use "@/assets/variables" as vars;
+@use "@/assets/mixins";
 
 .calendar-election-day {
   grid-column: span 3;
@@ -43,55 +44,12 @@
     flex: 1;
 
     button {
-      $calendar-button-link-bg-string: string.replace(
-        string.replace(
-          vars.$button-link-bg-string,
-          "#000",
-          "#{vars.$kvizle-color-2}"
-        ),
-        "#FFF",
-        "#{vars.$kvizle-color-4}"
-      );
-      $calendar-hover-button-link-bg-string: string.replace(
-        string.replace(
-          vars.$button-link-bg-string,
-          "#000",
-          "#{vars.$kvizle-color-2}"
-        ),
-        "#FFF",
-        "#{vars.$kvizle-color-5}"
-      );
-
+      @include mixins.button-link;
       display: block;
       width: 100%;
-      padding: 0.65em 0.4rem 0.75rem;
-      background-color: transparent;
-      background-image: url.svg($calendar-button-link-bg-string);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      border: none;
+      padding: 0.65em 0.45em 0.7em;
       font-size: 1.125rem;
       font-weight: 500;
-      line-height: 1.3;
-      color: var(--kvizle-color-2);
-      text-align: center;
-      text-decoration: none;
-      cursor: pointer;
-      transition:
-        scale 0.15s ease-in-out,
-        filter 0.15s ease-in-out;
-      will-change: scale, filter;
-
-      &:not(:disabled):hover {
-        scale: 1.05;
-        background-image: url.svg($calendar-hover-button-link-bg-string);
-        filter: drop-shadow(0 0 2px var(--kvizle-color-2));
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--kvizle-color-2);
-        outline-offset: 2px;
-      }
     }
   }
 }
