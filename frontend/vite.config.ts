@@ -25,4 +25,11 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: ["if-function"], // for sass-fairy
+      },
+    },
+  },
 });
