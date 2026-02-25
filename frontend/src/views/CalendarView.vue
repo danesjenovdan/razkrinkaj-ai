@@ -45,15 +45,18 @@ onMounted(() => {
 main {
   .calendar {
     display: grid;
-    align-content: start;
     justify-content: center;
     grid-template-columns: repeat(auto-fit, 9.5rem);
-    gap: 1.25rem;
-    width: 100%;
-    margin-top: 2rem;
-    max-width: min(65rem, 100%);
+    gap: 1.5rem;
+    width: min(100%, 65rem);
     margin-inline: auto;
+    margin-top: 2rem;
     margin-bottom: 8.125rem;
+
+    @media (max-width: 576px) {
+      grid-template-columns: repeat(2, 1fr);
+      width: min(100%, 21rem);
+    }
   }
 }
 </style>

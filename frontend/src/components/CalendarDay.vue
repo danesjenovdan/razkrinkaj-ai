@@ -155,10 +155,6 @@ onMounted(() => {
     font-size: 1.5rem;
     font-weight: 500;
     text-align: center;
-
-    @media (max-width: 576px) {
-      font-size: 0.875rem;
-    }
   }
 
   .text-content {
@@ -181,10 +177,6 @@ onMounted(() => {
       text-align: center;
       -webkit-text-fill-color: var(--kvizle-color-1);
       -webkit-text-stroke: 2px;
-
-      @media (max-width: 576px) {
-        font-size: 1.75rem;
-      }
     }
   }
 

@@ -19,11 +19,12 @@ const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
   margin-block: 1rem;
   font-family: var(--font-family-alt);
   font-size: 3rem;
+  line-height: 1;
   letter-spacing: 3%;
   text-align: center;
 
   @media (max-width: 576px) {
-    font-size: 1.75rem;
+    font-size: 2rem;
   }
 
   em {
@@ -32,7 +33,7 @@ const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
     color: var(--kvizle-color-2);
 
     @media (max-width: 576px) {
-      font-size: 2.5rem;
+      font-size: 2.75rem;
     }
   }
 }
