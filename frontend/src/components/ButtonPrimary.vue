@@ -1,27 +1,34 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed } from "vue";
 
 const props = withDefaults(
   defineProps<{
-    buttonText?: string
-    link?: object
-    href?: string
-    target?: string
-    icon?: string
-    leftIcon?: string
-    sideIcon?: string
-    color?: string
+    buttonText?: string;
+    link?: object;
+    href?: string;
+    target?: string;
+    icon?: string;
+    leftIcon?: string;
+    sideIcon?: string;
+    color?: string;
   }>(),
   {
-    color: 'primary',
+    buttonText: "Nadaljuj",
+    link: undefined,
+    href: undefined,
+    target: undefined,
+    icon: undefined,
+    leftIcon: undefined,
+    sideIcon: undefined,
+    color: "primary",
   },
-)
+);
 
-const text = computed(() => props.buttonText || 'Nadaljuj')
+const text = computed(() => props.buttonText);
 
 const componentName = computed(() =>
-  props.link ? 'RouterLink' : props.href ? 'a' : 'button',
-)
+  props.link ? "RouterLink" : props.href ? "a" : "button",
+);
 </script>
 
 <template>
@@ -65,9 +72,9 @@ const componentName = computed(() =>
 </template>
 
 <style scoped lang="scss">
-@use '@sass-fairy/string';
-@use '@sass-fairy/url';
-@use '@/assets/variables' as vars;
+@use "@sass-fairy/string";
+@use "@sass-fairy/url";
+@use "@/assets/variables" as vars;
 
 .button-primary {
   position: relative;
@@ -99,8 +106,8 @@ const componentName = computed(() =>
   &.button-color-primary {
     $button-bg-svg-string-primary: string.replace(
       vars.$button-bg-svg-string,
-      '#FFF',
-      '#{vars.$manipulacija-color-2}'
+      "#FFF",
+      "magenta"
     );
     background-image: url.svg($button-bg-svg-string-primary);
   }
@@ -108,8 +115,8 @@ const componentName = computed(() =>
   &.button-color-secondary {
     $button-bg-svg-string-secondary: string.replace(
       vars.$button-bg-svg-string,
-      '#FFF',
-      '#{vars.$manipulacija-color-6}'
+      "#FFF",
+      "magenta"
     );
     background-image: url.svg($button-bg-svg-string-secondary);
     padding-inline: 1.3125rem;

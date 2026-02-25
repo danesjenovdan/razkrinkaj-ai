@@ -1,19 +1,46 @@
-import pluginVue from 'eslint-plugin-vue'
-import vueTsEslintConfig from '@vue/eslint-config-typescript'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import { globalIgnores } from "eslint/config";
+import js from "@eslint/js";
+import globals from "globals";
+import pluginImport from "eslint-plugin-import";
+import pluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import pluginVue from "eslint-plugin-vue";
+import {
+  defineConfigWithVueTs,
+  vueTsConfigs,
+} from "@vue/eslint-config-typescript";
 
-export default [
+export default defineConfigWithVueTs([
+  js.configs.recommended,
+  pluginImport.flatConfigs.recommended,
+  ...pluginVue.configs["flat/recommended"],
+  vueTsConfigs.recommended,
+  globalIgnores(["dist/"]),
   {
-    name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    rules: {
+      "no-console": "warn",
+      "no-alert": "warn",
+      "import/extensions": ["error", "always", { ignorePackages: true }],
+      "import/no-extraneous-dependencies": [
+        "error",
+        {
+          optionalDependencies: false,
+          devDependencies: ["eslint.config.js", "vite.config.ts"],
+        },
+      ],
+    },
+    settings: {
+      "import/resolver": {
+        alias: [["@", "./src"]],
+      },
+    },
   },
-
-  {
-    name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
-  },
-
-  ...pluginVue.configs['flat/essential'],
-  ...vueTsEslintConfig(),
-  skipFormatting,
-]
+  pluginPrettierRecommended,
+]);

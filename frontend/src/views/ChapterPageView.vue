@@ -1,79 +1,79 @@
 <script setup lang="ts">
-import ButtonPrimary from '@/components/ButtonPrimary.vue'
-import QuizPage from '@/components/QuizPage.vue'
-import RichText from '@/components/RichText.vue'
-import { useStore } from '@/stores/store'
-import type { Chapter } from '@/types'
-import { preloadPageImages } from '@/utils/image'
-import { computed, ref, watch, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import ButtonPrimary from "@/components/ButtonPrimary.vue";
+import QuizPage from "@/components/QuizPage.vue";
+import RichText from "@/components/RichText.vue";
+import { useStore } from "@/stores/store.ts";
+import type { Chapter } from "@/types";
+import { preloadPageImages } from "@/utils/image.ts";
+import { computed, ref, watch, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
-const props = defineProps<{ chapter: Chapter }>()
+const props = defineProps<{ chapter: Chapter }>();
 
-const store = useStore()
-const route = useRoute()
+const store = useStore();
+const route = useRoute();
 const pageIndex = computed(() => {
-  const pageIndexParam = route.params.pageIndex as string
+  const pageIndexParam = route.params.pageIndex as string;
   if (!pageIndexParam) {
-    return 0
+    return 0;
   }
-  return parseInt(pageIndexParam, 10)
-})
+  return parseInt(pageIndexParam, 10);
+});
 
 const chapterDate = computed(() => {
-  const dateParts = props.chapter.title.split('.').map(Number)
-  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0])
-})
+  const dateParts = props.chapter.title.split(".").map(Number);
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+});
 
 const formattedTitle = computed(() => {
   if (!chapterDate.value || Number.isNaN(chapterDate.value.getTime())) {
-    return props.chapter.title
+    return props.chapter.title;
   }
-  const formatter = new Intl.DateTimeFormat('sl-SI', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-  const formattedDate = formatter.format(chapterDate.value)
-  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)
-})
+  const formatter = new Intl.DateTimeFormat("sl-SI", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  const formattedDate = formatter.format(chapterDate.value);
+  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+});
 
 const page = computed(() => {
-  const p = props.chapter.pages?.[pageIndex.value]
+  const p = props.chapter.pages?.[pageIndex.value];
   if (!p) {
-    return null
+    return null;
     // throw new Error('Page not found')
   }
   if (chapterDate.value && !Number.isNaN(chapterDate.value.getTime())) {
-    const now = Date.now()
-    const isLocked = now < chapterDate.value.getTime()
+    const now = Date.now();
+    const isLocked = now < chapterDate.value.getTime();
     if (isLocked) {
-      return null
+      return null;
       // throw new Error('Page is locked')
     }
   }
-  return p
-})
+  return p;
+});
 
 const hasNextPage = computed(() => {
-  return !!props.chapter.pages?.[pageIndex.value + 1]
-})
+  return !!props.chapter.pages?.[pageIndex.value + 1];
+});
 
 const nextPageLink = computed(() => {
   return hasNextPage.value
-    ? { name: 'chapter-page', params: { pageIndex: pageIndex.value + 1 } }
-    : { name: 'chapter-result' }
-})
+    ? { name: "chapter-page", params: { pageIndex: pageIndex.value + 1 } }
+    : { name: "chapter-result" };
+});
 
-const showNextButton = ref(false)
+const showNextButton = ref(false);
 
 watch(pageIndex, () => {
-  showNextButton.value = false
-})
+  showNextButton.value = false;
+});
 
 function onQuizDone() {
-  showNextButton.value = true
+  showNextButton.value = true;
 
   if (!hasNextPage.value) {
     // save score and answers
@@ -81,29 +81,29 @@ function onQuizDone() {
       store.finishedChapters.set(props.chapter.id, {
         score: store.currentChapterScore,
         answers: new Map(store.currentChapterAnswers),
-      })
-      store.inProgressChapters.delete(props.chapter.id)
-      store.sendFinishedChapterDataToApi(props.chapter.id)
-      store.saveLocalStorage()
+      });
+      store.inProgressChapters.delete(props.chapter.id);
+      store.sendFinishedChapterDataToApi(props.chapter.id);
+      store.saveLocalStorage();
     }
   }
 }
 
 const nextPage = computed(() => {
-  return props.chapter.pages?.[pageIndex.value + 1]
-})
+  return props.chapter.pages?.[pageIndex.value + 1];
+});
 
 watch(nextPage, () => {
   if (nextPage.value) {
-    preloadPageImages(nextPage.value)
+    preloadPageImages(nextPage.value);
   }
-})
+});
 
 onMounted(() => {
   if (nextPage.value) {
-    preloadPageImages(nextPage.value)
+    preloadPageImages(nextPage.value);
   }
-})
+});
 </script>
 
 <template>

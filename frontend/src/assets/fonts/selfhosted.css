@@ -1,29 +1,36 @@
 /**
-  * Clash Grotesk
-  *
-  * This is a variable font
-  * You can control variable axes as shown below:
-  * font-variation-settings: wght 700.0;
-  *
-  * available axes:
-  *   - 'wght' (range from 200.0 to 700.0)
+  * Super Chiby
   */
 @font-face {
-  font-family: 'wf-clash-grotesk-variable';
-  src: url('./clash-grotesk/ClashGrotesk-Variable.woff2') format('woff2');
-  font-weight: 200 700;
+  font-family: 'wf-super-chiby';
   font-display: swap;
   font-style: normal;
+  font-weight: 400;
+  src: url('./super-chiby/super_chiby.woff2') format('woff2');
 }
-/**
-  * DynaPuff is a variable font with these axes:
-  *   wdth 75-100
-  *   wght 400-700
-  */
+
+/* Schibsted Grotesk */
 @font-face {
-  font-family: 'wf-dynapuff-variable';
-  src: url('./dynapuff/DynaPuff-VariableFont_wdth,wght.woff2') format('woff2');
-  font-weight: 400 700;
+  font-family: 'wf-schibsted-grotesk';
   font-display: swap;
   font-style: normal;
+  font-weight: 400;
+  src: url('./schibsted-grotesk/schibsted-grotesk-v7-latin_latin-ext-regular.woff2')
+    format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'wf-schibsted-grotesk';
+  font-style: normal;
+  font-weight: 500;
+  src: url('./schibsted-grotesk/schibsted-grotesk-v7-latin_latin-ext-500.woff2')
+    format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'wf-schibsted-grotesk';
+  font-style: normal;
+  font-weight: 600;
+  src: url('./schibsted-grotesk/schibsted-grotesk-v7-latin_latin-ext-600.woff2')
+    format('woff2');
 }

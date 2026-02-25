@@ -1,38 +1,39 @@
 <script setup lang="ts">
-import type { ImageDescription } from '@/types'
-import { onMounted, ref } from 'vue'
-import { fixLocalUrl, preloadImageUrl } from '@/utils/image'
+import type { ImageDescription } from "@/types";
+import { onMounted, ref } from "vue";
+import { fixLocalUrl, preloadImageUrl } from "@/utils/image.ts";
 
-const props = defineProps<{ image: ImageDescription }>()
+const props = defineProps<{ image: ImageDescription }>();
 
-const isThumbnail = ref(!props.image.preloaded)
+const isThumbnail = ref(!props.image.preloaded);
 
-const isSVG = ref(!!props.image.svg)
-const svgData = ref<string | null>(null)
+const isSVG = ref(!!props.image.svg);
+const svgData = ref<string | null>(null);
 
 function fetchSVG() {
   if (isSVG.value && !svgData.value) {
     fetch(fixLocalUrl(props.image.url))
-      .then(response => response.text())
-      .then(data => {
-        svgData.value = data
-      })
+      .then((response) => response.text())
+      .then((data) => {
+        svgData.value = data;
+      });
   }
 }
 
 onMounted(() => {
   if (!props.image.preloaded) {
     preloadImageUrl(props.image.url).then(() => {
-      isThumbnail.value = false
-    })
+      isThumbnail.value = false;
+    });
   }
 
-  fetchSVG()
-})
+  fetchSVG();
+});
 </script>
 
 <template>
   <div class="thumbnail-image">
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div v-if="isSVG && svgData" v-html="svgData"></div>
     <img
       v-else
