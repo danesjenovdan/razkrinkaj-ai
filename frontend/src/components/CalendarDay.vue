@@ -4,8 +4,6 @@ import { computed, onMounted } from "vue";
 import { useStore } from "@/stores/store.ts";
 import { preloadPageImages } from "@/utils/image.ts";
 import { slugifyDot } from "@/utils/stringify.ts";
-import LockIcon from "./LockIcon.vue";
-import QuestionIcon from "./QuestionIcon.vue";
 
 const props = defineProps<{
   chapter: Chapter;
@@ -111,7 +109,7 @@ onMounted(() => {
     <template v-if="isLocked">
       <h2 class="title">{{ chapter.title }}</h2>
       <div class="icon icon--lock">
-        <LockIcon />
+        <img src="/lock.svg" alt="" />
       </div>
     </template>
     <template v-else>
@@ -122,9 +120,9 @@ onMounted(() => {
         </div>
       </div>
       <div class="answer-icons">
-        <div class="answer-icon"><QuestionIcon /></div>
-        <div class="answer-icon"><QuestionIcon /></div>
-        <div class="answer-icon"><QuestionIcon /></div>
+        <div class="answer-icon"><img src="/question.svg" alt="" /></div>
+        <div class="answer-icon"><img src="/question.svg" alt="" /></div>
+        <div class="answer-icon"><img src="/question.svg" alt="" /></div>
       </div>
     </template>
   </component>
@@ -194,7 +192,7 @@ onMounted(() => {
         border-right: 2px solid var(--kvizle-color-2);
       }
 
-      svg {
+      img {
         height: 2rem;
         margin: auto;
       }
@@ -224,9 +222,8 @@ onMounted(() => {
       width: 2.25rem;
       margin-inline: auto;
 
-      svg {
+      img {
         width: 100%;
-        height: 100%;
       }
     }
   }
