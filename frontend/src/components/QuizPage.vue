@@ -220,16 +220,6 @@ onBeforeUnmount(() => {
       <div class="answer-description">
         <RichText :content="page.answer_description" />
       </div>
-      <div class="answer-stats">
-        Na to vprašanje je pravilno odgovorilo
-        <template v-if="percentPeopleCorrect !== -1">
-          <em>{{ percentPeopleCorrect }} %</em>
-        </template>
-        <template v-else>
-          <em>...</em>
-        </template>
-        uporabnikov.
-      </div>
     </div>
     <div v-if="modalOpen && modalExplanation !== null" class="help-modal">
       <div class="modal-content">
@@ -311,7 +301,7 @@ onBeforeUnmount(() => {
     max-width: 603px;
     margin: 0 auto;
     padding: 2.5rem 5rem;
-    background-image: url("/jagged-border-question.svg");
+    // background-image: url("/jagged-border-question.svg");
     background-repeat: no-repeat;
     background-size: 100% 100%;
     font-size: 2rem;
@@ -427,49 +417,12 @@ onBeforeUnmount(() => {
   .answer-description-wrapper {
     margin-top: 3rem;
 
-    .answer-stats {
-      max-width: 700px;
-      margin-inline: auto;
-      margin-top: 2.5rem;
-      padding: 1.125rem 1rem 1.25rem 1rem;
-      $percentile-bg-svg-string-default: string.replace(
-        vars.$percentile-bg-svg-string,
-        "#FFF",
-        "magenta"
-      );
-      background-image: url.svg($percentile-bg-svg-string-default);
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      font-size: 1.3125rem;
-      line-height: 1;
-      font-weight: 500;
-      text-align: center;
-      rotate: -1.7deg;
-
-      @media (max-width: 576px) {
-        font-size: 1.125rem;
-      }
-
-      em {
-        font-family: var(--font-family-alt);
-        font-style: normal;
-        font-size: 2rem;
-        font-weight: 600;
-        white-space: nowrap;
-        margin-inline: 0.125em;
-
-        @media (max-width: 576px) {
-          font-size: 1.5rem;
-        }
-      }
-    }
-
     .answer-description {
       max-width: 700px;
       margin-inline: auto;
       margin-top: 1rem;
       padding: 2rem 2.25rem;
-      background-image: url("/jagged-border.svg");
+      // background-image: url("/jagged-border.svg");
       background-repeat: no-repeat;
       background-size: 100% 100%;
 
@@ -502,7 +455,7 @@ onBeforeUnmount(() => {
       max-height: calc(100dvh - 6rem);
       margin-inline: auto;
       padding: 0.5rem;
-      background-image: url("/jagged-border.svg");
+      // background-image: url("/jagged-border.svg");
       background-repeat: no-repeat;
       background-size: 100% 100%;
 

@@ -74,17 +74,15 @@ const isTomorrow = computed(() => {
   );
 });
 
-const didAnswerCorrectly = computed<boolean | null>(() => {
+const answers = computed(() => {
   if (store.finishedChapters.has(props.chapter.id)) {
     const chapterData = store.finishedChapters.get(props.chapter.id)!;
-    const answers = Array.from(chapterData.answers.values());
-    return answers.every((answer) => answer.correct);
+    return Array.from(chapterData.answers.values());
   } else if (store.inProgressChapters.has(props.chapter.id)) {
     const chapterData = store.inProgressChapters.get(props.chapter.id)!;
-    const answers = Array.from(chapterData.answers.values());
-    return answers.every((answer) => answer.correct);
+    return Array.from(chapterData.answers.values());
   }
-  return null;
+  return [];
 });
 
 const isHidden = computed(() => {
@@ -114,14 +112,12 @@ onMounted(() => {
     v-if="!isHidden"
     :class="{
       'calendar-day': true,
-      today: isToday && didAnswerCorrectly === null,
+      today: isToday && !answers.length,
       tomorrow: isTomorrow,
       'tomorrow-highlighted': isTomorrow && answeredYesterday,
       disabled: isLocked,
       completed: isFinished,
-      success: didAnswerCorrectly === true,
-      fail: didAnswerCorrectly === false,
-      'did-answer': didAnswerCorrectly !== null && !isLocked,
+      'did-answer': answers.length && !isLocked,
     }"
     :to="
       !isLocked
@@ -141,14 +137,30 @@ onMounted(() => {
     <template v-else>
       <div class="text-content">
         <h2 class="title">{{ chapter.title }}</h2>
-        <div v-if="isToday && didAnswerCorrectly === null" class="text">
-          REŠI!
-        </div>
+        <div v-if="isToday && !answers.length" class="text">REŠI!</div>
       </div>
       <div class="answer-icons">
-        <div class="answer-icon"><img src="/question.svg" alt="" /></div>
-        <div class="answer-icon"><img src="/question.svg" alt="" /></div>
-        <div class="answer-icon"><img src="/question.svg" alt="" /></div>
+        <template v-if="answers[0]">
+          <div v-if="answers[0].correct" class="answer-icon">
+            <img src="/check.svg" alt="" />
+          </div>
+          <div v-else class="answer-icon"><img src="/cross.svg" alt="" /></div>
+        </template>
+        <div v-else class="answer-icon"><img src="/question.svg" alt="" /></div>
+        <template v-if="answers[1]">
+          <div v-if="answers[1].correct" class="answer-icon">
+            <img src="/check.svg" alt="" />
+          </div>
+          <div v-else class="answer-icon"><img src="/cross.svg" alt="" /></div>
+        </template>
+        <div v-else class="answer-icon"><img src="/question.svg" alt="" /></div>
+        <template v-if="answers[2]">
+          <div v-if="answers[2].correct" class="answer-icon">
+            <img src="/check.svg" alt="" />
+          </div>
+          <div v-else class="answer-icon"><img src="/cross.svg" alt="" /></div>
+        </template>
+        <div v-else class="answer-icon"><img src="/question.svg" alt="" /></div>
       </div>
     </template>
   </component>
@@ -219,8 +231,8 @@ onMounted(() => {
       }
 
       img {
-        height: 2rem;
-        margin: auto;
+        width: 100%;
+        height: 100%;
       }
     }
   }
