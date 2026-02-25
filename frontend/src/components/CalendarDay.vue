@@ -26,6 +26,28 @@ const chapterSlug = computed(() => {
   return slugifyDot(props.chapter.title);
 });
 
+const yesterdayChapterDate = computed(() => {
+  const date = chapterDate.value;
+  const yesterday = new Date(date);
+  yesterday.setDate(date.getDate() - 1);
+  return yesterday;
+});
+const yesterdayChapterSlug = computed(() => {
+  const date = yesterdayChapterDate.value;
+  const title = `${date.getDate()}.${date.getMonth() + 1}.`;
+  return slugifyDot(title);
+});
+const yesterdayChapterId = computed(() => {
+  return store.getChapterIdBySlug(yesterdayChapterSlug.value);
+});
+const answeredYesterday = computed(() => {
+  const yesterdayId = yesterdayChapterId.value;
+  if (yesterdayId) {
+    return store.finishedChapters.has(yesterdayId);
+  }
+  return false;
+});
+
 const isFinished = computed(() => store.finishedChapters.has(props.chapter.id));
 const isLocked = computed(() => {
   const date = chapterDate.value;
@@ -94,6 +116,7 @@ onMounted(() => {
       'calendar-day': true,
       today: isToday && didAnswerCorrectly === null,
       tomorrow: isTomorrow,
+      'tomorrow-highlighted': isTomorrow && answeredYesterday,
       disabled: isLocked,
       completed: isFinished,
       success: didAnswerCorrectly === true,
@@ -108,7 +131,10 @@ onMounted(() => {
   >
     <template v-if="isLocked">
       <h2 class="title">{{ chapter.title }}</h2>
-      <div class="icon icon--lock">
+      <div v-if="isTomorrow && answeredYesterday" class="text">
+        VRNI SE JUTRI!
+      </div>
+      <div v-else class="icon icon--lock">
         <img src="/lock.svg" alt="" />
       </div>
     </template>
@@ -225,6 +251,20 @@ onMounted(() => {
       img {
         width: 100%;
       }
+    }
+  }
+
+  &.tomorrow-highlighted {
+    background: var(--kvizle-color-5);
+
+    .text {
+      font-family: var(--font-family-alt);
+      font-size: 1.5rem;
+      line-height: 1;
+      letter-spacing: 3%;
+      color: var(--kvizle-color-2);
+      text-align: center;
+      transform: rotate(-3.5deg) translateY(25%);
     }
   }
 
