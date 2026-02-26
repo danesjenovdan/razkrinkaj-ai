@@ -16,47 +16,15 @@ type FinishedChapterData = {
   answers: Map<number, AnswerData>;
 };
 
-// TODO
-const axios = {
-  post: async (url: string, payload: object) => {
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-      return {
-        status: response.status,
-        data: await response.json(),
-      };
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Axios POST error", error);
-      return {
-        status: -1,
-        data: null,
-      };
-    }
-  },
-  get: async (url: string) => {
-    try {
-      const response = await fetch(url);
-      return {
-        status: response.status,
-        data: await response.json(),
-      };
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error("Axios GET error", error);
-      return {
-        status: -1,
-        data: null,
-      };
-    }
-  },
-};
+function postJson(url: string, payload: object) {
+  return fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+}
 
 export const useStore = defineStore("store", () => {
   const homeDataLoaded = ref(false);
@@ -143,7 +111,7 @@ export const useStore = defineStore("store", () => {
     consentClickedButNotDone.value = true;
     // send all pre consent data to backend
     for (const req of preConsentRequests.value) {
-      const res = await axios.post(req.url, req.payload);
+      const res = await postJson(req.url, req.payload);
       // eslint-disable-next-line no-console
       console.log("Pre consent request sent", req.url, res.status);
     }
@@ -282,10 +250,10 @@ export const useStore = defineStore("store", () => {
   });
 
   async function fetchHomeData() {
-    const response = await axios.get(`${apiUrl}/api/home/`);
+    const response = await fetch(`${apiUrl}/api/home/`);
 
-    if (response.status == 200) {
-      const data = response.data;
+    if (response.status === 200) {
+      const data = await response.json();
       introductionTitle.value = data.title;
       introductionDescription.value = data.description;
       preloadImages(data.description_images);
@@ -325,10 +293,10 @@ export const useStore = defineStore("store", () => {
   }
 
   async function fetchChapterData(id: number) {
-    const response = await axios.get(`${apiUrl}/api/chapter/${id}/`);
+    const response = await fetch(`${apiUrl}/api/chapter/${id}/`);
 
-    if (response.status == 200) {
-      const data = response.data;
+    if (response.status === 200) {
+      const data = await response.json();
       const chapter = chapters.get(id);
       if (chapter) {
         chapter.pages = data.pages;
@@ -344,17 +312,17 @@ export const useStore = defineStore("store", () => {
     }
   }
 
-  async function wrapAxiosPost(url: string, payload: object) {
+  async function wrapConsentPost(url: string, payload: object) {
     if (!hasConsented.value) {
       // eslint-disable-next-line no-console
       console.log("No consent, not sending data to API");
       preConsentRequests.value.push({ url, payload });
       return {
         status: -1,
-        data: null,
+        json: async () => null,
       };
     }
-    return axios.post(url, payload);
+    return postJson(url, payload);
   }
 
   async function sendChapterDataToApi(
@@ -363,14 +331,15 @@ export const useStore = defineStore("store", () => {
   ) {
     if (data) {
       try {
-        const response = await wrapAxiosPost(url, {
+        const response = await wrapConsentPost(url, {
           userGUID: userGUID.value,
           attemptGUID: attemptGUID.value,
           data: smartToString(data),
         });
-        if (response.status == 200) {
+        if (response.status === 200) {
+          const data = await response.json();
           // eslint-disable-next-line no-console
-          console.log("sendChapterDataToApi", response.data);
+          console.log("sendChapterDataToApi", data);
         }
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -424,7 +393,7 @@ export const useStore = defineStore("store", () => {
     }
     try {
       if (dataToSend.length != 0) {
-        const response = await axios.post(
+        const response = await postJson(
           `${apiUrl}/api/ensure-finished-chapter-scores/`,
           {
             userGUID: userGUID.value,
@@ -432,9 +401,10 @@ export const useStore = defineStore("store", () => {
             data: smartToString(dataToSend),
           },
         );
-        if (response.status == 200) {
+        if (response.status === 200) {
+          const data = await response.json();
           // eslint-disable-next-line no-console
-          console.log("ensureFinishedChaptersSent", response.data);
+          console.log("ensureFinishedChaptersSent", data);
           ensuredFinishedChaptersSent.value = true;
           saveLocalStorage();
         }
@@ -447,11 +417,12 @@ export const useStore = defineStore("store", () => {
 
   async function fetchPageCorrectPercent(chapterId: number, pageId: number) {
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `${apiUrl}/api/chapter/${chapterId}/page/${pageId}/stats/`,
       );
-      if (response.status == 200) {
-        return response.data.percent_correct;
+      if (response.status === 200) {
+        const data = await response.json();
+        return data.percent_correct;
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -465,11 +436,12 @@ export const useStore = defineStore("store", () => {
       return null;
     }
     try {
-      const response = await axios.get(
+      const response = await fetch(
         `${apiUrl}/api/leaderboard/?attempt_guid=${attemptGUID.value}`,
       );
-      if (response.status == 200) {
-        return response.data;
+      if (response.status === 200) {
+        const data = await response.json();
+        return data;
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -483,12 +455,12 @@ export const useStore = defineStore("store", () => {
       return false;
     }
     try {
-      const response = await axios.post(`${apiUrl}/api/leaderboard/nickname/`, {
+      const response = await postJson(`${apiUrl}/api/leaderboard/nickname/`, {
         userGUID: userGUID.value,
         attemptGUID: attemptGUID.value,
         nickname,
       });
-      if (response.status == 200) {
+      if (response.status === 200) {
         return true;
       }
     } catch (error) {
