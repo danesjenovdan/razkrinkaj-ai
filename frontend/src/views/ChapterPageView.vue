@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ButtonPrimary from "@/components/ButtonPrimary.vue";
+import ChapterTitle from "@/components/ChapterTitle.vue";
 import QuizPage from "@/components/QuizPage.vue";
 import RichText from "@/components/RichText.vue";
 import { useStore } from "@/stores/store.ts";
@@ -22,7 +23,13 @@ const pageIndex = computed(() => {
 
 const chapterDate = computed(() => {
   const dateParts = props.chapter.title.split(".").map(Number);
-  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+  let year = dateParts[2];
+  if (Number.isNaN(year) || year === 0) {
+    year = 2026;
+  } else if (year < 100) {
+    year += 2000;
+  }
+  return new Date(year, dateParts[1] - 1, dateParts[0]);
 });
 
 const formattedTitle = computed(() => {
@@ -30,13 +37,11 @@ const formattedTitle = computed(() => {
     return props.chapter.title;
   }
   const formatter = new Intl.DateTimeFormat("sl-SI", {
-    weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-  const formattedDate = formatter.format(chapterDate.value);
-  return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  return formatter.format(chapterDate.value);
 });
 
 const page = computed(() => {
@@ -64,6 +69,13 @@ const nextPageLink = computed(() => {
   return hasNextPage.value
     ? { name: "chapter-page", params: { pageIndex: pageIndex.value + 1 } }
     : { name: "chapter-result" };
+});
+
+const nextPageLinkText = computed(() => {
+  if (hasNextPage.value) {
+    return "Naslednje vprašanje";
+  }
+  return "Poglej rezultat";
 });
 
 const showNextButton = ref(false);
@@ -112,18 +124,15 @@ onMounted(() => {
   </main>
   <main v-else :key="pageIndex">
     <div class="page-gutter">
-      <div class="narrow">
-        <div class="intro">
-          <h1>{{ formattedTitle }}</h1>
-        </div>
+      <div class="page-title">
+        <ChapterTitle :title="formattedTitle" :chapter="chapter" />
       </div>
       <div v-if="page.type === 'text'" class="page-content">
         <RichText :title="page.title" :content="page.text" />
         <ButtonPrimary
           class="button"
-          button-text="NADALJUJ"
+          :text="nextPageLinkText"
           :link="nextPageLink"
-          icon="hand"
         />
       </div>
       <div v-else-if="page.type === 'quiz'" class="page-content">
@@ -131,10 +140,8 @@ onMounted(() => {
         <ButtonPrimary
           v-if="showNextButton"
           class="button"
-          button-text="NADALJUJ"
+          :text="nextPageLinkText"
           :link="nextPageLink"
-          icon="hand"
-          color="white"
         />
       </div>
       <div v-else>unknown page type</div>
@@ -154,26 +161,6 @@ main.no-page {
 }
 
 main {
-  .narrow {
-    max-width: 603px;
-    margin: 0 auto;
-  }
-
-  .intro {
-    padding-block: 4.4375rem 0;
-
-    @media (max-width: 576px) {
-      padding-block: 2rem 0;
-    }
-
-    h1 {
-      margin-bottom: 0;
-      font-size: 1.3125rem;
-      font-weight: 600;
-      text-align: center;
-    }
-  }
-
   .page-content {
     padding-bottom: 7rem;
 
@@ -183,11 +170,13 @@ main {
   }
 
   .button {
-    gap: 1.5rem;
-    justify-content: center;
-    max-width: 455px;
+    display: flex;
+    max-width: 22rem;
     margin-inline: auto;
-    text-align: center;
+
+    @media (max-width: 576px) {
+      max-width: 18rem;
+    }
   }
 }
 </style>

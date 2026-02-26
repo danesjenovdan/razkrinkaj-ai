@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import { useStore } from "@/stores/store.ts";
-import { slugify } from "@/utils/stringify.ts";
 
-const props = defineProps<{
+defineProps<{
   buttonText: string;
   correct: boolean;
   revealed: boolean;
@@ -15,21 +13,6 @@ const store = useStore();
 
 const chapter = store.chapters.get(store.currentChapterId);
 if (!chapter) throw new Error("Chapter not found");
-
-function getAnswerBySlug(slug: string) {
-  for (const [id, explanation] of store.explanations) {
-    if (slugify(explanation.name) === slug) {
-      return id;
-    }
-  }
-  return -1;
-}
-
-const explanation = computed(() => {
-  const explanationId = getAnswerBySlug(slugify(props.buttonText));
-  if (explanationId == null) return null;
-  return store.explanations.get(explanationId) || null;
-});
 </script>
 
 <template>
@@ -44,57 +27,25 @@ const explanation = computed(() => {
       selected: revealed && selected,
     }"
   >
-    <span class="answer-left">
-      <span v-if="explanation && explanation.image" class="icon">
-        <img :src="explanation.image.url" :alt="explanation.image.alt" />
-      </span>
-      <span class="answer-text">{{ buttonText }}</span>
-    </span>
+    <div class="answer-left">
+      <div class="icon">
+        <img v-if="revealed && correct" src="/check.svg" alt="" />
+        <img v-else-if="revealed && selected" src="/cross.svg" alt="" />
+        <div v-else class="dot"></div>
+      </div>
+    </div>
+    <div class="answer-text">{{ buttonText }}</div>
     <div class="answer-right">
-      <span v-if="selected && points > 0" class="score">
-        <strong>{{ correct ? "+" : "-" }} {{ points }}</strong>
+      <div v-if="selected && points > 0" class="score">
+        <strong>{{ correct ? "+" : "-" }}{{ points }}</strong>
         točk
-      </span>
-      <span v-if="revealed" class="icon">
-        <svg
-          v-if="correct"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 30 25"
-        >
-          <path
-            fill="#BDFB7B"
-            stroke="#000"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M22.2842 2.254c1.1172-1.005 2.8212-1.005 3.9385 0l.1103.1034v.001l1.3027 1.2978.1963.2159a2.9266 2.9266 0 0 1 .668 1.8642c-.0001.7862-.3116 1.5269-.8613 2.0772l-.003.003-14.8955 14.8261c-1.1484 1.1433-3.0096 1.1432-4.1582 0l-6.2177-6.1905c-1.1521-1.1471-1.1521-3.011 0-4.1582l1.1835-1.1787.1192-.1181.2168-.1953a2.9405 2.9405 0 0 1 1.8633-.6631l.291.0146a2.9397 2.9397 0 0 1 1.5703.6465l.2158.1943.003.003 2.8339 2.8222L22.1738 2.3574l.1104-.1035Z"
-          />
-        </svg>
-        <svg
-          v-else-if="!correct && selected"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 26 27"
-        >
-          <path
-            fill="#FF6224"
-            stroke="#000"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6.9775 2.542c.8142.1208 1.5947.5124 2.211 1.1299l3.8105 3.8105 3.8106-3.8105.1269-.1211c1.3358-1.2211 3.5282-1.5394 4.9727-.0938l.001-.001 1.6337 1.6338.1338.1416c1.3304 1.4894.9316 3.6765-.3506 4.9571l.001.001L19.5166 14l3.8105 3.8105.1211.126c1.2255 1.3377 1.5376 3.5311.0967 4.9746l-.0019.002-1.6338 1.6318c-1.4892 1.4879-3.7766 1.1056-5.0987-.2138l-.0009-.001-3.8106-3.8125-3.8105 3.8125c-1.3226 1.3213-3.6096 1.7015-5.0996.2148l-.001-.001-1.6309-1.6318c-1.4916-1.4913-1.1063-3.7803.2139-5.1006L6.4814 14 2.671 10.1885C1.3516 8.8687.9652 6.5803 2.457 5.0898l1.63-1.6328.0019-.002c.6355-.634 1.457-.935 2.2695-.954l.5547-.0127.0644.0537Z"
-          />
-        </svg>
-      </span>
+      </div>
     </div>
   </button>
 </template>
 
 <style scoped lang="scss">
-@use "@sass-fairy/string";
-@use "@sass-fairy/url";
-@use "@/assets/variables" as vars;
+@use "@/assets/mixins";
 
 @keyframes bounceIn {
   from,
@@ -141,38 +92,30 @@ const explanation = computed(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.625rem 1.125rem 0.625rem 0.625rem;
-  background: transparent;
-  background-image: url.svg(vars.$button-answer-bg-svg-string);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
+  padding: 0.375rem 0.5rem;
+  background: var(--color-bg-white);
+  border: 2px solid var(--kvizle-color-2);
+  font-size: 1.25rem;
+  line-height: 1.3;
   font-weight: 500;
   color: var(--color-text);
   text-align: left;
   text-decoration: none;
   cursor: pointer;
   will-change: scale, filter;
+  --_box-shadow-size: 1rem;
 
   @media (max-width: 576px) {
-    padding: 0.25rem 0.75rem 0.25rem 0.5rem;
-    font-size: 1.125rem;
+    padding-block: 0.25rem;
+    font-size: 1rem;
+    --_box-shadow-size: 0.5rem;
   }
 
   .answer-left {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    min-height: 2.5rem;
-
-    @media (max-width: 576px) {
-      gap: 0.25rem;
-    }
-
     .icon {
       flex-shrink: 0;
+      display: grid;
+      place-items: center;
       width: 2.5rem;
       height: 2.5rem;
 
@@ -184,63 +127,51 @@ const explanation = computed(() => {
       img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+      }
+
+      .dot {
+        width: 1.5rem;
+        height: 1.5rem;
+        border: 2px solid var(--kvizle-color-2);
+        border-radius: 50%;
+
+        @media (max-width: 576px) {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
       }
     }
+  }
 
-    .answer-text:first-child {
-      margin-left: 3rem;
-
-      @media (max-width: 576px) {
-        margin-left: 2.5rem;
-      }
-    }
+  .answer-text {
+    flex: 1;
   }
 
   .answer-right {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
+    align-self: center;
 
-    @media (max-width: 576px) {
-      gap: 0.25rem;
-    }
-
-    .icon {
+    .score {
       flex-shrink: 0;
-      display: flex;
-      width: 1.5rem;
-      height: 1.5rem;
-      margin-block: -0.2em;
+      margin-block: -1rem;
+      font-size: 1rem;
+      line-height: 1.3;
+      font-weight: 600;
+      color: var(--kvizle-color-2);
+      animation: bounceIn 0.66s;
 
       @media (max-width: 576px) {
-        width: 1.125rem;
-        height: 1.125rem;
+        font-size: 0.875rem;
       }
 
-      svg {
-        width: 100%;
-        height: 100%;
+      strong {
+        font-family: var(--font-family-alt);
+        font-size: 2.25rem;
+        font-weight: 400;
+
+        @media (max-width: 576px) {
+          font-size: 1.5rem;
+        }
       }
-    }
-  }
-
-  .score {
-    flex-shrink: 0;
-    display: inline-block;
-    border-radius: 3px;
-    font-family: var(--font-family-alt);
-    font-size: 1rem;
-    line-height: 1.3;
-    font-weight: 500;
-    animation: bounceIn 0.66s;
-
-    @media (max-width: 576px) {
-      font-size: 0.875rem;
-    }
-
-    strong {
-      font-weight: 700;
     }
   }
 
@@ -249,62 +180,28 @@ const explanation = computed(() => {
 
     &.correct,
     &.is-feedback {
-      $button-answer-bg-svg-string-correct: string.replace(
-        vars.$button-answer-bg-svg-string,
-        "#FFF",
-        "#E5FDCA"
-      );
-      background-image: url.svg($button-answer-bg-svg-string-correct);
-      filter: drop-shadow(1.5px 1.5px 0 #bdfb7b)
-        drop-shadow(-1.5px -1.5px 0 #bdfb7b) drop-shadow(0px 1.5px 0 #bdfb7b)
-        drop-shadow(1.5px 0px 0 #bdfb7b) drop-shadow(0px -1.5px 0 #bdfb7b)
-        drop-shadow(-1.5px 0px 0 #bdfb7b) drop-shadow(1.5px -1.5px 0 #bdfb7b)
-        drop-shadow(-1.5px 1.5px 0 #bdfb7b);
+      box-shadow:
+        0 0 0.25rem 0 var(--kvizle-color-9),
+        0 0 var(--_box-shadow-size) 0 var(--kvizle-color-10) inset;
     }
 
     &.selected.incorrect {
-      $button-answer-bg-svg-string-incorrect: string.replace(
-        vars.$button-answer-bg-svg-string,
-        "#FFF",
-        "#FEE2D6"
-      );
-      $button-answer-bg-svg-string-incorrect: string.replace(
-        $button-answer-bg-svg-string-incorrect,
-        "<path ",
-        '<defs><filter id="shadow"><feFlood flood-color="#FF4B04" /><feComposite operator="out" in2="SourceGraphic" /><feMorphology operator="dilate" radius="2" /><feGaussianBlur stdDeviation="6" /><feComposite operator="atop" in2="SourceGraphic" /></filter></defs><path filter="url(#shadow)" '
-      );
-      $button-answer-bg-svg-string-incorrect-border: string.replace(
-        vars.$button-answer-bg-svg-string,
-        "#FFF",
-        "none"
-      );
-      background-image:
-        url.svg($button-answer-bg-svg-string-incorrect-border),
-        url.svg($button-answer-bg-svg-string-incorrect);
-      font-weight: 600;
+      box-shadow: 0 0 var(--_box-shadow-size) 0 var(--kvizle-color-11) inset;
     }
   }
 
   &:not(.revealed):hover {
-    $button-answer-bg-svg-string-hover: string.replace(
-      vars.$button-answer-bg-svg-string,
-      "#FFF",
-      "#C6D0FC"
-    );
-    $button-answer-bg-svg-string-hover: string.replace(
-      $button-answer-bg-svg-string-hover,
-      "<path ",
-      '<defs><filter id="shadow"><feFlood flood-color="#4063F6" /><feComposite operator="out" in2="SourceGraphic" /><feMorphology operator="dilate" radius="2" /><feGaussianBlur stdDeviation="6" /><feComposite operator="atop" in2="SourceGraphic" /></filter></defs><path filter="url(#shadow)" '
-    );
-    $button-answer-bg-svg-string-hover-border: string.replace(
-      vars.$button-answer-bg-svg-string,
-      "#FFF",
-      "none"
-    );
-    background-image:
-      url.svg($button-answer-bg-svg-string-hover-border),
-      url.svg($button-answer-bg-svg-string-hover);
-    filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
+    box-shadow:
+      0 0 0.25rem 0 var(--kvizle-color-6),
+      0 0 var(--_box-shadow-size) 0 var(--kvizle-color-7) inset;
+
+    .answer-left .icon {
+      .dot {
+        background-color: var(--kvizle-color-2);
+      }
+    }
   }
+
+  @include mixins.focus-visible;
 }
 </style>

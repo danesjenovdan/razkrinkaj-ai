@@ -18,11 +18,18 @@ if (route.params.id === undefined && route.params.slug !== undefined) {
   chapterId = parseInt(idString, 10);
 }
 
-const chapter = store.chapters.get(chapterId);
-
-if (Number.isNaN(chapterId) || chapterId < 0 || chapter === undefined) {
-  throw new Error("Invalid chapter id");
-}
+const chapter = computed(() => {
+  if (Number.isNaN(chapterId) || chapterId < 0) {
+    return null;
+    // throw new Error('Invalid chapter id')
+  }
+  const c = store.chapters.get(chapterId);
+  if (!c) {
+    return null;
+    // throw new Error('Chapter not found')
+  }
+  return c;
+});
 
 const hideHeaderScore = computed(() => {
   return route.name === "chapter-result";
@@ -36,10 +43,12 @@ const score = computed(() => {
 });
 
 onMounted(() => {
-  store.setCurrentChapter(chapterId);
-  store.initChapterData(chapterId);
-  // clear just unlocked chapters for next time list is shown
-  store.justUnlockedChapters = [];
+  if (chapter.value) {
+    store.setCurrentChapter(chapterId);
+    store.initChapterData(chapterId);
+    // clear just unlocked chapters for next time list is shown
+    store.justUnlockedChapters = [];
+  }
 });
 </script>
 
@@ -52,8 +61,11 @@ onMounted(() => {
     />
   </div>
   <div class="bg-kvizle-color-0">
+    <main v-if="!chapter" :key="'no-chapter'" class="no-chapter">
+      <h1>chapter not found</h1>
+    </main>
     <RouterView
-      v-if="
+      v-else-if="
         store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)
       "
       :chapter="chapter"
@@ -66,6 +78,16 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+main.no-chapter {
+  margin-top: 3rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
 .loader-container {
   display: flex;
   justify-content: center;
