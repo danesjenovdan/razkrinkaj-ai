@@ -8,7 +8,7 @@ resources:
 images:
   - name: kvizle-dz-2026-backend
     newName: rg.fr-par.scw.cloud/djnd/kvizle-dz-2026-backend
-    newTag: '63edd75103b56625f123354fc824bce965182064'
+    newTag: '05474b00d0255d949faad5cdc9e59a20670c7bde'
   - name: kvizle-dz-2026-frontend
     newName: rg.fr-par.scw.cloud/djnd/kvizle-dz-2026-frontend
-    newTag: '63edd75103b56625f123354fc824bce965182064'
+    newTag: '05474b00d0255d949faad5cdc9e59a20670c7bde'
