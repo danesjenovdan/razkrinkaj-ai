@@ -1,170 +1,51 @@
 <script setup lang="ts">
-import { computed } from "vue";
-
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    buttonText?: string;
-    link?: object;
-    href?: string;
+    text: string;
+    link: object;
     target?: string;
-    icon?: string;
-    leftIcon?: string;
-    sideIcon?: string;
-    color?: string;
   }>(),
   {
-    buttonText: "Nadaljuj",
-    link: undefined,
-    href: undefined,
     target: undefined,
-    icon: undefined,
-    leftIcon: undefined,
-    sideIcon: undefined,
-    color: "primary",
   },
-);
-
-const text = computed(() => props.buttonText);
-
-const componentName = computed(() =>
-  props.link ? "RouterLink" : props.href ? "a" : "button",
 );
 </script>
 
 <template>
-  <component
-    :is="componentName"
-    :to="link"
-    :href="href"
-    :target="target"
-    :class="['button-primary', `button-color-${color}`]"
-  >
-    <span v-if="sideIcon" class="side-icon">
-      <template v-if="sideIcon === 'hand-down'">
-        <img class="hand-down" src="/hand-down.svg" alt="" />
-      </template>
-    </span>
-    <span v-if="leftIcon" class="icon left-icon">
-      <template v-if="leftIcon === 'hands'">
-        <img class="hands" src="/hands.svg" alt="" />
-      </template>
-      <template v-else-if="leftIcon === 'hand'">
-        <img class="hand" src="/hand.svg" alt="" />
-      </template>
-      <span v-else>{{ leftIcon }}</span>
-    </span>
+  <RouterLink :to="link" :target="target" class="button-primary">
     <span class="text">{{ text }}</span>
-    <span v-if="icon" class="icon">
-      <template v-if="icon === 'hands'">
-        <img class="hands" src="/hands.svg" alt="" />
-      </template>
-      <template v-else-if="icon === 'hand'">
-        <img class="hand" src="/hand.svg" alt="" />
-      </template>
-      <span v-else>{{ icon }}</span>
-    </span>
-    <span v-if="sideIcon" class="side-icon">
-      <template v-if="sideIcon === 'hand-down'">
-        <img class="hand-down" src="/hand-down.svg" alt="" />
-      </template>
-    </span>
-  </component>
+    <img src="/arrow.svg" alt="" />
+  </RouterLink>
 </template>
 
 <style scoped lang="scss">
 @use "@sass-fairy/string";
 @use "@sass-fairy/url";
 @use "@/assets/variables" as vars;
+@use "@/assets/mixins";
 
 .button-primary {
-  position: relative;
-  display: flex;
-  gap: 0.68rem;
+  @include mixins.button-link;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1.1875rem 3.875rem;
-  background-image: url.svg(vars.$button-bg-svg-string);
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  font-family: var(--font-family-alt);
-  font-size: 2.5rem;
-  line-height: 1.2;
-  font-weight: 600;
-  text-align: center;
-  color: var(--color-text);
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    scale 0.15s ease-in-out,
-    filter 0.15s ease-in-out;
-  will-change: scale, filter;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5em 1em;
+  font-size: 1.5rem;
+  font-weight: 500;
 
   @media (max-width: 576px) {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
-  &.button-color-primary {
-    $button-bg-svg-string-primary: string.replace(
-      vars.$button-bg-svg-string,
-      "#FFF",
-      "magenta"
-    );
-    background-image: url.svg($button-bg-svg-string-primary);
-  }
-
-  &.button-color-secondary {
-    $button-bg-svg-string-secondary: string.replace(
-      vars.$button-bg-svg-string,
-      "#FFF",
-      "magenta"
-    );
-    background-image: url.svg($button-bg-svg-string-secondary);
-    padding-inline: 1.3125rem;
-    font-size: 1.3125rem;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .text {
-    flex: 1;
-  }
-
-  .icon {
+  img {
     flex-shrink: 0;
-    display: flex;
+    width: 1.75rem;
+    height: auto;
 
-    &.left-icon {
-      scale: -1 1;
+    @media (max-width: 576px) {
+      width: 1.5rem;
     }
-
-    .hand,
-    .hands {
-      width: auto;
-      height: 1.5rem;
-    }
-  }
-
-  .side-icon {
-    flex-shrink: 0;
-    display: flex;
-    position: absolute;
-    left: -0.375rem;
-
-    &:last-child {
-      left: auto;
-      right: -0.375rem;
-      transform: scaleX(-1);
-    }
-
-    .hand-down {
-      width: auto;
-      height: 2.875rem;
-    }
-  }
-
-  &:hover {
-    scale: 1.05;
-    filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
   }
 }
 </style>

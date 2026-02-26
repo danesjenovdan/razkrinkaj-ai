@@ -139,6 +139,8 @@ async function onNewsletterSubmit() {
 @use "@/assets/mixins";
 
 footer {
+  margin-top: auto;
+
   .page-footer {
     display: flex;
     justify-content: center;
