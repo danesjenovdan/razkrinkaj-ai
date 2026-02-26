@@ -1,10 +1,40 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import type { ATCBActionEventConfig } from "add-to-calendar-button";
+import { atcb_action } from "add-to-calendar-button";
+
+const config: ATCBActionEventConfig = {
+  name: "Državnozborske volitve 2026",
+  description: "Državnozborske volitve 2026",
+  startDate: "2026-03-22",
+  endDate: "2026-03-22",
+  timeZone: "Europe/Ljubljana",
+  uid: "f2a4df18-7f3a-4de3-9848-3a90dd1a97a8",
+  options: [
+    "Apple",
+    "Google",
+    "iCal",
+    "Microsoft365",
+    "MicrosoftTeams",
+    "Outlook.com",
+    "Yahoo",
+  ],
+  customLabels: {
+    close: "Zapri",
+  },
+};
+
+function onCalClick(event) {
+  atcb_action(config, event.currentTarget);
+}
+</script>
 
 <template>
   <div class="calendar-election-day">
     <div class="text">22.&nbsp;3. VOLILNA NEDELJA</div>
     <div class="button-container">
-      <button type="button">Dodaj opomnik v koledar</button>
+      <button type="button" @click.prevent="onCalClick">
+        Dodaj opomnik v koledar
+      </button>
     </div>
   </div>
 </template>

@@ -53,14 +53,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="bg-kvizle-color-8">
+  <div class="bg-kvizle-color-8 header-container">
     <ScoreHeader
       :title="store.introductionTitle"
       :score="score"
       :hide-score="hideHeaderScore"
     />
   </div>
-  <div class="bg-kvizle-color-0">
+  <div class="bg-kvizle-color-0 main-container">
     <main v-if="!chapter" :key="'no-chapter'" class="no-chapter">
       <h1>chapter not found</h1>
     </main>
@@ -78,20 +78,25 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
-main.no-chapter {
-  margin-top: 3rem;
-
-  h1 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    text-align: center;
-  }
-}
-
-.loader-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.main-container {
   height: 100%;
+  min-height: 18rem;
+
+  main.no-chapter {
+    margin-top: 3rem;
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+
+  .loader-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
 }
 </style>
