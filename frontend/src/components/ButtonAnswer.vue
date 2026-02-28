@@ -190,14 +190,16 @@ if (!chapter) throw new Error("Chapter not found");
     }
   }
 
-  &:not(.revealed):hover {
-    box-shadow:
-      0 0 0.25rem 0 var(--kvizle-color-6),
-      0 0 var(--_box-shadow-size) 0 var(--kvizle-color-7) inset;
+  @media (hover: hover) {
+    &:not(.revealed):hover {
+      box-shadow:
+        0 0 0.25rem 0 var(--kvizle-color-6),
+        0 0 var(--_box-shadow-size) 0 var(--kvizle-color-7) inset;
 
-    .answer-left .icon {
-      .dot {
-        background-color: var(--kvizle-color-2);
+      .answer-left .icon {
+        .dot {
+          background-color: var(--kvizle-color-2);
+        }
       }
     }
   }

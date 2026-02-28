@@ -296,13 +296,15 @@ onMounted(() => {
   }
 
   &:not(.disabled) {
-    &:hover {
-      rotate: 3deg;
-      scale: 1.05;
-      box-shadow: 0 0 8px 2px var(--kvizle-color-6);
+    @media (hover: hover) {
+      &:hover {
+        rotate: 3deg;
+        scale: 1.05;
+        box-shadow: 0 0 8px 2px var(--kvizle-color-6);
 
-      &:not(.did-answer) {
-        background: var(--kvizle-color-5);
+        &:not(.did-answer) {
+          background: var(--kvizle-color-5);
+        }
       }
     }
 
