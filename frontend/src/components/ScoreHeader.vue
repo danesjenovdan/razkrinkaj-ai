@@ -4,6 +4,7 @@ defineProps<{
   description?: string;
   score: number;
   hideScore?: boolean;
+  backButton?: boolean;
 }>();
 </script>
 
@@ -20,6 +21,12 @@ defineProps<{
             <img src="/star.svg" alt="" />
             <strong>{{ score }}</strong>
           </div>
+        </div>
+        <div v-if="backButton" class="back-button-container">
+          <RouterLink :to="{ name: 'intro' }" class="back-to-calendar">
+            <img src="/share-arrow.svg" alt="" />
+            <span>Nazaj na koledar</span>
+          </RouterLink>
         </div>
       </div>
       <!-- eslint-disable-next-line vue/no-v-html -->
@@ -38,6 +45,7 @@ defineProps<{
   .header-content {
     position: relative;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     max-width: 65rem;
@@ -126,6 +134,43 @@ defineProps<{
 
           @media (max-width: 576px) {
             font-size: 2rem;
+          }
+        }
+      }
+    }
+
+    .back-button-container {
+      width: 100%;
+      max-width: 21rem;
+      margin-inline: auto;
+
+      @media (max-width: 576px) {
+        max-width: 18rem;
+      }
+
+      .back-to-calendar {
+        @include mixins.button-link;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-top: 2rem;
+        padding: 0.45em 1.5em;
+        font-size: 1.5rem;
+        font-weight: 500;
+
+        @media (max-width: 576px) {
+          margin-top: 0.75rem;
+          font-size: 1.25rem;
+        }
+
+        img {
+          flex-shrink: 0;
+          width: 2.25rem;
+          scale: -1 1;
+
+          @media (max-width: 576px) {
+            width: 1.75rem;
           }
         }
       }
