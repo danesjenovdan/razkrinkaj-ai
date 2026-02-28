@@ -9,10 +9,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - api.kvizle.lb.djnd.si
+        - api.kvizle.si
       secretName: kvizle-dz-2026-backend-tls
   rules:
-    - host: api.kvizle.lb.djnd.si
+    - host: api.kvizle.si
       http:
         paths:
           - path: /
@@ -34,10 +34,10 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - kvizle.lb.djnd.si
+        - kvizle.si
       secretName: kvizle-dz-2026-frontend-tls
   rules:
-    - host: kvizle.lb.djnd.si
+    - host: kvizle.si
       http:
         paths:
           - path: /

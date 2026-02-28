@@ -41,7 +41,7 @@ jobs:
         with:
           context: ./frontend
           build-args: |
-            VITE_API_URL_BASE=https://api.kvizle.lb.djnd.si
+            VITE_API_URL_BASE=https://api.kvizle.si
           push: true
           tags: |
             rg.fr-par.scw.cloud/djnd/kvizle-dz-2026-frontend:${{ github.sha }}
