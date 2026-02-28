@@ -75,14 +75,29 @@ const isTomorrow = computed(() => {
 });
 
 const answers = computed(() => {
+  const pageIds = props.chapter.pages?.map((p) => p.id) || [];
+  let chapterData;
   if (store.finishedChapters.has(props.chapter.id)) {
-    const chapterData = store.finishedChapters.get(props.chapter.id)!;
-    return Array.from(chapterData.answers.values());
+    chapterData = store.finishedChapters.get(props.chapter.id)!;
   } else if (store.inProgressChapters.has(props.chapter.id)) {
-    const chapterData = store.inProgressChapters.get(props.chapter.id)!;
-    return Array.from(chapterData.answers.values());
+    chapterData = store.inProgressChapters.get(props.chapter.id)!;
   }
-  return [];
+  if (!chapterData) {
+    return [null, null, null];
+  }
+  let a1 = null;
+  let a2 = null;
+  let a3 = null;
+  if (pageIds[0]) {
+    a1 = chapterData.answers.get(pageIds[0]) || null;
+  }
+  if (pageIds[1]) {
+    a2 = chapterData.answers.get(pageIds[1]) || null;
+  }
+  if (pageIds[2]) {
+    a3 = chapterData.answers.get(pageIds[2]) || null;
+  }
+  return [a1, a2, a3];
 });
 
 const isHidden = computed(() => {
