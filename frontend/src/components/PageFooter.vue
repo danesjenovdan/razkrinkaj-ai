@@ -182,8 +182,10 @@ footer {
         font-weight: 500;
         color: inherit;
 
-        &:hover {
-          text-decoration: none;
+        @media (hover: hover) {
+          &:hover {
+            text-decoration: none;
+          }
         }
 
         @include mixins.focus-visible;

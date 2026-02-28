@@ -39,6 +39,13 @@ function onAnswerClick(index: number) {
     score: store.currentChapterScore,
     answers: new Map(store.currentChapterAnswers),
   });
+
+  // delete finished chapter if it exists
+  // THIS CAN HAPPEN IF USER "FINISHED" THE CHAPTER BEFORE ALL PAGES WERE ADDED TO ADMIN
+  if (store.finishedChapters.has(store.currentChapterId)) {
+    store.finishedChapters.delete(store.currentChapterId);
+  }
+
   // add to streak if current date is the chapter date
   const today = new Date();
   const isSameDay =
@@ -171,8 +178,10 @@ onMounted(() => {
           font-weight: 500;
           color: inherit;
 
-          &:hover {
-            text-decoration: none;
+          @media (hover: hover) {
+            &:hover {
+              text-decoration: none;
+            }
           }
 
           @include mixins.focus-visible;
@@ -220,8 +229,10 @@ onMounted(() => {
             font-weight: 500;
             color: inherit;
 
-            &:hover {
-              text-decoration: none;
+            @media (hover: hover) {
+              &:hover {
+                text-decoration: none;
+              }
             }
 
             @include mixins.focus-visible;

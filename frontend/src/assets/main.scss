@@ -1,5 +1,5 @@
-@use 'sass:list';
-@use 'variables' as vars;
+@use "sass:list";
+@use "variables" as vars;
 
 :root {
   @for $i from 1 through list.length(vars.$kvizle-colors) {
@@ -13,8 +13,8 @@
   --page-gutter: 1.5625rem;
   --page-width: min(1200px, 100%);
 
-  --font-family-base: 'wf-schibsted-grotesk', sans-serif;
-  --font-family-alt: 'wf-super-chiby', sans-serif;
+  --font-family-base: "wf-schibsted-grotesk", sans-serif;
+  --font-family-alt: "wf-super-chiby", sans-serif;
 }
 
 *,
