@@ -35,6 +35,10 @@ const hideHeaderScore = computed(() => {
   return route.name === "chapter-result";
 });
 
+const showBackButton = computed(() => {
+  return route.name === "chapter-result";
+});
+
 const score = computed(() => {
   if (store.finishedChapters.has(chapterId)) {
     return store.score;
@@ -58,6 +62,7 @@ onMounted(() => {
       :title="store.introductionTitle"
       :score="score"
       :hide-score="hideHeaderScore"
+      :back-button="showBackButton"
     />
   </div>
   <div class="bg-kvizle-color-0 main-container">

@@ -267,7 +267,7 @@ main {
         justify-content: center;
         gap: 0.75rem;
         margin-top: 2rem;
-        padding: 0.45em 2.5em;
+        padding: 0.45em 1.5em;
         font-size: 1.5rem;
         font-weight: 500;
 
@@ -279,6 +279,10 @@ main {
         img {
           flex-shrink: 0;
           width: 2.25rem;
+
+          @media (max-width: 576px) {
+            width: 1.75rem;
+          }
         }
       }
     }
