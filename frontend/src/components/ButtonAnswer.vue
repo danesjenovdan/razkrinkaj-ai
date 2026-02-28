@@ -36,7 +36,7 @@ if (!chapter) throw new Error("Chapter not found");
     </div>
     <div class="answer-text">{{ buttonText }}</div>
     <div class="answer-right">
-      <div v-if="selected && points > 0" class="score">
+      <div v-if="selected && points > 0 && correct" class="score">
         <strong>{{ correct ? "+" : "-" }}{{ points }}</strong>
         točk
       </div>

@@ -24,7 +24,8 @@ const chapterDate = computed(() => {
 function onAnswerClick(index: number) {
   selectedAnswer.value = index;
   const correct = props.page.answers[index].correct;
-  const points = correct ? props.page.points : -props.page.points;
+  // const points = correct ? props.page.points : -props.page.points;
+  const points = correct ? props.page.points : 0;
   // add points
   store.currentChapterScore += points;
   // store answer
