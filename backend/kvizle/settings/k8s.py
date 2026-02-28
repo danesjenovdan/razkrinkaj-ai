@@ -4,11 +4,11 @@ DEBUG = bool(os.getenv("DJANGO_DEBUG", ""))
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
 
-ALLOWED_HOSTS = ["api.kvizle.lb.djnd.si"]
-CSRF_TRUSTED_ORIGINS = ["https://api.kvizle.lb.djnd.si"]
-CORS_ALLOWED_ORIGINS = ["https://kvizle.lb.djnd.si"]
+ALLOWED_HOSTS = ["api.kvizle.si"]
+CSRF_TRUSTED_ORIGINS = ["https://api.kvizle.si"]
+CORS_ALLOWED_ORIGINS = ["https://kvizle.si"]
 
-WAGTAILADMIN_BASE_URL = "https://api.kvizle.lb.djnd.si"
+WAGTAILADMIN_BASE_URL = "https://api.kvizle.si"
 
 STATIC_ROOT = os.getenv("DJANGO_STATIC_ROOT", BASE_DIR / "static")
 STATIC_URL = os.getenv("DJANGO_STATIC_URL_BASE", "/static/")

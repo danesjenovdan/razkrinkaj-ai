@@ -37,7 +37,7 @@ const correctAnswers = computed(() => {
 const shareResultMessage = computed(() => {
   return `
 
-Moj rezultat na kvizle.lb.djnd.si
+Moj rezultat na kvizle.si
 
 ${props.chapter.title}
 
@@ -73,7 +73,7 @@ async function onShareResult() {
   }
 }
 
-const websiteLinkValue = "kvizle.lb.djnd.si";
+const websiteLinkValue = "kvizle.si";
 
 async function onCopyLink() {
   if (await copyTextToClipboard(websiteLinkValue)) {
