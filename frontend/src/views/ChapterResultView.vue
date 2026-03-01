@@ -37,7 +37,7 @@ const correctAnswers = computed(() => {
 const shareResultMessage = computed(() => {
   return `
 
-Moj rezultat na kvizle.si
+Moj rezultat na Kvizle.si
 
 ${props.chapter.title}
 
