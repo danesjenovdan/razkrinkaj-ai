@@ -23,7 +23,7 @@ async function onNewsletterSubmit() {
       <div class="page-footer">
         <div class="footer-col about-section">
           <div class="footer-block">
-            Za <strong>Volilni kvizle</strong> skrbi<br />
+            Za <strong>volilni Kvizle</strong> skrbi<br />
             <a
               href="https://danesjenovdan.si"
               target="_blank"
