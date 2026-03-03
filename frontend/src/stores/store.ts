@@ -241,6 +241,12 @@ export const useStore = defineStore("store", () => {
     }
   }
 
+  function deleteAnswers(chapterId: number) {
+    finishedChapters.delete(chapterId);
+    inProgressChapters.delete(chapterId);
+    saveLocalStorage();
+  }
+
   // total score
   const score = computed(() => {
     return [...finishedChapters.values()].reduce(
@@ -501,6 +507,7 @@ export const useStore = defineStore("store", () => {
     clearAllProgress,
     saveLocalStorage,
     loadLocalStorage,
+    deleteAnswers,
     score,
     sendFinishedChapterDataToApi,
     sendProgressChapterDataToApi,
