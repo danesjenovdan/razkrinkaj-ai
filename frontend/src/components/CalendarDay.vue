@@ -7,6 +7,7 @@ import { slugifyDot } from "@/utils/stringify.ts";
 
 const props = defineProps<{
   chapter: Chapter;
+  forceUnlock?: boolean;
 }>();
 
 const store = useStore();
@@ -50,6 +51,9 @@ const answeredYesterday = computed(() => {
 
 const isFinished = computed(() => store.finishedChapters.has(props.chapter.id));
 const isLocked = computed(() => {
+  if (props.forceUnlock) {
+    return false;
+  }
   const date = chapterDate.value;
   const now = Date.now();
   return now < date.getTime();
@@ -100,6 +104,10 @@ const answers = computed(() => {
   return [a1, a2, a3];
 });
 
+const didAnswer = computed(() => {
+  return answers.value.filter((a) => a != null).length;
+});
+
 const isHidden = computed(() => {
   if (props.chapter.is_feedback && (isLocked.value || isFinished.value)) {
     return true;
@@ -108,6 +116,16 @@ const isHidden = computed(() => {
 });
 
 const componentName = computed(() => (!isLocked.value ? "RouterLink" : "span"));
+
+const componentLink = computed(() =>
+  !isLocked.value
+    ? {
+        name: "chapter-intro",
+        params: { slug: chapterSlug.value },
+        query: props.forceUnlock ? { forceUnlock: "true" } : {},
+      }
+    : undefined,
+);
 
 onMounted(() => {
   if (!isLocked.value) {
@@ -127,18 +145,14 @@ onMounted(() => {
     v-if="!isHidden"
     :class="{
       'calendar-day': true,
-      today: isToday && !answers.length,
+      today: isToday && !didAnswer,
       tomorrow: isTomorrow,
       'tomorrow-highlighted': isTomorrow && answeredYesterday,
       disabled: isLocked,
       completed: isFinished,
-      'did-answer': answers.length && !isLocked,
+      'did-answer': didAnswer && !isLocked,
     }"
-    :to="
-      !isLocked
-        ? { name: 'chapter-intro', params: { slug: chapterSlug } }
-        : undefined
-    "
+    :to="componentLink"
   >
     <template v-if="isLocked">
       <h2 class="title">{{ chapter.title }}</h2>
@@ -152,7 +166,7 @@ onMounted(() => {
     <template v-else>
       <div class="text-content">
         <h2 class="title">{{ chapter.title }}</h2>
-        <div v-if="isToday && !answers.length" class="text">REŠI!</div>
+        <div v-if="isToday && !didAnswer" class="text">REŠI!</div>
       </div>
       <div class="answer-icons">
         <template v-if="answers[0]">

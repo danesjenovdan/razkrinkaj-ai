@@ -1,13 +1,18 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "@/stores/store.ts";
 import ScoreHeader from "@/components/ScoreHeader.vue";
 import TheLoader from "@/components/TheLoader.vue";
 import PageFooter from "@/components/PageFooter.vue";
 
+const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+const forceUnlock = computed(() => {
+  return route.query.forceUnlock === "true";
+});
 
 let chapterId = -1;
 if (route.params.id === undefined && route.params.slug !== undefined) {
@@ -46,6 +51,14 @@ const score = computed(() => {
   return store.score + store.currentChapterScore;
 });
 
+function deleteMyAnswers() {
+  store.deleteAnswers(chapterId);
+  router.push({
+    name: "intro",
+    query: forceUnlock.value ? { forceUnlock: "true" } : {},
+  });
+}
+
 onMounted(() => {
   if (chapter.value) {
     store.setCurrentChapter(chapterId);
@@ -64,6 +77,11 @@ onMounted(() => {
       :hide-score="hideHeaderScore"
       :back-button="showBackButton"
     />
+    <div v-if="forceUnlock" style="text-align: center">
+      <button type="button" @click.prevent="deleteMyAnswers">
+        Delete my answers!
+      </button>
+    </div>
   </div>
   <div class="bg-kvizle-color-0 main-container">
     <main v-if="!chapter" :key="'no-chapter'" class="no-chapter">
@@ -74,6 +92,7 @@ onMounted(() => {
         store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)
       "
       :chapter="chapter"
+      :force-unlock="forceUnlock"
     />
     <div v-else class="loader-container">
       <TheLoader />
