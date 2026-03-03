@@ -100,6 +100,10 @@ const answers = computed(() => {
   return [a1, a2, a3];
 });
 
+const didAnswer = computed(() => {
+  return answers.value.filter((a) => a != null).length;
+});
+
 const isHidden = computed(() => {
   if (props.chapter.is_feedback && (isLocked.value || isFinished.value)) {
     return true;
@@ -127,12 +131,12 @@ onMounted(() => {
     v-if="!isHidden"
     :class="{
       'calendar-day': true,
-      today: isToday && !answers.length,
+      today: isToday && !didAnswer,
       tomorrow: isTomorrow,
       'tomorrow-highlighted': isTomorrow && answeredYesterday,
       disabled: isLocked,
       completed: isFinished,
-      'did-answer': answers.length && !isLocked,
+      'did-answer': didAnswer && !isLocked,
     }"
     :to="
       !isLocked
@@ -152,7 +156,7 @@ onMounted(() => {
     <template v-else>
       <div class="text-content">
         <h2 class="title">{{ chapter.title }}</h2>
-        <div v-if="isToday && !answers.length" class="text">REŠI!</div>
+        <div v-if="isToday && !didAnswer" class="text">REŠI!</div>
       </div>
       <div class="answer-icons">
         <template v-if="answers[0]">
