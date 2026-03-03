@@ -3,7 +3,10 @@ import type { Chapter } from "@/types";
 import { onMounted, computed } from "vue";
 import { useStore } from "@/stores/store.ts";
 
-const props = defineProps<{ chapter: Chapter }>();
+const props = defineProps<{
+  chapter: Chapter;
+  forceUnlock?: boolean;
+}>();
 
 const store = useStore();
 

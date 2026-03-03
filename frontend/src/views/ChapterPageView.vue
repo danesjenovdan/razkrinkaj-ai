@@ -9,7 +9,10 @@ import { preloadPageImages } from "@/utils/image.ts";
 import { computed, ref, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 
-const props = defineProps<{ chapter: Chapter }>();
+const props = defineProps<{
+  chapter: Chapter;
+  forceUnlock?: boolean;
+}>();
 
 const store = useStore();
 const route = useRoute();
@@ -53,7 +56,7 @@ const page = computed(() => {
   if (chapterDate.value && !Number.isNaN(chapterDate.value.getTime())) {
     const now = Date.now();
     const isLocked = now < chapterDate.value.getTime();
-    if (isLocked) {
+    if (isLocked && !props.forceUnlock) {
       return null;
       // throw new Error('Page is locked')
     }
@@ -67,8 +70,15 @@ const hasNextPage = computed(() => {
 
 const nextPageLink = computed(() => {
   return hasNextPage.value
-    ? { name: "chapter-page", params: { pageIndex: pageIndex.value + 1 } }
-    : { name: "chapter-result" };
+    ? {
+        name: "chapter-page",
+        params: { pageIndex: pageIndex.value + 1 },
+        query: props.forceUnlock ? { forceUnlock: "true" } : {},
+      }
+    : {
+        name: "chapter-result",
+        query: props.forceUnlock ? { forceUnlock: "true" } : {},
+      };
 });
 
 const nextPageLinkText = computed(() => {

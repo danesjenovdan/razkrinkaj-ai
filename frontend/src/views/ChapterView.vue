@@ -9,6 +9,10 @@ import PageFooter from "@/components/PageFooter.vue";
 const route = useRoute();
 const store = useStore();
 
+const forceUnlock = computed(() => {
+  return route.query.forceUnlock === "true";
+});
+
 let chapterId = -1;
 if (route.params.id === undefined && route.params.slug !== undefined) {
   const slug = route.params.slug as string;
@@ -74,6 +78,7 @@ onMounted(() => {
         store.currentChapterId >= 0 && store.chapterDataLoaded.get(chapterId)
       "
       :chapter="chapter"
+      :force-unlock="forceUnlock"
     />
     <div v-else class="loader-container">
       <TheLoader />

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import { useStore } from "@/stores/store.ts";
 import ScoreHeader from "@/components/ScoreHeader.vue";
 import DaysToElection from "@/components/DaysToElection.vue";
@@ -8,6 +9,11 @@ import CalendarElectionDay from "@/components/CalendarElectionDay.vue";
 import PageFooter from "@/components/PageFooter.vue";
 
 const store = useStore();
+const route = useRoute();
+
+const forceUnlock = computed(() => {
+  return route.query.forceUnlock === "true";
+});
 
 onMounted(() => {
   store.clearCurrentChapter();
@@ -32,6 +38,7 @@ onMounted(() => {
             v-for="[id, chapter] in store.chapters"
             :key="id"
             :chapter="chapter"
+            :force-unlock="forceUnlock"
           />
           <CalendarElectionDay />
         </div>

@@ -7,6 +7,7 @@ import { slugifyDot } from "@/utils/stringify.ts";
 
 const props = defineProps<{
   chapter: Chapter;
+  forceUnlock?: boolean;
 }>();
 
 const store = useStore();
@@ -50,6 +51,9 @@ const answeredYesterday = computed(() => {
 
 const isFinished = computed(() => store.finishedChapters.has(props.chapter.id));
 const isLocked = computed(() => {
+  if (props.forceUnlock) {
+    return false;
+  }
   const date = chapterDate.value;
   const now = Date.now();
   return now < date.getTime();
@@ -113,6 +117,16 @@ const isHidden = computed(() => {
 
 const componentName = computed(() => (!isLocked.value ? "RouterLink" : "span"));
 
+const componentLink = computed(() =>
+  !isLocked.value
+    ? {
+        name: "chapter-intro",
+        params: { slug: chapterSlug.value },
+        query: props.forceUnlock ? { forceUnlock: "true" } : {},
+      }
+    : undefined,
+);
+
 onMounted(() => {
   if (!isLocked.value) {
     store.initChapterData(props.chapter.id).then(() => {
@@ -138,11 +152,7 @@ onMounted(() => {
       completed: isFinished,
       'did-answer': didAnswer && !isLocked,
     }"
-    :to="
-      !isLocked
-        ? { name: 'chapter-intro', params: { slug: chapterSlug } }
-        : undefined
-    "
+    :to="componentLink"
   >
     <template v-if="isLocked">
       <h2 class="title">{{ chapter.title }}</h2>
