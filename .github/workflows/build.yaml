@@ -41,7 +41,7 @@ jobs:
         with:
           context: ./frontend
           build-args: |
-            VITE_API_URL_BASE=https://api.manipulacija.lb.djnd.si
+            VITE_API_URL_BASE=https://api.manipulacija.djnd.si
           push: true
           tags: |
             rg.fr-par.scw.cloud/djnd/manipulacija-frontend:${{ github.sha }}
