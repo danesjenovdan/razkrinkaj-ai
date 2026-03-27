@@ -1,18 +1,43 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: max-body-size
+spec:
+  buffering:
+    maxRequestBodyBytes: 10485760  # 10m
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: enable-cors
+spec:
+  headers:
+    accessControlAllowOriginList:
+      - "https://api.manipulacija.djnd.si"
+    accessControlAllowMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    accessControlAllowHeaders:
+      - "*"
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: manipulacija
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    traefik.ingress.kubernetes.io/router.middlewares: manipulacija-max-body-size@kubernetescrd
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
     - hosts:
-        - api.manipulacija.lb.djnd.si
+        - api.manipulacija.djnd.si
       secretName: manipulacija-tls
   rules:
-    - host: api.manipulacija.lb.djnd.si
+    - host: api.manipulacija.djnd.si
       http:
         paths:
           - path: /
@@ -29,27 +54,17 @@ metadata:
   name: manipulacija-frontend
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: manipulacija-enable-cors@kubernetescrd
 spec:
-  ingressClassName: nginx
+  ingressClassName: traefik
   tls:
     - hosts:
-        - manipulacija.danesjenovdan.si
         - manipulacija.djnd.si
+        - manipulacija.danesjenovdan.si
       secretName: manipulacija-frontend-tls
   rules:
-    - host: manipulacija.danesjenovdan.si
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: manipulacija-frontend
-                port:
-                  number: 80
     - host: manipulacija.djnd.si
-      http:
+      http: &http_paths
         paths:
           - path: /
             pathType: Prefix
@@ -58,3 +73,5 @@ spec:
                 name: manipulacija-frontend
                 port:
                   number: 80
+    - host: manipulacija.danesjenovdan.si
+      http: *http_paths
