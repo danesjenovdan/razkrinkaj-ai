@@ -9,31 +9,13 @@ const newsletterConsent = ref(false)
 const newsletterLoading = ref(false)
 
 async function onNewsletterSubmit() {
-  newsletterLoading.value = true
-  try {
-    const response = await axios.post(
-      'https://podpri.lb.djnd.si/api/subscribe/',
-      {
-        email: newsletterEmail.value,
-        segment_id: 21,
-      },
-    )
-    if (response.data.msg === 'mail sent') {
-      newsletterEmail.value = ''
-      newsletterConsent.value = false
-      newsletterLoading.value = false
-      alert(
-        'Hvala! Poslali smo ti sporočilo s povezavo, na kateri lahko potrdiš prijavo!',
-      )
-    } else {
-      newsletterLoading.value = false
-      alert('Prišlo je do napake :(')
-    }
-  } catch (error) {
-    console.error(error)
-    newsletterLoading.value = false
-    alert('Prišlo je do napake :(')
-  }
+  const campaign_slug = "danes-je-nov-dan";
+  const segment_id = 21;
+  const email = newsletterEmail.value;
+
+  let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`;
+  url += `&email=${encodeURIComponent(email)}`;
+  window.open(`${url}`, `_blank`);
 }
 </script>
 
