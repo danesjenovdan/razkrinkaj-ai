@@ -6,6 +6,7 @@ import CalendarView from '../views/CalendarView.vue'
 import ChapterView from '../views/ChapterView.vue'
 import ChapterPageView from '../views/ChapterPageView.vue'
 import ChapterResultView from '../views/ChapterResultView.vue'
+import PrivacyPolicyView from '../views/PrivacyPolicyView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -60,6 +61,11 @@ const router = createRouter({
               component: ChapterResultView,
             },
           ],
+        },
+        {
+          path: 'politika-zasebnosti',
+          name: 'privacy-policy',
+          component: PrivacyPolicyView,
         },
       ],
     },
