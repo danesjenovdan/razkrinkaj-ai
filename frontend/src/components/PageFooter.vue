@@ -8,13 +8,13 @@ const newsletterConsent = ref(false)
 const newsletterLoading = ref(false)
 
 async function onNewsletterSubmit() {
-  const campaign_slug = "danes-je-nov-dan";
-  const segment_id = 21;
-  const email = newsletterEmail.value;
+  const campaign_slug = 'danes-je-nov-dan'
+  const segment_id = 21
+  const email = newsletterEmail.value
 
-  let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`;
-  url += `&email=${encodeURIComponent(email)}`;
-  window.open(`${url}`, `_blank`);
+  let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`
+  url += `&email=${encodeURIComponent(email)}`
+  window.open(`${url}`, `_blank`)
 }
 </script>
 
@@ -154,11 +154,9 @@ async function onNewsletterSubmit() {
     <div class="page-gutter bg-white">
       <div class="page-footer page-footer-bottom">
         <div class="footer-col">
-          <a
-            href="https://danesjenovdan.si/politika-zasebnosti-in-varstva-osebnih-podatkov/"
-            target="_blank"
-            >Politika zasebnosti in varstva osebnih podatkov</a
-          >
+          <RouterLink :to="{ name: 'privacy-policy' }">
+            Politika zasebnosti in varstva osebnih podatkov
+          </RouterLink>
         </div>
         <div class="footer-col"></div>
         <div class="footer-col">
