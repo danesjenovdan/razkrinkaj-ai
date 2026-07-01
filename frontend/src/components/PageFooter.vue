@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from 'axios'
 import { ref } from 'vue'
 import MkLogo from './logos/MkLogo.vue'
 import UseLogo from './logos/UseLogo.vue'
@@ -9,13 +8,13 @@ const newsletterConsent = ref(false)
 const newsletterLoading = ref(false)
 
 async function onNewsletterSubmit() {
-  const campaign_slug = "danes-je-nov-dan";
-  const segment_id = 21;
-  const email = newsletterEmail.value;
+  const campaign_slug = 'danes-je-nov-dan'
+  const segment_id = 21
+  const email = newsletterEmail.value
 
-  let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`;
-  url += `&email=${encodeURIComponent(email)}`;
-  window.open(`${url}`, `_blank`);
+  let url = `https://moj.djnd.si/${campaign_slug}/prijava?segment_id=${segment_id}`
+  url += `&email=${encodeURIComponent(email)}`
+  window.open(`${url}`, `_blank`)
 }
 </script>
 
@@ -31,6 +30,11 @@ async function onNewsletterSubmit() {
             rel="noopener noreferrer"
             class="about-link"
             >Danes je nov dan, Inštitut za druga vprašanja</a
+          >
+          <br />
+          <br />
+          <RouterLink :to="{ name: 'privacy-policy' }"
+            >Politika zasebnosti in varstva osebnih podatkov</RouterLink
           >
         </div>
         <hr />
