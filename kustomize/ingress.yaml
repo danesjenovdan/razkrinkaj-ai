@@ -1,10 +1,12 @@
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: max-body-size
+  name: redirect-domain
 spec:
-  buffering:
-    maxRequestBodyBytes: 10485760  # 10m
+  redirectRegex:
+    regex: ^https?://razkrinkaj-ai.djnd.si/(.*)
+    replacement: https://razkrinkaj-ai.danesjenovdan.si/${1}
+    permanent: true
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -13,7 +15,7 @@ metadata:
 spec:
   headers:
     accessControlAllowOriginList:
-      - "https://api.razkrinkaj.ai"
+      - "https://api.razkrinkaj-ai.danesjenovdan.si"
     accessControlAllowMethods:
       - GET
       - POST
@@ -29,15 +31,16 @@ metadata:
   name: razkrinkaj-ai
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
-    traefik.ingress.kubernetes.io/router.middlewares: razkrinkaj-ai-max-body-size@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: |
+      traefik-redirect-to-https@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - api.razkrinkaj.ai
+        - api.razkrinkaj-ai.danesjenovdan.si
       secretName: razkrinkaj-ai-tls
   rules:
-    - host: api.razkrinkaj.ai
+    - host: api.razkrinkaj-ai.danesjenovdan.si
       http:
         paths:
           - path: /
@@ -54,15 +57,19 @@ metadata:
   name: razkrinkaj-ai-frontend
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-production"
-    traefik.ingress.kubernetes.io/router.middlewares: razkrinkaj-ai-enable-cors@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: |
+      traefik-redirect-to-https@kubernetescrd,
+      razkrinkaj-ai-redirect-domain@kubernetescrd,
+      razkrinkaj-ai-enable-cors@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - razkrinkaj.ai
+        - razkrinkaj-ai.djnd.si
+        - razkrinkaj-ai.danesjenovdan.si
       secretName: razkrinkaj-ai-frontend-tls
   rules:
-    - host: razkrinkaj.ai
+    - host: razkrinkaj-ai.danesjenovdan.si
       http:
         paths:
           - path: /
