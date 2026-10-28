@@ -16,7 +16,7 @@ const store = useStore()
       <a
         target="_blank"
         rel="noopener noreferrer nofollow"
-        href="http://razkrinkaj.ai"
+        href="http://razkrinkaj-ai.danesjenovdan.si"
         >razkrinkaj.ai</a
       >
       ter politike varovanja osebnih podatkov.

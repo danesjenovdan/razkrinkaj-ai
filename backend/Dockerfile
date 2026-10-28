@@ -1,5 +1,5 @@
-# Use an official Python runtime based on Debian 12 "bookworm" as a parent image.
-FROM python:3.12-slim-bookworm
+# Use an official Python runtime based on Debian 13 "trixie" as a parent image.
+FROM python:3.14-slim-trixie
 
 # Add user that will be used in the container.
 RUN useradd wagtail
@@ -25,10 +25,7 @@ RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-r
     gettext \
     libicu-dev \
     pkg-config \
- && rm -rf /var/lib/apt/lists/*
-
-# Install the application server.
-RUN pip install "gunicorn==23.0.0"
+    && rm -rf /var/lib/apt/lists/*
 
 # Install the project requirements.
 COPY requirements.txt /

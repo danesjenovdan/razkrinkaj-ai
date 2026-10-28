@@ -1,12 +1,12 @@
 # build stage
-FROM node:20-alpine AS build
+FROM node:26-alpine AS build
 
 # set current directory
 WORKDIR /app
 
 # install dependencies
-COPY package.json yarn.lock ./
-RUN yarn
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # copy source code
 COPY public ./public
@@ -17,7 +17,7 @@ COPY env.d.ts eslint.config.js .prettierrc.json index.html tsconfig.json tsconfi
 ARG VITE_API_URL_BASE
 
 # build the app
-RUN yarn build
+RUN npm run build
 
 # production stage
 FROM nginx:alpine

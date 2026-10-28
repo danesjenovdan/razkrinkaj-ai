@@ -4,27 +4,27 @@ volumes:
 
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     volumes:
       - postgres-data:/var/lib/postgresql/data
     expose:
       - "5432"
     environment:
-      POSTGRES_DB: wagtail
-      POSTGRES_USER: wagtail
+      POSTGRES_DB: razkrinkaj_ai
+      POSTGRES_USER: razkrinkaj_ai
       POSTGRES_PASSWORD: changeme
 
   wagtail:
     build: ./backend
     command: ./manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./backend:/app:delegated,rw
+      - ./backend:/app
     ports:
       - "8000:8000"
     environment:
       DJANGO_DATABASE_HOST: db
-      DJANGO_DATABASE_NAME: wagtail
-      DJANGO_DATABASE_USER: wagtail
+      DJANGO_DATABASE_NAME: razkrinkaj_ai
+      DJANGO_DATABASE_USER: razkrinkaj_ai
       DJANGO_DATABASE_PASSWORD: changeme
     depends_on:
       - db
@@ -38,15 +38,15 @@ services:
     environment:
       - VITE_API_URL_BASE=http://localhost:8000
     volumes:
-      - ./frontend/public:/app/public:delegated,rw
-      - ./frontend/src:/app/src:delegated,rw
-      - ./frontend/env.d.ts:/app/env.d.ts:delegated,rw
-      - ./frontend/eslint.config.js:/app/eslint.config.js:delegated,rw
-      - ./frontend/.prettierrc.json:/app/.prettierrc.json:delegated,rw
-      - ./frontend/index.html:/app/index.html:delegated,rw
-      - ./frontend/tsconfig.json:/app/tsconfig.json:delegated,rw
-      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json:delegated,rw
-      - ./frontend/tsconfig.node.json:/app/tsconfig.node.json:delegated,rw
-      - ./frontend/vite.config.ts:/app/vite.config.ts:delegated,rw
+      - ./frontend/public:/app/public
+      - ./frontend/src:/app/src
+      - ./frontend/env.d.ts:/app/env.d.ts
+      - ./frontend/eslint.config.js:/app/eslint.config.js
+      - ./frontend/.prettierrc.json:/app/.prettierrc.json
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tsconfig.app.json:/app/tsconfig.app.json
+      - ./frontend/tsconfig.node.json:/app/tsconfig.node.json
+      - ./frontend/vite.config.ts:/app/vite.config.ts
     depends_on:
       - wagtail

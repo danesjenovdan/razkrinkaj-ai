@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
     "corsheaders",
 ]
 
@@ -93,8 +94,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "HOST": os.getenv("DJANGO_DATABASE_HOST", "db"),
-        "NAME": os.getenv("DJANGO_DATABASE_NAME", "wagtail"),
-        "USER": os.getenv("DJANGO_DATABASE_USER", "wagtail"),
+        "NAME": os.getenv("DJANGO_DATABASE_NAME", "razkrinkaj_ai"),
+        "USER": os.getenv("DJANGO_DATABASE_USER", "razkrinkaj_ai"),
         "PASSWORD": os.getenv("DJANGO_DATABASE_PASSWORD", "changeme"),
         "PORT": os.getenv("DJANGO_DATABASE_PORT", "5432"),
     }
