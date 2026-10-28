@@ -69,8 +69,8 @@ spec:
         - razkrinkaj-ai.danesjenovdan.si
       secretName: razkrinkaj-ai-frontend-tls
   rules:
-    - host: razkrinkaj-ai.danesjenovdan.si
-      http:
+    - host: razkrinkaj-ai.djnd.si
+      http: &http_paths
         paths:
           - path: /
             pathType: Prefix
@@ -79,3 +79,5 @@ spec:
                 name: razkrinkaj-ai-frontend
                 port:
                   number: 80
+    - host: razkrinkaj-ai.danesjenovdan.si
+      http: *http_paths
