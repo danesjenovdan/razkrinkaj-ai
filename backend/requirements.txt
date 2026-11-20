@@ -27,6 +27,7 @@ draftjs_exporter==7.3.1
 et_xmlfile==2.0.0
 executing==2.3.0
 filetype==1.2.0
+gunicorn==27.0.1
 idna==3.20
 ipython==9.18.1
 ipython_pygments_lexers==1.1.1
