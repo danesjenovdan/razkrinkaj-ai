@@ -99,9 +99,7 @@ onMounted(() => {
     "
   >
     <h2 class="title">{{ chapter.title }}</h2>
-    <div v-if="isToday && didAnswerCorrectly === null" class="text">
-      REŠI!
-    </div>
+    <div v-if="isToday && didAnswerCorrectly === null" class="text">REŠI!</div>
     <div v-else-if="!isLocked" class="icon icon--star">
       <StarIcon :variant="starVariant" />
     </div>
@@ -222,7 +220,8 @@ onMounted(() => {
       '#FFF',
       'none'
     );
-    background-image: url.svg($day-bg-svg-string-today-border),
+    background-image:
+      url.svg($day-bg-svg-string-today-border),
       url.svg($day-bg-svg-string-today);
 
     .title {

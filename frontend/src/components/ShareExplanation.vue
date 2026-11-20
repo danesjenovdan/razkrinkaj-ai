@@ -2,7 +2,7 @@
   <div class="share-explanation">
     <label>
       <span>Deli povezavo:</span>
-      <input type="text" :value="urlValue" onfocus="this.select();" />
+      <input type="text" :value="urlValue" onfocus="this.select()" />
     </label>
   </div>
 </template>

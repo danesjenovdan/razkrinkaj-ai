@@ -426,7 +426,7 @@ onMounted(() => {
             :value="websiteLinkValue"
             maxlength="20"
             required
-            onfocus="this.select();"
+            onfocus="this.select()"
           />
           <button
             type="button"

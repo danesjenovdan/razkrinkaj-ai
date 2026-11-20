@@ -31,8 +31,8 @@ dd {
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
-ul[role="list"],
-ol[role="list"] {
+ul[role='list'],
+ol[role='list'] {
   list-style: none;
 }
 
@@ -107,11 +107,11 @@ textarea:not([rows]) {
 
 /* Cursor pointer on interactive elements */
 button,
-input[type="submit"],
-input[type="reset"],
-input[type="button"],
-input[type="checkbox"],
-input[type="radio"],
+input[type='submit'],
+input[type='reset'],
+input[type='button'],
+input[type='checkbox'],
+input[type='radio'],
 select {
   cursor: pointer;
 }

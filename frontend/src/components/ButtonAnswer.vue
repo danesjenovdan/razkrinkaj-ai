@@ -278,7 +278,8 @@ const explanation = computed(() => {
         '#FFF',
         'none'
       );
-      background-image: url.svg($button-answer-bg-svg-string-incorrect-border),
+      background-image:
+        url.svg($button-answer-bg-svg-string-incorrect-border),
         url.svg($button-answer-bg-svg-string-incorrect);
       font-weight: 600;
     }
@@ -300,7 +301,8 @@ const explanation = computed(() => {
       '#FFF',
       'none'
     );
-    background-image: url.svg($button-answer-bg-svg-string-hover-border),
+    background-image:
+      url.svg($button-answer-bg-svg-string-hover-border),
       url.svg($button-answer-bg-svg-string-hover);
     filter: drop-shadow(0 0 4px var(--manipulacija-color-4));
   }
